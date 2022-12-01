@@ -7,3 +7,8 @@ nav_order: 0
 
 
 # Modelling Greek syntax
+
+- texts
+- sentences
+- verbal units
+- tokens
