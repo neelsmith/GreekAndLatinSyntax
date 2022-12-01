@@ -2,12 +2,12 @@
 title: "Greek syntax: home page"
 layout: page
 nav_order: 0
-has_children: true
 ---
 
 
 # Greek syntax
 
-- [motivation](./motivation/)
+- [motivation](./motivation/) TBA
 - [models](./modelling/)
 - [serialization](./serialization/)
+- [visualization](./visualization/)
