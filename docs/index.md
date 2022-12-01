@@ -1,14 +1,13 @@
 ---
-title: "Modelling Greek syntax"
+title: "Greek syntax: home page"
 layout: page
 nav_order: 0
+has_children: true
 ---
 
 
+# Greek syntax
 
-# Modelling Greek syntax
+models
 
-- texts
-- sentences
-- verbal units
-- tokens
+serialization
