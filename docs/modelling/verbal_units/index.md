@@ -1,7 +1,7 @@
 ---
 title: "Verbal units"
 layout: page
-nav_order: 6
+nav_order: 5
 parent: "Modelling Greek syntax"
 ---
 
