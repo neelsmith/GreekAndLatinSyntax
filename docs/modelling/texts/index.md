@@ -3,6 +3,7 @@ title: "Texts"
 layout: page
 nav_order: 2
 parent: "Modelling Greek syntax"
+has_children: true
 ---
 
 
@@ -12,29 +13,11 @@ Ancient Greek is a historical language.  We study its syntax from source texts, 
 
 ## Source texts
 
-CITE model of structure: an ordered sequence of logical units in a citation hierarchy.
-
-Sufficiently general to apply to any text.
-
-Says nothing about contents!
+We follow the CITE architecture model for the *structure* of texts.  In this model, texts are organized as an ordered sequence of logical units in a citation hierarchy.  This model is sufficiently general to apply to any citable text, but says nothing about the contents of citable units.  They could be treated simply as a stream of characters or bytes.
 
 ## Analyzed texts
 
-Analyzed texts have a specified orthography, and are organized into a series of sentences.
+Analyzed texts have a specified [orthography](../orthography/), and are organized into a series of sentences.
 
-### Orthography
-
-An orthography has the following functionality:
-
-- enumerate character set
-- evaluate if a sequence of characters is orthographically valid
-- enumerate set of token types
-- parse a stream of valid characters into a sequence of classified tokens citable at the level of the token (i.e., extending the canonical citation hierarchy one level)
-
-
-This definition is generic enough to appy to many languages (any language?).
-
-### Sentences
-
-By *sentence*, we mean a textual expression capable of standing alone as complete idea.  The concept is generic, but [our realization of it](../sentences/) must be specific to Greek.
+Our definition of *sentence* is semantic: it is a textual expression capable of standing alone as a complete idea.  While this concept is generic, [our application of it to Greek](../sentences/) is specific to Greek syntax.
 

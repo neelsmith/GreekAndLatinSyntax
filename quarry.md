@@ -13,6 +13,12 @@ Every sentence has at least one *independent* verbal units, expressed with a cla
 
 A *verbal* unit is a verbal idea with a subject and predicate (either of which might be implicit or explicit).
 
+We annotate the *semantic type* of a verbal expression as one of:
+
+- transitive
+- intransitive
+- linking
+
 Each independent clause may have zero or more dependent verbal units, comprising constructions like:
 
 - clauses with a finite verb introduced by a subordinating conjunction
