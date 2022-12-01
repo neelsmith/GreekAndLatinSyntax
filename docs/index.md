@@ -8,6 +8,6 @@ has_children: true
 
 # Greek syntax
 
-models
-
-serialization
+- [motivation](./motivation/)
+- [models](./modelling/)
+- [serialization](./serialization/)
