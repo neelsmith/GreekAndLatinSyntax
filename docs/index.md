@@ -7,7 +7,7 @@ nav_order: 0
 
 # Greek syntax
 
-- [motivation](./motivation/) TBA
+- [motivation](./motivation/) 
 - [models](./modelling/)
 - [serialization](./serialization/)
-- [visualization](./visualization/) TBA
+- [visualization](./visualization/) 
