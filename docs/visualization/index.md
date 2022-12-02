@@ -8,10 +8,14 @@ nav_order: 8
 # Visualization
 
 
+
+## Example 1
+
 Here are examples of visualizations of the following passage of Lysias 1:
 
+> ἐπειδὴ δέ μοι ἡ μήτηρ ἐτελεύτησε, πάντων τῶν κακῶν ἀποθανοῦσα αἰτία μοι γεγένηται
 
-## Clustered in verbal units
+### Clustered in verbal units
 
 Clustered in verbal units indented by level of subordination:
 
@@ -26,7 +30,7 @@ Clustered in verbal units indented by level of subordination:
 >> `unit 3` ἀποθανοῦσα
 
 
-## Tokens in document order
+### Tokens in document order
 
 All tokens displayed in document order at level of subordination:
 
@@ -44,11 +48,12 @@ All tokens displayed in document order at level of subordination:
 > αἰτία μοι γεγένηται.
  
 
-## Syntax graph
+### Syntax graph
 
 ![syntax graph](./syntax.png)
 
 Generated from this mermaid source:
+
 ```mermaid
 graph BT;
 
@@ -66,5 +71,72 @@ graph BT;
 5141526[ἡ] --> |article| 5141527[μήτηρ] ;
 
 5141533[ἀποθανοῦσα] --> |circumstantial participle| 5141527[μήτηρ];
+
+```
+
+
+## Another example
+
+> ἔστι δ’ ἔφη Ἐρατοσθένης Ὀῆθεν ὁ ταῦτα πράττων , ὃς οὐ μόνον τὴν σὴν γυναῖκα διέφθαρκεν ἀλλὰ καὶ ἄλλας πολλάς :
+
+
+
+### Clustered in verbal units
+
+Clustered in verbal units indented by level of subordination:
+
+> **Level 1** (main clause)
+>
+>> **Level 2** (one level of subordination)
+>
+>>> **Level 3*** (two levels of subordination)
+>
+>> ἔστι Ἐρατοσθένης Ὀῆθεν
+>
+> δ’ ἔφη
+>
+>>> ὁ ταῦτα πράττων
+>
+>>> ὃς οὐ μόνον τὴν σὴν γυναῖκα διέφθαρκεν
+>
+>>> ἀλλὰ καὶ ἄλλας πολλάς:
+
+
+
+
+### Tokens in document order
+
+
+> **Level 1** (main clause)
+>
+>> **Level 2** (one level of subordination)
+>
+>>> **Level 3** (two levels of subordination)
+>
+>> ἔστι
+>
+> δ’ ἔφη
+>
+>> Ἐρατοσθένης Ὀῆθεν
+>
+>>> ὁ ταῦτα πράττων
+>
+>>> ὃς οὐ μόνον τὴν σὴν γυναῖκα διέφθαρκεν
+>
+>>> ἀλλὰ καὶ ἄλλας πολλάς:
+
+
+---
+
+### Syntax graph
+
+
+Generated from this mermaid source:
+
+```mermaid
+graph BT;
+
+
+5142028[ἔφη] --> |finite verb| 5142027[δ'];
 
 ```
