@@ -10,4 +10,4 @@ has_children: true
 
 We need to serialize the four levels of annotations we record for a syntactically analyzed text (text, sentence, verbal unit, token).  That is trivially accomplished with four delimited-text data sets, which can be coordinated through a CEX data model, and serialized to a single plain-text representation.
 
-See [examples](./examples/)
+See [examples](./examples/), and compare the example tables with these [visualizations of the same data](../visualization/).

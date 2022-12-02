@@ -46,6 +46,9 @@ All tokens displayed in document order at level of subordination:
 
 ## Syntax graph
 
+![syntax graph](./syntax.png)
+
+Generated from this mermaid source:
 ```mermaid
 graph BT;
 
