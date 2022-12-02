@@ -30,19 +30,14 @@ To interpret the tables more easily, consult the [visualizations of the same pas
 // CEX for a group of tokens
 |CTSURN|tokentype|nodeid|text|lemma|morphology|parent|relation|verbalunit|
 |---|---|---|---|---|---|---|---|
-|CTSURN|lexical|51415023|ἐπειδὴ|LEXURN|MORPHURN|5141536|AuxC|1|
-|CTSURN|lexical|5141524|δέ|LEXURN|MORPHURN|5141536|AuxY |
-|CTSURN|lexical|5141525|μοι|LEXURN|MORPHURN|5141528|J|1|
-|CTSURN|lexical|5141526|ἡ|LEXURN|MORPHURN|5141527|ATR|1|
-|CTSURN|lexical|5141527|μήτηρ|LEXURN|MORPHURN|5141528|SBJ|1|
-|CTSURN|lexical|5141528|ἐτελεύτησε|LEXURN|MORPHURN|41523|ADV|1|
-|CTSURN|punctuation|5141529|,|nothing|nothing|51415|PUNCT|1|
-|CTSURN|lexical|5141530|πάντων|LEXURN|MORPHURN|5141532|ATR|2|
-|CTSURN|lexical|5141531|τῶν|LEXURN|MORPHURN|5141532|ATR|2|
-|CTSURN|lexical|5141532|κακῶν|LEXURN|MORPHURN|5141533|OBJ|2|
-|CTSURN|lexical|5141533|ἀποθανοῦσα|LEXURN|MORPHURN|514153|ADV|3|
-|CTSURN|lexical|5141534|αἰτία|LEXURN|MORPHURN|5141536|OM|2|
-|CTSURN|lexical|5141535|μοι|LEXURN|MORPHURN|5141536|ADV|2|
-|CTSURN|lexical|5141536|γεγένηται|LEXURN|MORPHURN|0|PRED|2|
-|CTSURN|punctuation|5141537|.|nothing|nothing|51415|PUNCT|2|
+|CTSURN|lexical|51415023|ἐπειδὴ|LEXURN|MORPHURN|5141536|subord.conjunction|1|
+|CTSURN|lexical|5141524|δέ|LEXURN|MORPHURN|nothing|root|
+|CTSURN|lexical|5141525|μοι|LEXURN|MORPHURN|5141536|dative|1|
+|CTSURN|lexical|5141526|ἡ|LEXURN|MORPHURN|5141527|article|1|
+|CTSURN|lexical|5141527|μήτηρ|LEXURN|MORPHURN|5141528|subject|1|
+|CTSURN|lexical|5141528|ἐτελεύτησε|LEXURN|MORPHURN|51415023|finite verb|1|
+|CTSURN|punctuation|5141529|,|nothing|nothing|5141528|punctuation|1|
+|CTSURN|lexical|5141530|πάντων|LEXURN|MORPHURN|5141532|attribute|2|
+|CTSURN|lexical|5141531|τῶν|LEXURN|MORPHURN|5141532|article|2|
+|CTSURN|lexical|5141532|κακῶν|LEXURN|MORPHURN|5141533|genitive
 ```
