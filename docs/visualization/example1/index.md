@@ -10,6 +10,7 @@ title: "Visualizations: example 1"
 # Visualizations: example 1
 
 
+> ἐπειδὴ δέ μοι ἡ μήτηρ ἐτελεύτησε, πάντων τῶν κακῶν ἀποθανοῦσα αἰτία μοι γεγένηται.
 
 ### Clustered in verbal units
 
