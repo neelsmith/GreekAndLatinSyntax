@@ -28,10 +28,10 @@ To interpret the tables more easily, consult the [visualizations of the same pas
 |3|intransitive|circumstantial_participle|2|
 
 // CEX for a group of tokens
-|CTSURN|tokentype|nodeid|text|lemma|morphology|parent|relation|verbalunit|
-|---|---|---|---|---|---|---|---|
+|CTSURN|tokentype|nodeid|text|lemma|morphology|parent|relation|verbalunit|child|childrelation|
+|---|---|---|---|---|---|---|---|---|---|
 |CTSURN|lexical|51415023|ἐπειδὴ|LEXURN|MORPHURN|5141536|subord.conjunction|1|
-|CTSURN|lexical|5141524|δέ|LEXURN|MORPHURN|nothing|root|
+|CTSURN|lexical|5141524|δέ|LEXURN|MORPHURN|nothing|clause initial|
 |CTSURN|lexical|5141525|μοι|LEXURN|MORPHURN|5141536|dative|1|
 |CTSURN|lexical|5141526|ἡ|LEXURN|MORPHURN|5141527|article|1|
 |CTSURN|lexical|5141527|μήτηρ|LEXURN|MORPHURN|5141528|subject|1|
@@ -45,7 +45,7 @@ To interpret the tables more easily, consult the [visualizations of the same pas
 
 ## And another
 
-> ἔστι δ’ ἔφη Ἐρατοσθένης Ὀῆθεν ὁ ταῦτα πράττων , ὃς οὐ μόνον τὴν σὴν γυναῖκα διέφθαρκεν ἀλλὰ καὶ ἄλλας πολλάς ·
+> ἔστι δ’ ἔφη Ἐρατοσθένης Ὀῆθεν ὁ ταῦτα πράττων, ὃς οὐ μόνον τὴν σὴν γυναῖκα διέφθαρκεν ἀλλὰ καὶ ἄλλας πολλάς:
 
 
 
