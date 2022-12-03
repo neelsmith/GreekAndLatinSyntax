@@ -19,9 +19,9 @@ A *verbal unit* is a verbal idea with a subject and predicate (either of which m
 
 We annotate the *semantic type* of a verbal expression as one of:
 
-- transitive
-- intransitive
-- linking
+- *transitive*
+- *intransitive*
+- *linking*
 
 
 ## Syntactic type
@@ -30,14 +30,14 @@ We also annotate the *syntactic type* of a verbal expression.  For each syntacti
 
 | Type | Verbal construction |  Syntactic connection to context |
 | --- | --- | --- |
-| **main clause** | finite verb with nominative subject | coordinating particle or conjunction, or asyndeton |
-| **subordinate clause** | finite verb with nominative subject | subordinating conjunction |
-| **circumstantial participle** | participial form agreeing with a substantive functioning as subject of the verbal idea | agreement in gender, case, number with subject |
-| **attributive participle** | participial form agreeing   with a substantive functioning as subject of the verbal idea | participle related to subject substantive by being in attributive position |
-| **indirect statement with infinitive** | accusative subject  plus infinitive, or nominative subject if the same as subject of superior clause  | verb of superior clause expresses speaking, thinking, believing|
-| **indirect statement with participle** | accusative subject  plus participle| verb of superior clause expresses perceiving or knowing |
+| *independent clause* | finite verb with nominative subject | clause-initiating particle or conjunction, or asyndeton |
+| *subordinate clause* | finite verb with nominative subject | subordinating conjunction |
+| *circumstantial participle* | participial form agreeing with a substantive functioning as subject of the verbal idea | agreement in gender, case, number with subject |
+| *attributive participle* | participial form agreeing   with a substantive that functions as subject of the verbal idea | in attributive position to and agrees in gender, case, number with subject  |
+| *indirect statement with infinitive* | accusative subject  plus infinitive, or nominative subject if the same as subject of superior clause  | verb of superior clause expresses speaking, thinking, believing|
+| *indirect statement with participle* | accusative subject  plus participle| verb of superior clause expresses perceiving or knowing |
 
-Every [sentence](../sentences/) has one verbal unit of type *main clause*.  T
+Every [sentence](../sentences/) has at leastone verbal unit of type *independent clause*.  
 
 
 
