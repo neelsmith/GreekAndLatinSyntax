@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.13
+# v0.19.16
 
 using Markdown
 using InteractiveUtils
@@ -18,19 +18,35 @@ end
 begin
 	using PlutoUI, Kroki, Downloads
 	using CitableText
+	using PlutoTeachingTools
 end
 
+# ╔═╡ a877a321-c20a-438c-84b4-f4d40a76e57f
+
+ css = html"""
+<style>
+ .connector {
+ background: yellow;  
+ font-style: bold;
+}
+ }
+</style>
+ """
+
 # ╔═╡ 69a3ac2c-7312-11ed-1bbb-afa0ce256496
-md"""# Edit syntax"""
+md"""# Analyze syntax of Lysias 1"""
 
-# ╔═╡ 103d6511-1878-4070-b546-d6ec17fc889a
-md"""Identify the connecting word that relates this sentence to its context, or choose `asyndeton`.
+# ╔═╡ 045e98fc-188f-4c95-bf1c-e102bd4089e5
+md"""## 1. Annotate sentence connector"""
 
-*Choose from first *
+# ╔═╡ 5007dce1-189c-4bdf-8c99-ffaa84b350cd
+html"""
+
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+
+<hr/>
+Below here is WIP
 """
-
-# ╔═╡ 50a6569d-189d-4d69-a9fb-36aee1f99c13
-md"""## Identify verbal units"""
 
 # ╔═╡ 663c30ac-70e9-4259-bb38-570b9fa286c8
 init = ["initial"]
@@ -90,7 +106,8 @@ end
 md"""*Choose a sentence initiator*: $(@bind headword Select(menu))"""
 
 # ╔═╡ b0beec77-281d-4d87-b0af-80db1d286b9d
-
+md""">Formatted data that the user doesn't need to see
+"""
 
 # ╔═╡ 3f3406af-0d9b-4ae0-adcc-4b652d5dc19f
 md"""> Processing functions to hide from user
@@ -120,33 +137,105 @@ function loaddata(url)
 end
 
 # ╔═╡ ef84f1d8-45a5-4be3-acf2-426677d5073f
+# Data triples for each token, grouped by sentence
 sentences = loaddata("https://raw.githubusercontent.com/neelsmith/Treebanks.jl/main/lys1tb.cex")
 
 # ╔═╡ 45511e57-7cc2-47b4-8801-0f22f5d1d1a7
-md"""Loaded **$(length(sentences))** sentences.  *Choose a sentence to analyze*: $(@bind sentid Slider(0:length(sentences), show_value  = true))"""
+md"""Loaded **$(length(sentences))** sentences. 
+
+*Choose a sentence to analyze*: $(@bind sentid Slider(0:length(sentences), show_value  = true))"""
+
+# ╔═╡ b0073fe9-e08d-47cd-ae87-9d9468e50eab
+# The currently selected sentence
+sentence = sentid == 0 ? [] : sentences[sentid]
+
+# ╔═╡ 103d6511-1878-4070-b546-d6ec17fc889a
+if sentid == 0
+	md""
+else
+	md"""*Choose a connecting word from this many initial tokens:* $(@bind ninitial Slider(1:length(sentence), show_value = true, default = 10) )
+"""
+end
+	
+
+# ╔═╡ 60f71d58-b5cc-4c83-8c69-8b41fd21c8ea
+"""Compose menu to select connecting word from first N tokens of current sentence.
+"""
+function connectormenu()
+	menu = Pair{Union{Int64,Missing, Nothing}, String}[missing => "", nothing => "asyndeton"]
+	for (i, tkn) in enumerate(sentence[1:ninitial])
+		if tkn[3] == "u--------"
+			# omit: punctuation
+		else
+			pr = (i => string(i, ". ", tkn[2]))
+			push!(menu, pr)
+		end
+	end
+	menu
+end
+
+# ╔═╡ 6613a5ac-1ccb-4397-bddc-3c0274d0c563
+if sentid == 0
+	md""
+else
+	md"*Connecting word*: $(@bind connectorid Select(connectormenu()))"
+end
+
+# ╔═╡ 50a6569d-189d-4d69-a9fb-36aee1f99c13
+if sentid == 0 || ismissing(connectorid)
+	md""
+else
+	md"""## 2. Identify verbal units"""
+end
+		
+
+
+# ╔═╡ e4ffd5da-debe-4dde-8cd2-0c74905c886e
+verbalunits = begin
+	if sentid == 0 || ismissing(connectorid)
+		md""
+	else
+		[(id = 1, type = "independent clause", verbtype = missing)]
+	end
+end
 
 # ╔═╡ 9a60b3d9-5712-4f88-8f2a-b2afab8741dc
 """Format string value of tokens in `s` with approrpiate
-white space for lexical and punctuation tokens.
+white space for lexical and punctuation tokens.  Add HTML
+`span` tags for manually tagged stuff.
 """
 function formatsentence(s)
-	formatted = ["**Setence $(sentid)**:  "]
-	for tkn in s
+	formatted = []
+	for (i, tkn) in enumerate(s)
 		if tkn[3] == "u--------" # punctuation
 			push!(formatted, tkn[2])
-		else
+		elseif ismissing(connectorid) || isnothing(connectorid) || ! (i == connectorid)
 			push!(formatted, " " * tkn[2])
+		else # i == connectorid
+			tagged = "<span class=\"connector\">$(tkn[2])</span>"
+			push!(formatted, " " * tagged)
+			
 		end
 	end
 	join(formatted,"")
 end
 
+
 # ╔═╡ b2703fbd-a955-418c-bb9b-718fa4410ba0
 if sentid == 0
 	md""
+	
+elseif ismissing(connectorid)
+		str = formatsentence(sentences[sentid])
+		HTML("<i>Please identify a connecting word for this sentence, or select <q>asyndeton</q>:</i><br/><blockquote><strong>Sentence $(sentid)</strong>: " * str * "</blockquote>")
+
+elseif isnothing(connectorid)
+		str = formatsentence(sentences[sentid])
+		HTML("<blockquote><span class=\"connector\">Asyndeton: no connecting word.</span><br/><strong>Sentence $(sentid)</strong>: " * str * "</blockquote>")
 else
+	
 	str = formatsentence(sentences[sentid])
-	Markdown.parse("> " * str)
+	HTML("<blockquote><strong>Sentence $(sentid)</strong>: " * str * "</blockquote>")
 end
 
 
@@ -156,11 +245,13 @@ PLUTO_PROJECT_TOML_CONTENTS = """
 CitableText = "41e66566-473b-49d4-85b7-da83b66615d8"
 Downloads = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
 Kroki = "b3565e16-c1f2-4fe9-b4ab-221c88942068"
+PlutoTeachingTools = "661c6b06-c737-4d37-b85c-46df65de6f69"
 PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
 
 [compat]
 CitableText = "~0.15.2"
 Kroki = "~0.2.0"
+PlutoTeachingTools = "~0.2.5"
 PlutoUI = "~0.7.49"
 """
 
@@ -170,7 +261,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.8.1"
 manifest_format = "2.0"
-project_hash = "0a0fc2eca4fa5995fca09da3506ef609ca02cd61"
+project_hash = "85b338258b92fae2a054fa942a613fb68393f44f"
 
 [[deps.ANSIColoredPrinters]]
 git-tree-sha1 = "574baf8110975760d391c710b6341da1afa48d8c"
@@ -210,6 +301,12 @@ git-tree-sha1 = "87c096e67162faf21c0983a29396270cca168b4e"
 uuid = "41e66566-473b-49d4-85b7-da83b66615d8"
 version = "0.15.2"
 
+[[deps.CodeTracking]]
+deps = ["InteractiveUtils", "UUIDs"]
+git-tree-sha1 = "cc4bd91eba9cdbbb4df4746124c22c0832a460d6"
+uuid = "da1fd8a2-8d9e-5ec2-8556-3022fb5608a2"
+version = "1.1.1"
+
 [[deps.CodecZlib]]
 deps = ["TranscodingStreams", "Zlib_jll"]
 git-tree-sha1 = "ded953804d019afa9a3f98981d99b33e3db7b6da"
@@ -230,6 +327,10 @@ version = "0.5.2+0"
 [[deps.Dates]]
 deps = ["Printf"]
 uuid = "ade2ca70-3891-5945-98fb-dc099432e06a"
+
+[[deps.Distributed]]
+deps = ["Random", "Serialization", "Sockets"]
+uuid = "8ba89e20-285c-5b6f-9357-94700520ee1b"
 
 [[deps.DocStringExtensions]]
 deps = ["LibGit2"]
@@ -256,6 +357,12 @@ deps = ["Statistics"]
 git-tree-sha1 = "335bfdceacc84c5cdf16aadc768aa5ddfc5383cc"
 uuid = "53c48c17-4a7d-5ca2-90c5-79b7896eea93"
 version = "0.8.4"
+
+[[deps.Formatting]]
+deps = ["Printf"]
+git-tree-sha1 = "8339d61043228fdd3eb658d86c926cb282ae72a8"
+uuid = "59287772-0a20-5a39-b81b-1366585eb4c0"
+version = "0.4.2"
 
 [[deps.HTTP]]
 deps = ["Base64", "CodecZlib", "Dates", "IniFile", "Logging", "LoggingExtras", "MbedTLS", "NetworkOptions", "OpenSSL", "Random", "SimpleBufferStream", "Sockets", "URIs", "UUIDs"]
@@ -302,11 +409,28 @@ git-tree-sha1 = "3c837543ddb02250ef42f4738347454f95079d4e"
 uuid = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 version = "0.21.3"
 
+[[deps.JuliaInterpreter]]
+deps = ["CodeTracking", "InteractiveUtils", "Random", "UUIDs"]
+git-tree-sha1 = "a79c4cf60cc7ddcdcc70acbb7216a5f9b4f8d188"
+uuid = "aa1ae85d-cabe-5617-a682-6adf51b2e16a"
+version = "0.9.16"
+
 [[deps.Kroki]]
 deps = ["Base64", "CodecZlib", "DocStringExtensions", "HTTP", "JSON", "Markdown", "Reexport"]
 git-tree-sha1 = "a3235f9ff60923658084df500cdbc0442ced3274"
 uuid = "b3565e16-c1f2-4fe9-b4ab-221c88942068"
 version = "0.2.0"
+
+[[deps.LaTeXStrings]]
+git-tree-sha1 = "f2355693d6778a178ade15952b7ac47a4ff97996"
+uuid = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
+version = "1.3.0"
+
+[[deps.Latexify]]
+deps = ["Formatting", "InteractiveUtils", "LaTeXStrings", "MacroTools", "Markdown", "OrderedCollections", "Printf", "Requires"]
+git-tree-sha1 = "ab9aa169d2160129beb241cb2750ca499b4e90e9"
+uuid = "23fbe1c1-3f47-55db-b15f-69d7ec21a316"
+version = "0.15.17"
 
 [[deps.LibCURL]]
 deps = ["LibCURL_jll", "MozillaCACerts_jll"]
@@ -343,10 +467,22 @@ git-tree-sha1 = "cedb76b37bc5a6c702ade66be44f831fa23c681e"
 uuid = "e6f89c97-d47a-5376-807f-9c37f3926c36"
 version = "1.0.0"
 
+[[deps.LoweredCodeUtils]]
+deps = ["JuliaInterpreter"]
+git-tree-sha1 = "dedbebe234e06e1ddad435f5c6f4b85cd8ce55f7"
+uuid = "6f1432cf-f94c-5a45-995e-cdbf5db27b0b"
+version = "2.2.2"
+
 [[deps.MIMEs]]
 git-tree-sha1 = "65f28ad4b594aebe22157d6fac869786a255b7eb"
 uuid = "6c6e2e6c-3030-632d-7369-2d6c69616d65"
 version = "0.1.4"
+
+[[deps.MacroTools]]
+deps = ["Markdown", "Random"]
+git-tree-sha1 = "42324d08725e200c23d4dfb549e0d5d89dede2d2"
+uuid = "1914dd2f-81c6-5fcd-8719-6d5c9610ff09"
+version = "0.5.10"
 
 [[deps.Markdown]]
 deps = ["Base64"]
@@ -391,6 +527,11 @@ git-tree-sha1 = "f6e9dba33f9f2c44e08a020b0caf6903be540004"
 uuid = "458c3c95-2e84-50aa-8efc-19380b2a3a95"
 version = "1.1.19+0"
 
+[[deps.OrderedCollections]]
+git-tree-sha1 = "85f8e6578bf1f9ee0d11e7bb1b1456435479d47c"
+uuid = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
+version = "1.4.1"
+
 [[deps.Parsers]]
 deps = ["Dates", "SnoopPrecompile"]
 git-tree-sha1 = "b64719e8b4504983c7fca6cc9db3ebc8acc2a4d6"
@@ -401,6 +542,24 @@ version = "2.5.1"
 deps = ["Artifacts", "Dates", "Downloads", "LibGit2", "Libdl", "Logging", "Markdown", "Printf", "REPL", "Random", "SHA", "Serialization", "TOML", "Tar", "UUIDs", "p7zip_jll"]
 uuid = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 version = "1.8.0"
+
+[[deps.PlutoHooks]]
+deps = ["InteractiveUtils", "Markdown", "UUIDs"]
+git-tree-sha1 = "072cdf20c9b0507fdd977d7d246d90030609674b"
+uuid = "0ff47ea0-7a50-410d-8455-4348d5de0774"
+version = "0.0.5"
+
+[[deps.PlutoLinks]]
+deps = ["FileWatching", "InteractiveUtils", "Markdown", "PlutoHooks", "Revise", "UUIDs"]
+git-tree-sha1 = "8f5fa7056e6dcfb23ac5211de38e6c03f6367794"
+uuid = "0ff47ea0-7a50-410d-8455-4348d5de0420"
+version = "0.1.6"
+
+[[deps.PlutoTeachingTools]]
+deps = ["Downloads", "HypertextLiteral", "LaTeXStrings", "Latexify", "Markdown", "PlutoLinks", "PlutoUI", "Random"]
+git-tree-sha1 = "ea3e4ac2e49e3438815f8946fa7673b658e35bdb"
+uuid = "661c6b06-c737-4d37-b85c-46df65de6f69"
+version = "0.2.5"
 
 [[deps.PlutoUI]]
 deps = ["AbstractPlutoDingetjes", "Base64", "ColorTypes", "Dates", "FixedPointNumbers", "Hyperscript", "HypertextLiteral", "IOCapture", "InteractiveUtils", "JSON", "Logging", "MIMEs", "Markdown", "Random", "Reexport", "URIs", "UUIDs"]
@@ -430,6 +589,18 @@ uuid = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 git-tree-sha1 = "45e428421666073eab6f2da5c9d310d99bb12f9b"
 uuid = "189a3867-3050-52da-a836-e630ba90ab69"
 version = "1.2.2"
+
+[[deps.Requires]]
+deps = ["UUIDs"]
+git-tree-sha1 = "838a3a4188e2ded87a4f9f184b4b0d78a1e91cb7"
+uuid = "ae029012-a4dd-5104-9daa-d747884805df"
+version = "1.3.0"
+
+[[deps.Revise]]
+deps = ["CodeTracking", "Distributed", "FileWatching", "JuliaInterpreter", "LibGit2", "LoweredCodeUtils", "OrderedCollections", "Pkg", "REPL", "Requires", "UUIDs", "Unicode"]
+git-tree-sha1 = "dad726963ecea2d8a81e26286f625aee09a91b7c"
+uuid = "295af30f-e4ad-537b-8983-00126c2a3abe"
+version = "3.4.0"
 
 [[deps.SHA]]
 uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
@@ -519,12 +690,16 @@ version = "17.4.0+0"
 
 # ╔═╡ Cell order:
 # ╠═dac75c4e-f0b0-4168-91c9-83f4e4332a7b
+# ╟─a877a321-c20a-438c-84b4-f4d40a76e57f
 # ╟─69a3ac2c-7312-11ed-1bbb-afa0ce256496
+# ╟─045e98fc-188f-4c95-bf1c-e102bd4089e5
 # ╟─45511e57-7cc2-47b4-8801-0f22f5d1d1a7
+# ╟─103d6511-1878-4070-b546-d6ec17fc889a
+# ╟─6613a5ac-1ccb-4397-bddc-3c0274d0c563
 # ╟─b2703fbd-a955-418c-bb9b-718fa4410ba0
-# ╟─ef84f1d8-45a5-4be3-acf2-426677d5073f
-# ╠═103d6511-1878-4070-b546-d6ec17fc889a
 # ╟─50a6569d-189d-4d69-a9fb-36aee1f99c13
+# ╟─e4ffd5da-debe-4dde-8cd2-0c74905c886e
+# ╟─5007dce1-189c-4bdf-8c99-ffaa84b350cd
 # ╠═663c30ac-70e9-4259-bb38-570b9fa286c8
 # ╠═7ba2e72d-ca4a-44d1-8d1f-0c83bea2cb0c
 # ╟─df9295d9-b909-4b87-83c1-4d2558f3bedd
@@ -539,9 +714,12 @@ version = "17.4.0+0"
 # ╟─cd08d3bd-a8ce-40c7-90b6-0c057984bd36
 # ╟─42f98992-ee8c-4760-8b7d-bd8cedca30ea
 # ╟─0eef50ef-2d8b-4cf5-a63e-80b01ffb9c2c
-# ╠═b0beec77-281d-4d87-b0af-80db1d286b9d
+# ╟─b0beec77-281d-4d87-b0af-80db1d286b9d
+# ╟─ef84f1d8-45a5-4be3-acf2-426677d5073f
+# ╟─b0073fe9-e08d-47cd-ae87-9d9468e50eab
 # ╟─3f3406af-0d9b-4ae0-adcc-4b652d5dc19f
 # ╟─b48b3a59-4494-4b9a-8fa2-67f96fae937b
-# ╟─9a60b3d9-5712-4f88-8f2a-b2afab8741dc
+# ╠═60f71d58-b5cc-4c83-8c69-8b41fd21c8ea
+# ╠═9a60b3d9-5712-4f88-8f2a-b2afab8741dc
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
