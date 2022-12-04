@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.16
+# v0.19.13
 
 using Markdown
 using InteractiveUtils
@@ -33,11 +33,17 @@ end
 </style>
  """
 
+# ╔═╡ 7eb39b22-f258-4380-b8b4-9240e091236d
+
+
 # ╔═╡ 69a3ac2c-7312-11ed-1bbb-afa0ce256496
 md"""# Analyze syntax of Lysias 1"""
 
 # ╔═╡ 045e98fc-188f-4c95-bf1c-e102bd4089e5
 md"""## 1. Annotate sentence connector"""
+
+# ╔═╡ 15f25e67-741e-4f6c-9b67-7a87bdd226b6
+md"""*All verbal units identified*: $(@bind vudone CheckBox())"""
 
 # ╔═╡ 5007dce1-189c-4bdf-8c99-ffaa84b350cd
 html"""
@@ -48,62 +54,14 @@ html"""
 Below here is WIP
 """
 
-# ╔═╡ 663c30ac-70e9-4259-bb38-570b9fa286c8
-init = ["initial"]
-
-# ╔═╡ 7ba2e72d-ca4a-44d1-8d1f-0c83bea2cb0c
-function augment(s)
-	push!(init, s)
-end
-
-# ╔═╡ df9295d9-b909-4b87-83c1-4d2558f3bedd
-init
-
-# ╔═╡ f26f7f40-be52-45fd-a3e4-709ee4eb9fd1
-@bind bump Button("Add one!")
-
-# ╔═╡ 187b4edf-ba7a-4ad7-a1be-9422e63d37c7
-begin
-	bump
-	augment("Another")
-end
-
 # ╔═╡ c76e37a7-38f7-4f72-8310-b020249a972b
-md"""Assign tokens to verbal units"""
+md"""# Assign tokens to verbal units"""
 
 # ╔═╡ 96b2e9da-44b2-4d60-ac1d-00aaf888a889
 md"""## Analyze syntax of verbal unit"""
 
-# ╔═╡ 2136e77f-aa99-4f21-a1db-b181b55b50f3
-md"""> Hidable"""
-
-# ╔═╡ 02eb3eb5-f603-4541-b83e-5fb744ea4e74
-tokens = split("Now is the time to come the aid of your editions.")
-
-# ╔═╡ 49a27f26-9b54-44f5-b3b7-c9fa014eda3e
-md"""
-*Source text*:
-
-**$(join(tokens, " "))**
-"""
-
-# ╔═╡ cd08d3bd-a8ce-40c7-90b6-0c057984bd36
-menutokens = begin
-	vcat(["", "asyndeton"], 	
-		tokens
-	)
-end
-
-# ╔═╡ 42f98992-ee8c-4760-8b7d-bd8cedca30ea
-indexedtokens = enumerate(menutokens) |> collect
-
-# ╔═╡ 0eef50ef-2d8b-4cf5-a63e-80b01ffb9c2c
-menu = map(indexedtokens) do pr
-	pr[1] => pr[2]
-end
-
-# ╔═╡ e56eb85e-7a32-4e4a-84ba-d68d9e000b58
-md"""*Choose a sentence initiator*: $(@bind headword Select(menu))"""
+# ╔═╡ 0e15ccf7-e5ab-457b-aae2-9fc069bf3323
+md"> Show/hide boolean functions"
 
 # ╔═╡ b0beec77-281d-4d87-b0af-80db1d286b9d
 md""">Formatted data that the user doesn't need to see
@@ -145,16 +103,21 @@ md"""Loaded **$(length(sentences))** sentences.
 
 *Choose a sentence to analyze*: $(@bind sentid Slider(0:length(sentences), show_value  = true))"""
 
+# ╔═╡ ffd206d1-8256-4002-a270-5168aa7d12f3
+function level1()
+	sentid == 0 ? false : true
+end
+
 # ╔═╡ b0073fe9-e08d-47cd-ae87-9d9468e50eab
 # The currently selected sentence
 sentence = sentid == 0 ? [] : sentences[sentid]
 
 # ╔═╡ 103d6511-1878-4070-b546-d6ec17fc889a
-if sentid == 0
-	md""
-else
+if level1()
 	md"""*Choose a connecting word from this many initial tokens:* $(@bind ninitial Slider(1:length(sentence), show_value = true, default = 10) )
 """
+else 
+	md""
 end
 	
 
@@ -175,29 +138,47 @@ function connectormenu()
 end
 
 # ╔═╡ 6613a5ac-1ccb-4397-bddc-3c0274d0c563
-if sentid == 0
-	md""
-else
+if level1()
 	md"*Connecting word*: $(@bind connectorid Select(connectormenu()))"
+else
+	md""
+end
+
+# ╔═╡ 1eafd8a9-3c07-4901-8a32-ddfaa4d5ed46
+function level2()
+	level1() && ! ismissing(connectorid)
 end
 
 # ╔═╡ 50a6569d-189d-4d69-a9fb-36aee1f99c13
-if sentid == 0 || ismissing(connectorid)
-	md""
-else
+if level2()
 	md"""## 2. Identify verbal units"""
+else
+	md""
 end
 		
 
 
 # ╔═╡ e4ffd5da-debe-4dde-8cd2-0c74905c886e
 verbalunits = begin
-	if sentid == 0 || ismissing(connectorid)
-		md""
-	else
+	if level2()
 		[(id = 1, type = "independent clause", verbtype = missing)]
+	else
+		md""
 	end
 end
+
+# ╔═╡ 78392931-eed2-425d-b354-a07a2bb1d2dd
+function vumenu()
+	menu = ["", "Add a new verbal unit"]
+	for vu in verbalunits
+		push!(menu, string(vu.id, ". ", vu.type))
+	end
+	menu
+end
+
+
+# ╔═╡ 51605adf-21b6-4c1d-ab15-9bb0b5233c1b
+vumenu()
 
 # ╔═╡ 9a60b3d9-5712-4f88-8f2a-b2afab8741dc
 """Format string value of tokens in `s` with approrpiate
@@ -222,7 +203,7 @@ end
 
 
 # ╔═╡ b2703fbd-a955-418c-bb9b-718fa4410ba0
-if sentid == 0
+if ! level1()
 	md""
 	
 elseif ismissing(connectorid)
@@ -261,7 +242,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.8.1"
 manifest_format = "2.0"
-project_hash = "85b338258b92fae2a054fa942a613fb68393f44f"
+project_hash = "32ec95aae9779fa630b24b23bdc6d2945f378e8b"
 
 [[deps.ANSIColoredPrinters]]
 git-tree-sha1 = "574baf8110975760d391c710b6341da1afa48d8c"
@@ -691,6 +672,9 @@ version = "17.4.0+0"
 # ╔═╡ Cell order:
 # ╠═dac75c4e-f0b0-4168-91c9-83f4e4332a7b
 # ╟─a877a321-c20a-438c-84b4-f4d40a76e57f
+# ╠═ffd206d1-8256-4002-a270-5168aa7d12f3
+# ╠═1eafd8a9-3c07-4901-8a32-ddfaa4d5ed46
+# ╠═7eb39b22-f258-4380-b8b4-9240e091236d
 # ╟─69a3ac2c-7312-11ed-1bbb-afa0ce256496
 # ╟─045e98fc-188f-4c95-bf1c-e102bd4089e5
 # ╟─45511e57-7cc2-47b4-8801-0f22f5d1d1a7
@@ -698,22 +682,14 @@ version = "17.4.0+0"
 # ╟─6613a5ac-1ccb-4397-bddc-3c0274d0c563
 # ╟─b2703fbd-a955-418c-bb9b-718fa4410ba0
 # ╟─50a6569d-189d-4d69-a9fb-36aee1f99c13
+# ╠═51605adf-21b6-4c1d-ab15-9bb0b5233c1b
+# ╠═78392931-eed2-425d-b354-a07a2bb1d2dd
+# ╠═15f25e67-741e-4f6c-9b67-7a87bdd226b6
 # ╟─e4ffd5da-debe-4dde-8cd2-0c74905c886e
 # ╟─5007dce1-189c-4bdf-8c99-ffaa84b350cd
-# ╠═663c30ac-70e9-4259-bb38-570b9fa286c8
-# ╠═7ba2e72d-ca4a-44d1-8d1f-0c83bea2cb0c
-# ╟─df9295d9-b909-4b87-83c1-4d2558f3bedd
-# ╟─f26f7f40-be52-45fd-a3e4-709ee4eb9fd1
-# ╠═187b4edf-ba7a-4ad7-a1be-9422e63d37c7
-# ╟─49a27f26-9b54-44f5-b3b7-c9fa014eda3e
-# ╟─e56eb85e-7a32-4e4a-84ba-d68d9e000b58
 # ╟─c76e37a7-38f7-4f72-8310-b020249a972b
 # ╟─96b2e9da-44b2-4d60-ac1d-00aaf888a889
-# ╟─2136e77f-aa99-4f21-a1db-b181b55b50f3
-# ╟─02eb3eb5-f603-4541-b83e-5fb744ea4e74
-# ╟─cd08d3bd-a8ce-40c7-90b6-0c057984bd36
-# ╟─42f98992-ee8c-4760-8b7d-bd8cedca30ea
-# ╟─0eef50ef-2d8b-4cf5-a63e-80b01ffb9c2c
+# ╟─0e15ccf7-e5ab-457b-aae2-9fc069bf3323
 # ╟─b0beec77-281d-4d87-b0af-80db1d286b9d
 # ╟─ef84f1d8-45a5-4be3-acf2-426677d5073f
 # ╟─b0073fe9-e08d-47cd-ae87-9d9468e50eab
