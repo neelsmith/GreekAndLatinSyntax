@@ -20,19 +20,17 @@ begin
 	using CitableText
 end
 
-# ╔═╡ ef84f1d8-45a5-4be3-acf2-426677d5073f
-url = "https://raw.githubusercontent.com/neelsmith/Treebanks.jl/main/lys1tb.cex"
-
-# ╔═╡ b48b3a59-4494-4b9a-8fa2-67f96fae937b
-begin
-	rawlines = map(ln -> split(ln, "|"), Downloads.download(url) |> readlines)
-	map(rawlines[2:end]) do cols
-		(passagecomponent(CtsUrn(cols[1]))), cols[3], cols[5])
-	end
-end
-
 # ╔═╡ 69a3ac2c-7312-11ed-1bbb-afa0ce256496
 md"""# Edit syntax"""
+
+# ╔═╡ 103d6511-1878-4070-b546-d6ec17fc889a
+md"""Identify the connecting word that relates this sentence to its context, or choose `asyndeton`.
+
+*Choose from first *
+"""
+
+# ╔═╡ 50a6569d-189d-4d69-a9fb-36aee1f99c13
+md"""## Identify verbal units"""
 
 # ╔═╡ 663c30ac-70e9-4259-bb38-570b9fa286c8
 init = ["initial"]
@@ -53,9 +51,6 @@ begin
 	bump
 	augment("Another")
 end
-
-# ╔═╡ 50a6569d-189d-4d69-a9fb-36aee1f99c13
-md"""## Identify verbal units"""
 
 # ╔═╡ c76e37a7-38f7-4f72-8310-b020249a972b
 md"""Assign tokens to verbal units"""
@@ -97,6 +92,64 @@ md"""*Choose a sentence initiator*: $(@bind headword Select(menu))"""
 # ╔═╡ b0beec77-281d-4d87-b0af-80db1d286b9d
 
 
+# ╔═╡ 3f3406af-0d9b-4ae0-adcc-4b652d5dc19f
+md"""> Processing functions to hide from user
+"""
+
+# ╔═╡ b48b3a59-4494-4b9a-8fa2-67f96fae937b
+"""Load per-token data from `url`.
+"""
+function loaddata(url)
+	rawlines = map(ln -> split(ln, "|"), Downloads.download(url) |> readlines)
+	datalines = map(rawlines[2:end]) do cols
+		(parse(Int,passagecomponent(collapsePassageBy(CtsUrn(cols[1]), 1))), cols[3], cols[5])
+	end
+	sentencetokens = []
+	currentsentence = []
+	sentid = 0
+	for trip in datalines
+		if trip[1] == sentid
+			push!(currentsentence, trip)
+		else
+			push!(sentencetokens, currentsentence)
+			sentid = sentid + 1
+			currentsentence = [trip]
+		end
+	end
+	filter(s -> !isempty(s), sentencetokens)
+end
+
+# ╔═╡ ef84f1d8-45a5-4be3-acf2-426677d5073f
+sentences = loaddata("https://raw.githubusercontent.com/neelsmith/Treebanks.jl/main/lys1tb.cex")
+
+# ╔═╡ 45511e57-7cc2-47b4-8801-0f22f5d1d1a7
+md"""Loaded **$(length(sentences))** sentences.  *Choose a sentence to analyze*: $(@bind sentid Slider(0:length(sentences), show_value  = true))"""
+
+# ╔═╡ 9a60b3d9-5712-4f88-8f2a-b2afab8741dc
+"""Format string value of tokens in `s` with approrpiate
+white space for lexical and punctuation tokens.
+"""
+function formatsentence(s)
+	formatted = ["**Setence $(sentid)**:  "]
+	for tkn in s
+		if tkn[3] == "u--------" # punctuation
+			push!(formatted, tkn[2])
+		else
+			push!(formatted, " " * tkn[2])
+		end
+	end
+	join(formatted,"")
+end
+
+# ╔═╡ b2703fbd-a955-418c-bb9b-718fa4410ba0
+if sentid == 0
+	md""
+else
+	str = formatsentence(sentences[sentid])
+	Markdown.parse("> " * str)
+end
+
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -117,7 +170,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.8.1"
 manifest_format = "2.0"
-project_hash = "f076c734138a4677ab1247dd5ff3c1a6760cf260"
+project_hash = "0a0fc2eca4fa5995fca09da3506ef609ca02cd61"
 
 [[deps.ANSIColoredPrinters]]
 git-tree-sha1 = "574baf8110975760d391c710b6341da1afa48d8c"
@@ -466,9 +519,12 @@ version = "17.4.0+0"
 
 # ╔═╡ Cell order:
 # ╠═dac75c4e-f0b0-4168-91c9-83f4e4332a7b
-# ╟─ef84f1d8-45a5-4be3-acf2-426677d5073f
-# ╠═b48b3a59-4494-4b9a-8fa2-67f96fae937b
 # ╟─69a3ac2c-7312-11ed-1bbb-afa0ce256496
+# ╟─45511e57-7cc2-47b4-8801-0f22f5d1d1a7
+# ╟─b2703fbd-a955-418c-bb9b-718fa4410ba0
+# ╟─ef84f1d8-45a5-4be3-acf2-426677d5073f
+# ╠═103d6511-1878-4070-b546-d6ec17fc889a
+# ╟─50a6569d-189d-4d69-a9fb-36aee1f99c13
 # ╠═663c30ac-70e9-4259-bb38-570b9fa286c8
 # ╠═7ba2e72d-ca4a-44d1-8d1f-0c83bea2cb0c
 # ╟─df9295d9-b909-4b87-83c1-4d2558f3bedd
@@ -476,7 +532,6 @@ version = "17.4.0+0"
 # ╠═187b4edf-ba7a-4ad7-a1be-9422e63d37c7
 # ╟─49a27f26-9b54-44f5-b3b7-c9fa014eda3e
 # ╟─e56eb85e-7a32-4e4a-84ba-d68d9e000b58
-# ╟─50a6569d-189d-4d69-a9fb-36aee1f99c13
 # ╟─c76e37a7-38f7-4f72-8310-b020249a972b
 # ╟─96b2e9da-44b2-4d60-ac1d-00aaf888a889
 # ╟─2136e77f-aa99-4f21-a1db-b181b55b50f3
@@ -485,5 +540,8 @@ version = "17.4.0+0"
 # ╟─42f98992-ee8c-4760-8b7d-bd8cedca30ea
 # ╟─0eef50ef-2d8b-4cf5-a63e-80b01ffb9c2c
 # ╠═b0beec77-281d-4d87-b0af-80db1d286b9d
+# ╟─3f3406af-0d9b-4ae0-adcc-4b652d5dc19f
+# ╟─b48b3a59-4494-4b9a-8fa2-67f96fae937b
+# ╟─9a60b3d9-5712-4f88-8f2a-b2afab8741dc
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
