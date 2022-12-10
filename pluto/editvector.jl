@@ -17,16 +17,18 @@ end
 # ╔═╡ 90575372-7665-11ed-26a7-f507ba76236a
 using PlutoUI
 
+# ╔═╡ f5cd9434-9fea-4e0f-a284-778cf80b5a58
+md"""*Notebook version*:  **0.0.1**
+
+*Updating existing record breaks under some conditions* :-(
+"""
+
 # ╔═╡ 30743c2e-f64a-4eaa-9c1b-51cee4f52e81
 	data = Base.RefValue{Vector{String}}([""])
 
 # ╔═╡ 1cbbc199-1d86-4f62-a539-c725d7bca090
 # Check that we defined this right:
 typeof(data)
-
-# ╔═╡ f5cd9434-9fea-4e0f-a284-778cf80b5a58
-md"""*Notebook version*:  **0.0.1**
-"""
 
 # ╔═╡ 08fa5f55-3110-4291-8a57-9d7033d7a495
 md"""> ## Everything below here is a working example of dynamically editing a vector of strings
@@ -74,15 +76,7 @@ md"""> *To modify an existing element*:
 """
 
 # ╔═╡ 642906e7-9dab-424e-ba5c-02f323e5db2e
-begin
-
-	md"""
-
-	$(@bind updaterec Button("update record"))
-
-	
-	"""
-end
+@bind updaterec Button("update record")
 
 # ╔═╡ 881ff6f9-247c-4ad9-a8f1-2ad65ed28498
 md"""> *To delete an element*
@@ -166,11 +160,14 @@ begin
 
 	if isempty(editbox)
 		#do nothing
+		md"""(*Enter a new value*)"""
 	elseif elidx == 0
-		# do nothing
+		md"""(*Choose a new record to modify*)"""
 	else
 		#push!(data[],  "Another")
-		data[][elidx] = editbox
+		#data[][elidx] = editbox
+
+		md"""ADD $(editbox) to data at index $(elidx)"""
 	end
 end
 
@@ -447,13 +444,12 @@ version = "17.4.0+0"
 
 # ╔═╡ Cell order:
 # ╠═90575372-7665-11ed-26a7-f507ba76236a
+# ╟─f5cd9434-9fea-4e0f-a284-778cf80b5a58
 # ╟─30743c2e-f64a-4eaa-9c1b-51cee4f52e81
 # ╟─1cbbc199-1d86-4f62-a539-c725d7bca090
 # ╟─9913eedc-b7f1-43ec-a26a-de03faab9e17
 # ╠═6d425f6d-42a0-4a8d-99c6-0c097a35027a
-# ╠═84b8bcd4-e8a5-4007-a8d5-2a9a7de31597
 # ╠═7d0c1c79-c904-4cbd-87f4-d449b78fa2f9
-# ╟─f5cd9434-9fea-4e0f-a284-778cf80b5a58
 # ╟─08fa5f55-3110-4291-8a57-9d7033d7a495
 # ╟─43507a34-d4ca-43a7-898d-44b4c8edc8b2
 # ╟─c4fcd31d-cf18-449e-a4e2-c9a9810db736
@@ -465,6 +461,7 @@ version = "17.4.0+0"
 # ╟─8a01bf30-e45d-43f1-8e18-6d947128cb26
 # ╟─8ff5b6ec-ac4e-4c41-8184-045f4b9b7e98
 # ╟─642906e7-9dab-424e-ba5c-02f323e5db2e
+# ╠═84b8bcd4-e8a5-4007-a8d5-2a9a7de31597
 # ╟─881ff6f9-247c-4ad9-a8f1-2ad65ed28498
 # ╟─fcb91aa9-b9d0-4885-94d1-467323d9f9bb
 # ╟─2f26778d-a039-4e7e-9cc8-e9a1c92b5785
