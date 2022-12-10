@@ -24,6 +24,10 @@ using PlutoUI
 # Check that we defined this right:
 typeof(data)
 
+# ╔═╡ f5cd9434-9fea-4e0f-a284-778cf80b5a58
+md"""*Notebook version*:  **0.0.1**
+"""
+
 # ╔═╡ 08fa5f55-3110-4291-8a57-9d7033d7a495
 md"""> ## Everything below here is a working example of dynamically editing a vector of strings
 >
@@ -449,6 +453,7 @@ version = "17.4.0+0"
 # ╠═6d425f6d-42a0-4a8d-99c6-0c097a35027a
 # ╠═84b8bcd4-e8a5-4007-a8d5-2a9a7de31597
 # ╠═7d0c1c79-c904-4cbd-87f4-d449b78fa2f9
+# ╟─f5cd9434-9fea-4e0f-a284-778cf80b5a58
 # ╟─08fa5f55-3110-4291-8a57-9d7033d7a495
 # ╟─43507a34-d4ca-43a7-898d-44b4c8edc8b2
 # ╟─c4fcd31d-cf18-449e-a4e2-c9a9810db736
