@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.13
+# v0.19.16
 
 using Markdown
 using InteractiveUtils
@@ -33,17 +33,17 @@ end
 </style>
  """
 
-# ╔═╡ 7eb39b22-f258-4380-b8b4-9240e091236d
-
-
 # ╔═╡ 69a3ac2c-7312-11ed-1bbb-afa0ce256496
 md"""# Analyze syntax of Lysias 1"""
 
 # ╔═╡ 045e98fc-188f-4c95-bf1c-e102bd4089e5
 md"""## 1. Annotate sentence connector"""
 
+# ╔═╡ d7d8d701-4e8a-470e-9d46-035634707e91
+md"""$(@bind editvu Button("Edit")) $(@bind deletevu (Button("Delete")))"""
+
 # ╔═╡ 15f25e67-741e-4f6c-9b67-7a87bdd226b6
-md"""*All verbal units identified*: $(@bind vudone CheckBox())"""
+md"""*Finished identifying verbal units*: $(@bind vudone CheckBox())"""
 
 # ╔═╡ 5007dce1-189c-4bdf-8c99-ffaa84b350cd
 html"""
@@ -55,10 +55,10 @@ Below here is WIP
 """
 
 # ╔═╡ c76e37a7-38f7-4f72-8310-b020249a972b
-md"""# Assign tokens to verbal units"""
+md"""## 3. Assign tokens to verbal units"""
 
 # ╔═╡ 96b2e9da-44b2-4d60-ac1d-00aaf888a889
-md"""## Analyze syntax of verbal unit"""
+md"""## 4. Analyze syntax of verbal unit"""
 
 # ╔═╡ 0e15ccf7-e5ab-457b-aae2-9fc069bf3323
 md"> Show/hide boolean functions"
@@ -68,7 +68,7 @@ md""">Formatted data that the user doesn't need to see
 """
 
 # ╔═╡ 3f3406af-0d9b-4ae0-adcc-4b652d5dc19f
-md"""> Processing functions to hide from user
+md"""> Functions to format data and built UI elements
 """
 
 # ╔═╡ b48b3a59-4494-4b9a-8fa2-67f96fae937b
@@ -104,6 +104,7 @@ md"""Loaded **$(length(sentences))** sentences.
 *Choose a sentence to analyze*: $(@bind sentid Slider(0:length(sentences), show_value  = true))"""
 
 # ╔═╡ ffd206d1-8256-4002-a270-5168aa7d12f3
+"""True if requirements for sentence-level annotation (level 1) are satisfied"""
 function level1()
 	sentid == 0 ? false : true
 end
@@ -145,6 +146,7 @@ else
 end
 
 # ╔═╡ 1eafd8a9-3c07-4901-8a32-ddfaa4d5ed46
+"""True if requirements for annotating verbal units (level-2 annotations) are satisfied"""
 function level2()
 	level1() && ! ismissing(connectorid)
 end
@@ -168,6 +170,8 @@ verbalunits = begin
 end
 
 # ╔═╡ 78392931-eed2-425d-b354-a07a2bb1d2dd
+"""Compose menu of verbal units to edit or delete.
+"""
 function vumenu()
 	menu = ["", "Add a new verbal unit"]
 	for vu in verbalunits
@@ -177,8 +181,23 @@ function vumenu()
 end
 
 
-# ╔═╡ 51605adf-21b6-4c1d-ab15-9bb0b5233c1b
-vumenu()
+# ╔═╡ 78714b3d-fa63-431b-b1fa-74855b376def
+if level2()
+	md"""*Choose a verbal unit*: $(@bind vuchoice Select(vumenu()))"""
+	#md""" $(@bind vuchoice Select(vumenu()))"""
+	#=
+	@bind values PlutoUI.combine() do Child
+		md"""*Choose a verbal unit*: $(Child(
+				Select(vumenu())
+		)
+		)
+		$(Child(Button("Edit record"))) $(Child(Button("Delete record")))
+		"""
+	end
+	=#
+else
+	md""
+end
 
 # ╔═╡ 9a60b3d9-5712-4f88-8f2a-b2afab8741dc
 """Format string value of tokens in `s` with approrpiate
@@ -219,6 +238,28 @@ else
 	HTML("<blockquote><strong>Sentence $(sentid)</strong>: " * str * "</blockquote>")
 end
 
+
+# ╔═╡ 81a967b5-0787-442e-84ee-bf0cfb3029df
+"""Compose markdown table to display currently defined verbal units."""
+function displayvus()
+	lines = ["|ID|Type|Verbal type|", "| --- | --- | --- |"]
+	for vu in verbalunits
+		s = "|$(vu.id)|$(vu.type)|$(vu.verbtype)|"
+		push!(lines, s)
+	end
+	join(lines,"\n")
+end
+
+# ╔═╡ cb59838d-f053-4d1a-aee0-e73c514b5aa1
+if level2()
+	md"""
+**Verbal units**
+
+$(displayvus() |> Markdown.parse)
+"""
+else
+	md""
+end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -672,9 +713,6 @@ version = "17.4.0+0"
 # ╔═╡ Cell order:
 # ╠═dac75c4e-f0b0-4168-91c9-83f4e4332a7b
 # ╟─a877a321-c20a-438c-84b4-f4d40a76e57f
-# ╠═ffd206d1-8256-4002-a270-5168aa7d12f3
-# ╠═1eafd8a9-3c07-4901-8a32-ddfaa4d5ed46
-# ╠═7eb39b22-f258-4380-b8b4-9240e091236d
 # ╟─69a3ac2c-7312-11ed-1bbb-afa0ce256496
 # ╟─045e98fc-188f-4c95-bf1c-e102bd4089e5
 # ╟─45511e57-7cc2-47b4-8801-0f22f5d1d1a7
@@ -682,20 +720,25 @@ version = "17.4.0+0"
 # ╟─6613a5ac-1ccb-4397-bddc-3c0274d0c563
 # ╟─b2703fbd-a955-418c-bb9b-718fa4410ba0
 # ╟─50a6569d-189d-4d69-a9fb-36aee1f99c13
-# ╠═51605adf-21b6-4c1d-ab15-9bb0b5233c1b
-# ╠═78392931-eed2-425d-b354-a07a2bb1d2dd
-# ╠═15f25e67-741e-4f6c-9b67-7a87bdd226b6
-# ╟─e4ffd5da-debe-4dde-8cd2-0c74905c886e
+# ╟─15f25e67-741e-4f6c-9b67-7a87bdd226b6
+# ╟─78714b3d-fa63-431b-b1fa-74855b376def
+# ╟─d7d8d701-4e8a-470e-9d46-035634707e91
+# ╟─cb59838d-f053-4d1a-aee0-e73c514b5aa1
 # ╟─5007dce1-189c-4bdf-8c99-ffaa84b350cd
 # ╟─c76e37a7-38f7-4f72-8310-b020249a972b
 # ╟─96b2e9da-44b2-4d60-ac1d-00aaf888a889
 # ╟─0e15ccf7-e5ab-457b-aae2-9fc069bf3323
+# ╟─ffd206d1-8256-4002-a270-5168aa7d12f3
+# ╟─1eafd8a9-3c07-4901-8a32-ddfaa4d5ed46
 # ╟─b0beec77-281d-4d87-b0af-80db1d286b9d
 # ╟─ef84f1d8-45a5-4be3-acf2-426677d5073f
 # ╟─b0073fe9-e08d-47cd-ae87-9d9468e50eab
+# ╟─e4ffd5da-debe-4dde-8cd2-0c74905c886e
 # ╟─3f3406af-0d9b-4ae0-adcc-4b652d5dc19f
 # ╟─b48b3a59-4494-4b9a-8fa2-67f96fae937b
-# ╠═60f71d58-b5cc-4c83-8c69-8b41fd21c8ea
-# ╠═9a60b3d9-5712-4f88-8f2a-b2afab8741dc
+# ╟─78392931-eed2-425d-b354-a07a2bb1d2dd
+# ╟─60f71d58-b5cc-4c83-8c69-8b41fd21c8ea
+# ╟─9a60b3d9-5712-4f88-8f2a-b2afab8741dc
+# ╟─81a967b5-0787-442e-84ee-bf0cfb3029df
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
