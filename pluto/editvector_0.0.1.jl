@@ -18,13 +18,13 @@ end
 using PlutoUI;
 
 # ╔═╡ f5cd9434-9fea-4e0f-a284-778cf80b5a58
-md"""*Notebook version*:  **0.0.1**  *Show version history* $(@bind showhistory CheckBox()) 
+md"""*Notebook version*:  **0.1.0**  *Show version history* $(@bind showhistory CheckBox()) 
 """
 
 # ╔═╡ 5eeb2857-4a9b-41a0-ab7c-cd055ebf364a
 if showhistory
 md"""*Version notes*:
-
+- **0.1.0**:  Include previous value in form to update a record.  
 - **0.0.1**: initial working version.  Supports initializing a data vector, and adding, deleting or updating individual elements.
 """
 else
@@ -69,9 +69,8 @@ md"""### Modify an existing element
 
 # ╔═╡ 56002919-adf6-4894-add2-b84f1f76b908
 begin
-md"""*Update value*:
-	$(@bind updatebox confirm(TextField(placeholder = "(no element selected)")))
-"""
+		
+md"""*Update value*"""
 end
 
 # ╔═╡ 642906e7-9dab-424e-ba5c-02f323e5db2e
@@ -167,19 +166,6 @@ $(@bind elidx Select(menuopts))
 """
 end
 
-# ╔═╡ 84b8bcd4-e8a5-4007-a8d5-2a9a7de31597
-# Update value of existing element
-begin 
-	updaterec
-
-	if isempty(updatebox) || elidx == 0
-		# do nothing
-	else
-		data[][elidx] = updatebox
-	end
-	md"(*update an existing record*)"
-end
-
 # ╔═╡ 569425d2-c3be-4cb9-887c-f786c8891497
 begin
 	
@@ -225,6 +211,29 @@ end
 # ╔═╡ 6dad9f5a-3fc6-4836-90bc-cc52023f84eb
 let initialize, deleterec, updaterec, newrec 
 	displayvect(data[]) |> Markdown.parse
+end
+
+# ╔═╡ 67c7875e-9c21-4cd5-b9d0-6c99f33a2879
+# Keep an updated version of value currently selected for updating:
+begin initialize, deleterec, updaterec, newrec 
+	currval = elidx > 0 ?  data[][elidx] : ""
+end
+	
+
+# ╔═╡ 76c23256-6bd8-447d-9981-c38cd5836df3
+	@bind updatebox confirm(TextField(default = currval, placeholder = "(no element selected)"))
+
+# ╔═╡ 84b8bcd4-e8a5-4007-a8d5-2a9a7de31597
+# Update value of existing element
+begin 
+	updaterec
+
+	if isempty(updatebox) || elidx == 0
+		# do nothing
+	else
+		data[][elidx] = updatebox
+	end
+	md"(*Update an existing record*)"
 end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
@@ -499,6 +508,7 @@ version = "17.4.0+0"
 # ╟─6fd8330a-4551-4efd-8f16-85ab3a4ff5bc
 # ╟─8ff5b6ec-ac4e-4c41-8184-045f4b9b7e98
 # ╟─56002919-adf6-4894-add2-b84f1f76b908
+# ╟─76c23256-6bd8-447d-9981-c38cd5836df3
 # ╟─642906e7-9dab-424e-ba5c-02f323e5db2e
 # ╟─3f7ba856-d09c-4104-ad90-927eaa0a4206
 # ╟─84869013-feee-42af-a6f9-62dccf3466c4
@@ -516,5 +526,6 @@ version = "17.4.0+0"
 # ╟─2cf9f5e0-edc2-4a60-86fe-34a2b5e3ba96
 # ╟─bbf276d4-4947-47fa-984c-8d416ae65d90
 # ╟─e1ff0e06-bf9b-402e-97f7-2e17f144bf1b
+# ╟─67c7875e-9c21-4cd5-b9d0-6c99f33a2879
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
