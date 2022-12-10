@@ -15,50 +15,42 @@ macro bind(def, element)
 end
 
 # ╔═╡ 90575372-7665-11ed-26a7-f507ba76236a
-using PlutoUI
+using PlutoUI;
 
 # ╔═╡ f5cd9434-9fea-4e0f-a284-778cf80b5a58
-md"""*Notebook version*:  **0.0.1**
-
-*Updating existing record breaks under some conditions* :-(
+md"""*Notebook version*:  **0.0.1**  *Show version history* $(@bind showhistory CheckBox()) 
 """
 
-# ╔═╡ 30743c2e-f64a-4eaa-9c1b-51cee4f52e81
-	data = Base.RefValue{Vector{String}}([""])
+# ╔═╡ 5eeb2857-4a9b-41a0-ab7c-cd055ebf364a
+if showhistory
+md"""*Version notes*:
 
-# ╔═╡ 1cbbc199-1d86-4f62-a539-c725d7bca090
-# Check that we defined this right:
-typeof(data)
+- **0.0.1**: initial working version.  Supports initializing a data vector, and adding, deleting or updating individual elements.
+"""
+else
+	md""
+end
 
 # ╔═╡ 08fa5f55-3110-4291-8a57-9d7033d7a495
-md"""> ## Everything below here is a working example of dynamically editing a vector of strings
+md"""> ## Dynamically editing a vector of strings in Pluto
 >
-> This functionality could be used in a real UI.
+> Once you create a new vector, you can add, delete or update elements in the list.
+
+
+### Create a new vector
+
 """
 
 # ╔═╡ 43507a34-d4ca-43a7-898d-44b4c8edc8b2
-md"""> *Start by initializing a new vector with a default value*: 
+md"""> *Use the `initialize` button to create a new vector with a default value*: 
 
 $(@bind initialize Button("initialize"))
 """
 
-# ╔═╡ 9913eedc-b7f1-43ec-a26a-de03faab9e17
-# Initialize data array
-begin 
-	initialize
-	data[] =  ["Initial value"]
-end
+# ╔═╡ 42c4476a-5b6b-44d6-af1f-fef690048e83
+md"""### Add a new element
 
-# ╔═╡ c4fcd31d-cf18-449e-a4e2-c9a9810db736
-md"""### Display the current value"""
-
-# ╔═╡ 2600da2d-c424-403b-ae12-f588c203b275
-md"*This is the current value of the edited vector:*"
-
-# ╔═╡ 259da334-2433-45f4-9cf7-e5d9628c0b5e
-md"""> *To add a new element*
-> 
-> 1. Enter a new value, and confirm with `Submit`
+> 1. Enter a new value, and confirm your entry with `Submit`
 > 2. Use the `add record` button to add it to the data vector
 
 """
@@ -66,51 +58,44 @@ md"""> *To add a new element*
 # ╔═╡ ca9e23dd-3f09-400f-94b6-f7ea73db1ddc
 @bind newrec Button("add record")
 
-# ╔═╡ 8a01bf30-e45d-43f1-8e18-6d947128cb26
-md"""> *To modify an existing element*:
+# ╔═╡ 6fd8330a-4551-4efd-8f16-85ab3a4ff5bc
+md"""### Modify an existing element
 >
 > 1. choose an element from the `Choose element to modify` list
-> 2. enter a new value (above), and confirm with `Submit`
-> 3. `update record`
+> 2. enter an updated value, and confirm with `Submit`
+> 3. Use the `update record` button to udpate the record in the vector
 
 """
+
+# ╔═╡ 56002919-adf6-4894-add2-b84f1f76b908
+begin
+md"""*Update value*:
+	$(@bind updatebox confirm(TextField(placeholder = "(no element selected)")))
+"""
+end
 
 # ╔═╡ 642906e7-9dab-424e-ba5c-02f323e5db2e
 @bind updaterec Button("update record")
 
-# ╔═╡ 881ff6f9-247c-4ad9-a8f1-2ad65ed28498
-md"""> *To delete an element*
+# ╔═╡ 84869013-feee-42af-a6f9-62dccf3466c4
+md"""### Delete an element
 >
-> 1. choose an element from the `Choose element to modify` list
+> 1. choose an element from the `Choose element to delete` list
 > 2. use the `delete record` button
 """
 
 # ╔═╡ fcb91aa9-b9d0-4885-94d1-467323d9f9bb
 @bind deleterec Button("delete record")
 
-# ╔═╡ b91211c7-fb01-4849-a96e-ce7410d1f2d4
-let initialize, deleterec, updaterec, newrec 
-	data[]
-end
-
 # ╔═╡ e300b0a4-65c2-4e72-b4c0-aaaf376bdf18
 begin initialize, deleterec, updaterec, newrec
 	#md"""Compare `elidx` $(elidx) with length of data $(length(data))
 
 	md"""*Enter new value*:
-	$(@bind editbox confirm(TextField(placeholder = "(no element selected)")))
+	$(@bind neweditbox confirm(TextField(placeholder = "(no element selected)")))
 	"""
 	#defaultval = elidx > 1 ? data[][elidx] : ""
 	#md"""*Enter new value*: $(@bind editbox confirm(TextField(default = defaultval, placeholder = "(no element selected)")))"""
-end
-
-# ╔═╡ 7d0c1c79-c904-4cbd-87f4-d449b78fa2f9
-# Add a new, non-empty entry to the data vector
-begin 
-	newrec
-	if !isempty(editbox)
-		push!(data[], editbox)
-	end
 end
 
 # ╔═╡ 2f26778d-a039-4e7e-9cc8-e9a1c92b5785
@@ -121,11 +106,49 @@ html"""
 <hr/>
 """
 
-# ╔═╡ 8ce1efff-afc8-4165-81d8-d993bb2425da
-md"""> Some stuff that helps me debug initial version"""
+# ╔═╡ 3acc94e7-68b1-4518-b58b-8e821627f7b1
+md"""### Under the hood
+"""
 
-# ╔═╡ 397bc584-af57-45ca-9a89-1f67d45412af
-editbox
+# ╔═╡ 16ebf5c8-fa9b-4530-a535-936f9978724e
+md"""> The following five cells implement in-memory editing of a Vector of strings.
+> 
+> The first cell defines a `RefValue` for a Vector of Strings.
+>
+> The following four allow:
+>
+> - initialization of a new vector with default values
+> - adding a new record
+> - delete a record
+> - modifying a record
+
+"""
+
+# ╔═╡ 30743c2e-f64a-4eaa-9c1b-51cee4f52e81
+# Define the data set.
+data = Base.RefValue{Vector{String}}([""])
+
+# ╔═╡ 9913eedc-b7f1-43ec-a26a-de03faab9e17
+# Initialize data array
+begin 
+	initialize
+	data[] =  ["Initial value"]
+	md"(*Initialize a new vector*)"
+end
+
+# ╔═╡ 7d0c1c79-c904-4cbd-87f4-d449b78fa2f9
+# Add a new, non-empty entry to the data vector
+begin 
+	newrec
+	if !isempty(neweditbox)
+		push!(data[], neweditbox)
+	end
+	md"(*Add a new record*)"
+end
+
+# ╔═╡ 2cf9f5e0-edc2-4a60-86fe-34a2b5e3ba96
+md"""> Utilities
+"""
 
 # ╔═╡ bbf276d4-4947-47fa-984c-8d416ae65d90
 menuopts = begin initialize, newrec,  updaterec,  deleterec
@@ -144,44 +167,64 @@ $(@bind elidx Select(menuopts))
 """
 end
 
-# ╔═╡ 6d425f6d-42a0-4a8d-99c6-0c097a35027a
-# Delete selected element
-begin 
-	deleterec
-	if ! isempty(data[]) && elidx > 0
-		deleteat!(data[], elidx)
-	end
-end
-
 # ╔═╡ 84b8bcd4-e8a5-4007-a8d5-2a9a7de31597
 # Update value of existing element
 begin 
 	updaterec
 
-	if isempty(editbox)
-		#do nothing
-		md"""(*Enter a new value*)"""
-	elseif elidx == 0
-		md"""(*Choose a new record to modify*)"""
+	if isempty(updatebox) || elidx == 0
+		# do nothing
 	else
-		#push!(data[],  "Another")
-		#data[][elidx] = editbox
-
-		md"""ADD $(editbox) to data at index $(elidx)"""
+		data[][elidx] = updatebox
 	end
+	md"(*update an existing record*)"
 end
 
-# ╔═╡ 98f63352-c9a2-400f-8993-ba8d630b7d28
-begin initialize, deleterec, updaterec, newrec
-	md"""Compare `elidx` $(elidx) with length of data $(length(data[]))"""
+# ╔═╡ 569425d2-c3be-4cb9-887c-f786c8891497
+begin
+	
+md"""*Choose element to delete*: 
+$(@bind delidx Select(menuopts))
+"""
 end
 
-# ╔═╡ a0386f13-fa70-41eb-bd5a-a4d46511e1d6
-md"This is the length of the vector:"
+# ╔═╡ 6d425f6d-42a0-4a8d-99c6-0c097a35027a
+# Delete selected element
+begin 
+	deleterec
+	if ! isempty(data[]) && delidx > 0
+		deleteat!(data[], delidx)
+	end
+	md"*(Delete a record)*"
+end
 
-# ╔═╡ d1ab6b4e-9607-4f58-a2f3-c79360991564
+# ╔═╡ e1ff0e06-bf9b-402e-97f7-2e17f144bf1b
+"""Uniform markdown display for the vector we're editing"""
+function displayvect(v)
+	items = map(v) do elem
+		string("1. ", elem)
+	end
+	join(items,"\n")
+end
+
+# ╔═╡ b91211c7-fb01-4849-a96e-ce7410d1f2d4
 let initialize, deleterec, updaterec, newrec 
-	data[] |> length
+	displayvect(data[]) |> Markdown.parse
+end
+
+# ╔═╡ 373be1e3-11a6-4d9f-a7af-cb31df4b3a97
+let initialize, deleterec, updaterec, newrec 
+	displayvect(data[]) |> Markdown.parse
+end
+
+# ╔═╡ 3f7ba856-d09c-4104-ad90-927eaa0a4206
+let initialize, deleterec, updaterec, newrec 
+	displayvect(data[]) |> Markdown.parse
+end
+
+# ╔═╡ 6dad9f5a-3fc6-4836-90bc-cc52023f84eb
+let initialize, deleterec, updaterec, newrec 
+	displayvect(data[]) |> Markdown.parse
 end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
@@ -443,33 +486,35 @@ version = "17.4.0+0"
 """
 
 # ╔═╡ Cell order:
-# ╠═90575372-7665-11ed-26a7-f507ba76236a
+# ╟─90575372-7665-11ed-26a7-f507ba76236a
 # ╟─f5cd9434-9fea-4e0f-a284-778cf80b5a58
-# ╟─30743c2e-f64a-4eaa-9c1b-51cee4f52e81
-# ╟─1cbbc199-1d86-4f62-a539-c725d7bca090
-# ╟─9913eedc-b7f1-43ec-a26a-de03faab9e17
-# ╠═6d425f6d-42a0-4a8d-99c6-0c097a35027a
-# ╠═7d0c1c79-c904-4cbd-87f4-d449b78fa2f9
+# ╟─5eeb2857-4a9b-41a0-ab7c-cd055ebf364a
 # ╟─08fa5f55-3110-4291-8a57-9d7033d7a495
 # ╟─43507a34-d4ca-43a7-898d-44b4c8edc8b2
-# ╟─c4fcd31d-cf18-449e-a4e2-c9a9810db736
-# ╟─2600da2d-c424-403b-ae12-f588c203b275
 # ╟─b91211c7-fb01-4849-a96e-ce7410d1f2d4
-# ╟─259da334-2433-45f4-9cf7-e5d9628c0b5e
+# ╟─42c4476a-5b6b-44d6-af1f-fef690048e83
 # ╟─e300b0a4-65c2-4e72-b4c0-aaaf376bdf18
 # ╟─ca9e23dd-3f09-400f-94b6-f7ea73db1ddc
-# ╟─8a01bf30-e45d-43f1-8e18-6d947128cb26
+# ╟─373be1e3-11a6-4d9f-a7af-cb31df4b3a97
+# ╟─6fd8330a-4551-4efd-8f16-85ab3a4ff5bc
 # ╟─8ff5b6ec-ac4e-4c41-8184-045f4b9b7e98
+# ╟─56002919-adf6-4894-add2-b84f1f76b908
 # ╟─642906e7-9dab-424e-ba5c-02f323e5db2e
-# ╠═84b8bcd4-e8a5-4007-a8d5-2a9a7de31597
-# ╟─881ff6f9-247c-4ad9-a8f1-2ad65ed28498
+# ╟─3f7ba856-d09c-4104-ad90-927eaa0a4206
+# ╟─84869013-feee-42af-a6f9-62dccf3466c4
+# ╟─569425d2-c3be-4cb9-887c-f786c8891497
 # ╟─fcb91aa9-b9d0-4885-94d1-467323d9f9bb
+# ╟─6dad9f5a-3fc6-4836-90bc-cc52023f84eb
 # ╟─2f26778d-a039-4e7e-9cc8-e9a1c92b5785
-# ╟─8ce1efff-afc8-4165-81d8-d993bb2425da
-# ╠═397bc584-af57-45ca-9a89-1f67d45412af
-# ╟─98f63352-c9a2-400f-8993-ba8d630b7d28
+# ╟─3acc94e7-68b1-4518-b58b-8e821627f7b1
+# ╟─16ebf5c8-fa9b-4530-a535-936f9978724e
+# ╟─30743c2e-f64a-4eaa-9c1b-51cee4f52e81
+# ╟─9913eedc-b7f1-43ec-a26a-de03faab9e17
+# ╟─7d0c1c79-c904-4cbd-87f4-d449b78fa2f9
+# ╟─6d425f6d-42a0-4a8d-99c6-0c097a35027a
+# ╟─84b8bcd4-e8a5-4007-a8d5-2a9a7de31597
+# ╟─2cf9f5e0-edc2-4a60-86fe-34a2b5e3ba96
 # ╟─bbf276d4-4947-47fa-984c-8d416ae65d90
-# ╟─a0386f13-fa70-41eb-bd5a-a4d46511e1d6
-# ╟─d1ab6b4e-9607-4f58-a2f3-c79360991564
+# ╟─e1ff0e06-bf9b-402e-97f7-2e17f144bf1b
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
