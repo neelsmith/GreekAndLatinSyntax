@@ -1,0 +1,8 @@
+[deps]
+CitableText = "41e66566-473b-49d4-85b7-da83b66615d8"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+Downloads = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
+Kroki = "b3565e16-c1f2-4fe9-b4ab-221c88942068"
+PlutoGrid = "a20d0229-560c-4477-9f1c-52a9c9028069"
+PlutoTeachingTools = "661c6b06-c737-4d37-b85c-46df65de6f69"
+PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
