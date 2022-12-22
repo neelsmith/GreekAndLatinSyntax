@@ -2,3 +2,4 @@ docs/Gemfile
 _site/
 Gemfile.lock
 .jekyll-cache/
+scratch/
