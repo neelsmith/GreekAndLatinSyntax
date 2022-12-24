@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.18
+# v0.19.9
 
 using Markdown
 using InteractiveUtils
@@ -134,6 +134,20 @@ md"""*Please provide a title for your collection of annotations.*
 
 # ╔═╡ 73cb1d9d-c265-46c5-ae8d-1d940379b0d1
 md"""*URL and title are correct* $(@bind urlok CheckBox())"""
+
+# ╔═╡ e7b6a508-81fb-4f40-bd34-185ce6a20e14
+palette = ["#79A6A3;",
+	"#E5B36A;",
+	"#C7D7CA;",
+	"#E7926C;",
+	"#D29DC0;",
+	"#C2D6C4;",
+	"#D291BC;",
+	"E7DCCA;",
+	"#FEC8D8;",
+	"#F5CF89;",
+	"#F394AF;"
+];
 
 # ╔═╡ 7183fd4d-f180-474f-81d5-524aaf7f0152
 html"""
@@ -585,13 +599,6 @@ span.tooltip:before {
 }
 </style>
  """
-
-# ╔═╡ e7b6a508-81fb-4f40-bd34-185ce6a20e14
-palette = ["#79A6A3;",
-	"#E5B36A;",
-	"#C7D7CA;",
-	"#E7926C;"
-];
 
 # ╔═╡ ab5048e0-e1c4-42ec-8837-a16dd231fe37
 """Format user instructions with Markdown admonition."""
