@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.9
+# v0.19.17
 
 using Markdown
 using InteractiveUtils
@@ -19,6 +19,7 @@ end
 begin
 	using Pkg
 	Pkg.activate(pwd())
+	Pkg.update()
 	Pkg.instantiate()
 
 	Pkg.add("PlutoUI")
@@ -55,7 +56,7 @@ begin
 	Pkg.add(url = "https://github.com/lungben/PlutoGrid.jl")
 	using PlutoGrid
 
-	
+	Pkg.status()
 	md"""(*Unhide this cell to see environment setup.*)"""
 end
 
@@ -63,7 +64,7 @@ end
 TableOfContents() 
 
 # ╔═╡ 31cc3ad6-ac34-49f7-a86f-575a08eb1358
-nbversion = "0.1.0";
+nbversion = "0.1.1";
 
 # ╔═╡ 9c197585-a2dd-42d2-b45c-deb5f756434b
 begin
@@ -81,6 +82,7 @@ md"""(*Notebook version **$(nbversion)**.*)  *See version history* $(@bind histo
 if history
 md"""
 
+- **0.1.1**: bug fixes, including important correction to sentence + group ID in export of token annotations.
 - **0.1.0** initial version:  load a citable corpus from CEX source, validate its orthography and parse into sentence units citable by CTS URN, save annotation results to delimited-text files.
 """
 else
@@ -134,20 +136,6 @@ md"""*Please provide a title for your collection of annotations.*
 
 # ╔═╡ 73cb1d9d-c265-46c5-ae8d-1d940379b0d1
 md"""*URL and title are correct* $(@bind urlok CheckBox())"""
-
-# ╔═╡ e7b6a508-81fb-4f40-bd34-185ce6a20e14
-palette = ["#79A6A3;",
-	"#E5B36A;",
-	"#C7D7CA;",
-	"#E7926C;",
-	"#D29DC0;",
-	"#C2D6C4;",
-	"#D291BC;",
-	"E7DCCA;",
-	"#FEC8D8;",
-	"#F5CF89;",
-	"#F394AF;"
-];
 
 # ╔═╡ 7183fd4d-f180-474f-81d5-524aaf7f0152
 html"""
@@ -221,15 +209,16 @@ end;
 
 # ╔═╡ b6cb23ee-8870-41b5-a800-d91d88dc2c28
 if prereqsok()
-#badortho
+	if ! isempty(badortho)
 	warning_box(md"""Your text has **$(length(badortho))** orthographically invalid tokens.  This can affect the accuracy of tokenizing and parsing into sentence units.
 
 You can unfold the list below to see a list of invalid tokens.  Consider whether you should correct your source text before annotating it.
 """)
 end
+end
 
 # ╔═╡ c21618ab-7092-4696-9508-8f8efc052917
-if prereqsok()
+if prereqsok() && ! isempty(badortho)
 	ortholines = ["Orthographically invalid tokens:", ""]
 	for cp in badortho
 		push!(ortholines, string("- ", passagecomponent(cp.urn), ": ", cp.text))
@@ -405,7 +394,8 @@ end
 """Look up in dataframe `df` the assigned group for passage `psg`."""
 function groupforpassage(psg, df)
 	psgmatches = filter(row -> row.passage == psg, df)
-	nrow(psgmatches) == 1 ? psgmatches[1, :group] : nothing
+	groupid = nrow(psgmatches) == 1 ? psgmatches[1, :group] : nothing
+	string(passagecomponent(sentencerange(sentence)), ".", groupid)
 end;
 
 # ╔═╡ 419c6fe4-b41f-4045-a2d2-c14a9b255f35
@@ -599,6 +589,20 @@ span.tooltip:before {
 }
 </style>
  """
+
+# ╔═╡ e7b6a508-81fb-4f40-bd34-185ce6a20e14
+palette = ["#79A6A3;",
+	"#E5B36A;",
+	"#C7D7CA;",
+	"#E7926C;",
+	"#D29DC0;",
+	"#C2D6C4;",
+	"#D291BC;",
+	"E7DCCA;",
+	"#FEC8D8;",
+	"#F5CF89;",
+	"#F394AF;"
+];
 
 # ╔═╡ ab5048e0-e1c4-42ec-8837-a16dd231fe37
 """Format user instructions with Markdown admonition."""
@@ -1231,10 +1235,10 @@ end;
 # ╟─7183fd4d-f180-474f-81d5-524aaf7f0152
 # ╟─736baf25-214a-4d22-9003-a4d33155b36e
 # ╟─ae140e63-0e4d-4978-b6c2-9f135cac8163
+# ╟─2b3381a1-a82a-441a-81a4-7aa0e62ceac6
 # ╟─47c1d979-f814-404d-80b1-adf3fcd1d337
 # ╟─0f38d603-8b1d-451f-8be7-2162e055073f
 # ╟─9ad3cf28-d403-449e-a8db-cc8a5fe84bee
-# ╟─2b3381a1-a82a-441a-81a4-7aa0e62ceac6
 # ╟─41a654d1-44d7-476b-b421-8f83d254f14e
 # ╟─3294b863-69ce-46d4-9465-7db4f2a52996
 # ╟─80010946-099e-4e1f-893b-f32aef12783e
@@ -1268,9 +1272,9 @@ end;
 # ╟─b3565306-6e7b-4d02-901c-dec331b3da18
 # ╟─887a6294-5987-4c94-98c6-d92634006bcc
 # ╟─26cc6db2-9164-4ceb-b87f-d812cb1e98ce
-# ╟─88ea3ada-dc10-44b5-8d2f-70ef78b7a3fe
 # ╟─d1edf3dd-503d-4b08-b153-a050d8a44a46
 # ╟─fa278abd-db5d-4340-9795-94407ef9cbf7
+# ╟─88ea3ada-dc10-44b5-8d2f-70ef78b7a3fe
 # ╟─03a20740-0756-4081-b2f6-335888238336
 # ╟─0635610a-69b0-4a15-b086-236e3fd48a01
 # ╟─e7b6a508-81fb-4f40-bd34-185ce6a20e14
