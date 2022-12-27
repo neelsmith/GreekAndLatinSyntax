@@ -1,9 +1,5 @@
 ### A Pluto.jl notebook ###
-<<<<<<< HEAD
 # v0.19.18
-=======
-# v0.19.17
->>>>>>> 0002c157cc4feebf8b8ce4ea277d9968dd0759c4
 
 using Markdown
 using InteractiveUtils
@@ -68,11 +64,7 @@ end
 TableOfContents() 
 
 # ╔═╡ 31cc3ad6-ac34-49f7-a86f-575a08eb1358
-<<<<<<< HEAD
 nbversion = "0.2.0";
-=======
-nbversion = "0.1.1";
->>>>>>> 0002c157cc4feebf8b8ce4ea277d9968dd0759c4
 
 # ╔═╡ 9c197585-a2dd-42d2-b45c-deb5f756434b
 begin
@@ -90,10 +82,7 @@ md"""(*Notebook version **$(nbversion)**.*)  *See version history* $(@bind histo
 if history
 md"""
 
-<<<<<<< HEAD
 - **0.2.0**: reorganizes notebook in preparation for publication of `GreekSyntax` package on juliahub, and changes to writing all delimited-text serialization of annotations to a single file.
-=======
->>>>>>> 0002c157cc4feebf8b8ce4ea277d9968dd0759c4
 - **0.1.1**: bug fixes, including important correction to sentence + group ID in export of token annotations.
 - **0.1.0** initial version:  load a citable corpus from CEX source, validate its orthography and parse into sentence units citable by CTS URN, save annotation results to delimited-text files.
 """
@@ -303,17 +292,6 @@ else
 	md""
 end
 
-<<<<<<< HEAD
-=======
-# ╔═╡ 7b206be8-19cc-49b4-98a9-b39177701f2b
-"""Look up in dataframe `df` the assigned group for passage `psg`."""
-function groupforpassage(psg, df)
-	psgmatches = filter(row -> row.passage == psg, df)
-	groupid = nrow(psgmatches) == 1 ? psgmatches[1, :group] : nothing
-	string(passagecomponent(sentencerange(sentence)), ".", groupid)
-end;
-
->>>>>>> 0002c157cc4feebf8b8ce4ea277d9968dd0759c4
 # ╔═╡ 419c6fe4-b41f-4045-a2d2-c14a9b255f35
 if openhood
 md"""> ### Step 4 documentation. Annotate syntax NEEDS UPDATING
@@ -1336,17 +1314,8 @@ end;
 # ╟─5116aaa6-af7c-46e7-9e11-6059e587f5c0
 # ╟─d86eca56-ea1f-4d32-bff2-44f26d12e3f4
 # ╟─013963bc-d65f-449f-8bd5-ddda9dddb1fd
-<<<<<<< HEAD
 # ╟─55394f6e-e696-4f44-a00e-1dd6e4fcdcb8
 # ╟─86da97f3-bb20-4779-8efa-b9088409acd6
-=======
-# ╟─b3565306-6e7b-4d02-901c-dec331b3da18
-# ╟─887a6294-5987-4c94-98c6-d92634006bcc
-# ╟─26cc6db2-9164-4ceb-b87f-d812cb1e98ce
-# ╟─d1edf3dd-503d-4b08-b153-a050d8a44a46
-# ╟─fa278abd-db5d-4340-9795-94407ef9cbf7
-# ╟─88ea3ada-dc10-44b5-8d2f-70ef78b7a3fe
->>>>>>> 0002c157cc4feebf8b8ce4ea277d9968dd0759c4
 # ╟─03a20740-0756-4081-b2f6-335888238336
 # ╟─0635610a-69b0-4a15-b086-236e3fd48a01
 # ╟─e7b6a508-81fb-4f40-bd34-185ce6a20e14
