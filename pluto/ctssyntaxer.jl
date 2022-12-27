@@ -1,5 +1,9 @@
 ### A Pluto.jl notebook ###
+<<<<<<< HEAD
+# v0.19.18
+=======
 # v0.19.17
+>>>>>>> 0002c157cc4feebf8b8ce4ea277d9968dd0759c4
 
 using Markdown
 using InteractiveUtils
@@ -64,7 +68,11 @@ end
 TableOfContents() 
 
 # ╔═╡ 31cc3ad6-ac34-49f7-a86f-575a08eb1358
+<<<<<<< HEAD
+nbversion = "0.2.0";
+=======
 nbversion = "0.1.1";
+>>>>>>> 0002c157cc4feebf8b8ce4ea277d9968dd0759c4
 
 # ╔═╡ 9c197585-a2dd-42d2-b45c-deb5f756434b
 begin
@@ -82,6 +90,10 @@ md"""(*Notebook version **$(nbversion)**.*)  *See version history* $(@bind histo
 if history
 md"""
 
+<<<<<<< HEAD
+- **0.2.0**: reorganizes notebook in preparation for publication of `GreekSyntax` package on juliahub, and changes to writing all delimited-text serialization of annotations to a single file.
+=======
+>>>>>>> 0002c157cc4feebf8b8ce4ea277d9968dd0759c4
 - **0.1.1**: bug fixes, including important correction to sentence + group ID in export of token annotations.
 - **0.1.0** initial version:  load a citable corpus from CEX source, validate its orthography and parse into sentence units citable by CTS URN, save annotation results to delimited-text files.
 """
@@ -231,66 +243,6 @@ if prereqsok() && ! isempty(badortho)
 
 end
 
-# ╔═╡ a8e032a5-94f8-4937-aad1-016883116f85
-"""Break up corpus `c` into sentence units.
-"""
-function parsesentences(c)
-	tokens = tokenize(c, literaryGreek());
-	baseurn = c.passages[1].urn |> droppassage
-	finals = [".", ":", ";"]
-	rangeopener = ""
-
-	sentenceurls = []
-	sentencecontents = []
-	currentsentence = []	
-	for n in tokens
-    	if n[1].text in finals
-        	rangeu = addpassage(baseurn, string(rangeopener, "-", 	passagecomponent(n[1].urn)))
-	        push!(sentenceurls, rangeu)
-
-			push!(currentsentence, n)
-			push!(sentencecontents, currentsentence)
-			currentsentence = []
-			
-	    else
-			if isempty(rangeopener)
-	        	rangeopener = passagecomponent(n[1].urn)
-	    	end
-			push!(currentsentence, n)
-		end
-	end
-	(sentenceurls,sentencecontents)
-end;
-
-# ╔═╡ 9ad3cf28-d403-449e-a8db-cc8a5fe84bee
-if loadedok() 
-	(urnlist, sentences) = parsesentences(corpus);
-end;
-
-# ╔═╡ 7ff0baa8-3354-4300-81bc-90466b049e73
-if prereqsok()
-	reportlines = ["**Results**: for *$(title)*, loaded corpus with  **$(length(corpus))** citable passages, and parsed **$(length(tokens))** tokens into **$(length(sentences))** sentences."
-]
-	
-	
-	if isempty(badortho)
-		push!(reportlines, "All tokens are orthographically valid.")	
-	elseif length(badortho) == 1
-		push!(reportlines, "**1** token is orthographically invalid.")	
-	else
-		push!(reportlines, "**$(length(badortho))** tokens are orthographically invalid.")	
-	end
-	
-	Markdown.parse(join(reportlines,"\n"))
-end
-
-# ╔═╡ 4627ab0d-42a8-4d92-9b0d-c933b1b41f50
-if prereqsok()
-	md"""
-
-*Choose a sentence to analyze*: $(@bind sentid NumberField(0:length(sentences)))"""
-end
-
 # ╔═╡ b5be20e7-4eec-405b-9aa6-dfbd6aedbecd
 if openhood
 	md"""> ### Step 1 documentation: annotating a sentence: NEEDS UPDATING
@@ -305,32 +257,6 @@ if openhood
 else
 	md""
 end
-
-# ╔═╡ 3a49b461-e4c2-44cb-9600-9ec10bf1e91f
-# The currently selected sentence
-if prereqsok()
-	sentence = sentid == 0 ? [] : sentences[sentid];
-end;
-
-# ╔═╡ a050416e-9b64-4103-8859-170d3912339d
-if prereqsok()
-	if sentid == 0
-		md""
-	else 
-		md"""*Choose a connecting word from this many initial tokens:* $(@bind ninitial Slider(1:length(sentence), show_value = true, default = 10) )
-	"""
-	
-	end
-end
-
-# ╔═╡ 15deb4e6-4d84-4862-b453-d33cb96a02c7
-"""Find CTS URN for range of tokens in sentence `s`."""
-function sentencerange(s)
-	baseurn = droppassage(s[1][1].urn)
-	opener = passagecomponent(s[1][1].urn)
-	closer = passagecomponent(s[end][1].urn)
-	addpassage(baseurn, string(opener, "-", closer))
-end;
 
 # ╔═╡ d193df28-4805-49f7-a5ea-c2885be9cd98
 if openhood
@@ -349,19 +275,6 @@ md"""> ### Step 2 documentation. Define verbal units: NEEDS UPDATING
 else
 	md""
 end
-
-# ╔═╡ 86264609-3fb6-479b-9289-35bb31e7999b
-function typelabel(tkntype)
-	if string(typeof(tkntype)) == "Orthography.LexicalToken"
-		"lexical"
-	elseif string(typeof(tkntype)) == "Orthography.PunctuationToken"
-		"punctuation"
-	elseif string(typeof(tkntype)) == "Orthography.UnanalyzedToken"
-		"unanalyzed"
-	else
-		"unrecognized"
-	end
-end;
 
 # ╔═╡ 187adacf-badf-482c-976a-9348e60b4c04
 """Define a DataFrame for recording verbal units"""
@@ -390,6 +303,8 @@ else
 	md""
 end
 
+<<<<<<< HEAD
+=======
 # ╔═╡ 7b206be8-19cc-49b4-98a9-b39177701f2b
 """Look up in dataframe `df` the assigned group for passage `psg`."""
 function groupforpassage(psg, df)
@@ -398,6 +313,7 @@ function groupforpassage(psg, df)
 	string(passagecomponent(sentencerange(sentence)), ".", groupid)
 end;
 
+>>>>>>> 0002c157cc4feebf8b8ce4ea277d9968dd0759c4
 # ╔═╡ 419c6fe4-b41f-4045-a2d2-c14a9b255f35
 if openhood
 md"""> ### Step 4 documentation. Annotate syntax NEEDS UPDATING
@@ -414,20 +330,6 @@ md"""> ### Step 4 documentation. Annotate syntax NEEDS UPDATING
 else
 	md""
 end
-
-# ╔═╡ 01ccc6f1-2271-41cb-bbfa-a95f727e912b
-"""Construct named tuple with relations of passage `psg` in syntax dataframe `df`."""
-function relationsforpassage(psg, df)
-	psgmatches = filter(row -> row.passage == psg, df)
-	if nrow(psgmatches) == 1 
-		(n1 = psgmatches[1, :node1], n1relation = psgmatches[1,:node1rel],
-		n2 = psgmatches[1, :node2], n2relation = psgmatches[1,:node2rel],
-		)
-	else
-		nothing
-	end
-end;
-
 
 # ╔═╡ 7bc296a5-d4ee-4a60-be7c-20df3a121176
 """Find index of a single node with token value `asyndeton`"""
@@ -460,7 +362,8 @@ function mermadize(syndf)
 			if ! isnothing(asynidx) && string(asynidx) == r.node1
 				push!(graphlines, "class $(r.node1) implicit;")
 			end
-			if ! isnothing(r.node2)
+			if  isnothing(r.node2) || isempty(r.node2)
+			else
 				push!(graphlines, string(r.reference, "[", r.token, "]", " --> |", r.node2rel, "| ", r.node2, "[", syndf[parse(Int, r.node2), :token], "];"))
 			end
 			
@@ -489,34 +392,8 @@ end;
 # ╔═╡ 013963bc-d65f-449f-8bd5-ddda9dddb1fd
 fname = replace(title, " " => "_");
 
-# ╔═╡ b3565306-6e7b-4d02-901c-dec331b3da18
-sentencesfile = joinpath(outputdir, fname * "_sentences.cex");
-
-# ╔═╡ 887a6294-5987-4c94-98c6-d92634006bcc
-vufile = joinpath(outputdir, fname * "_verbal_units.cex");
-
-# ╔═╡ 26cc6db2-9164-4ceb-b87f-d812cb1e98ce
-tokensfile = joinpath(outputdir, fname * "_tokens.cex");
-
-# ╔═╡ fa278abd-db5d-4340-9795-94407ef9cbf7
-function writevus(df, f; delimiter = "|")
-	hdr = "vuid|semantic_type|syntactic_type|depth"
-	lines = isfile(f) ? readlines(f) : [hdr]
-
-	psg = sentencerange(sentence) |> passagecomponent
-	rowidx = 0
-	for row in eachrow(df)
-		rowidx = rowidx + 1
-		ref = string(psg,".", rowidx)
-		push!(lines, join([ref, lowercase(row.semantic_type),lowercase(row.syntactic_type),row.depth], delimiter))
-	end
-	open(f, "a") do io
-		write(f, join(lines,"\n"))
-	end
-	
-	#md"Write contents of VU $(df) to $(f) $(sentid)"
-	
-end;
+# ╔═╡ 55394f6e-e696-4f44-a00e-1dd6e4fcdcb8
+outputfile = joinpath(outputdir, fname * ".cex");
 
 # ╔═╡ 03a20740-0756-4081-b2f6-335888238336
 if openhood
@@ -668,6 +545,156 @@ if prereqsok()
 
 end
 
+# ╔═╡ fe901b4d-9453-4123-ac3d-ee6a766337d4
+if openhood 
+	md"""> ## Documentation: formatting functions that need to be rewritten in `GreekSyntax.jl`
+>
+> These functions are not ready to add to the package yet.
+"""
+end
+
+# ╔═╡ 2bffa4ea-03c2-4cda-8b7d-b166e0b9939b
+if openhood
+md"""> ### Documentation: functions that properly belong in `GreekSyntax.jl`
+>
+> These functions can be replaced with calls to `GreekSyntax.jl` once it is published.
+
+"""
+end
+
+# ╔═╡ fa278abd-db5d-4340-9795-94407ef9cbf7
+"""Compose delimited-text representation of verbal unit annotations."""
+function vucex(df; delimiter = "|")
+	hdr = "vuid|semantic_type|syntactic_type|depth"
+	lines = ["#!verbal_unit", hdr]
+	
+	for row in eachrow(df)	
+		push!(lines, 
+			join([row.passage, 		
+				lowercase(row.semantic_type),
+				lowercase(row.syntactic_type),
+				row.depth], 
+				delimiter))
+	end
+	join(lines, "\n")
+	
+end;
+
+# ╔═╡ 15deb4e6-4d84-4862-b453-d33cb96a02c7
+"""Find CTS URN for range of tokens in sentence `s`
+where `s` is a vector of analyzed tokens as produced
+by `Orthography`'s `tokenize` function.
+"""
+function sentencerange(s)
+	baseurn = droppassage(s[1][1].urn)
+	opener = passagecomponent(s[1][1].urn)
+	closer = passagecomponent(s[end][1].urn)
+	addpassage(baseurn, string(opener, "-", closer))
+end;
+
+# ╔═╡ 86264609-3fb6-479b-9289-35bb31e7999b
+"""Compose a string value for type of token, for use in
+writing delimited-text representation of annotations.
+"""
+function typelabel(tkntype)
+	if string(typeof(tkntype)) == "Orthography.LexicalToken"
+		"lexical"
+	elseif string(typeof(tkntype)) == "Orthography.PunctuationToken"
+		"punctuation"
+	elseif string(typeof(tkntype)) == "Orthography.UnanalyzedToken"
+		"unanalyzed"
+	else
+		"unrecognized"
+	end
+end;
+
+# ╔═╡ f0fcb59d-1793-413a-845c-55f77391b3b0
+function vuidfortoken(senttokens, groupmappingsdf)
+	# find group ref for token
+	local tpsg = senttokens[1][1].urn |> passagecomponent
+	psgmatches = filter(row -> row.passage == tpsg, groupmappingsdf)
+	psgint = psgmatches[1, :group]
+	psgint
+	string(passagecomponent(sentencerange(senttokens)), ".", psgint)	
+end;
+
+# ╔═╡ a8e032a5-94f8-4937-aad1-016883116f85
+"""Break up corpus `c` into sentence units.
+"""
+function parsesentences(c)
+	tokens = tokenize(c, literaryGreek());
+	baseurn = c.passages[1].urn |> droppassage
+	finals = [".", ":", ";"]
+	rangeopener = ""
+
+	sentenceurls = []
+	sentencecontents = []
+	currentsentence = []	
+	for n in tokens
+    	if n[1].text in finals
+        	rangeu = addpassage(baseurn, string(rangeopener, "-", 	passagecomponent(n[1].urn)))
+	        push!(sentenceurls, rangeu)
+
+			push!(currentsentence, n)
+			push!(sentencecontents, currentsentence)
+			currentsentence = []
+			
+	    else
+			if isempty(rangeopener)
+	        	rangeopener = passagecomponent(n[1].urn)
+	    	end
+			push!(currentsentence, n)
+		end
+	end
+	(sentenceurls,sentencecontents)
+end;
+
+# ╔═╡ 9ad3cf28-d403-449e-a8db-cc8a5fe84bee
+if loadedok() 
+	(urnlist, sentences) = parsesentences(corpus);
+end;
+
+# ╔═╡ 7ff0baa8-3354-4300-81bc-90466b049e73
+if prereqsok()
+	reportlines = ["**Results**: for *$(title)*, loaded corpus with  **$(length(corpus))** citable passages, and parsed **$(length(tokens))** tokens into **$(length(sentences))** sentences."
+]
+	
+	
+	if isempty(badortho)
+		push!(reportlines, "All tokens are orthographically valid.")	
+	elseif length(badortho) == 1
+		push!(reportlines, "**1** token is orthographically invalid.")	
+	else
+		push!(reportlines, "**$(length(badortho))** tokens are orthographically invalid.")	
+	end
+	
+	Markdown.parse(join(reportlines,"\n"))
+end
+
+# ╔═╡ 4627ab0d-42a8-4d92-9b0d-c933b1b41f50
+if prereqsok()
+	md"""
+
+*Choose a sentence to analyze*: $(@bind sentid NumberField(0:length(sentences)))"""
+end
+
+# ╔═╡ 3a49b461-e4c2-44cb-9600-9ec10bf1e91f
+# The currently selected sentence
+if prereqsok()
+	sentence = sentid == 0 ? [] : sentences[sentid];
+end;
+
+# ╔═╡ a050416e-9b64-4103-8859-170d3912339d
+if prereqsok()
+	if sentid == 0
+		md""
+	else 
+		md"""*Choose a connecting word from this many initial tokens:* $(@bind ninitial Slider(1:length(sentence), show_value = true, default = 10) )
+	"""
+	
+	end
+end
+
 # ╔═╡ d1496b85-c488-4130-a915-aeedfb1e45c0
 """Compose a menu to select the connecting word from the first N tokens of the current sentence.
 """
@@ -745,6 +772,32 @@ let initialize
 	end
 end
 
+# ╔═╡ a906ee9c-dddd-4597-b8bc-6a15ef050138
+"""Passage reference to recorde"""
+function createvudf()
+	spsg =  sentencerange(sentence) |> passagecomponent
+	nopsg = create_dataframe(vus)
+
+	psg = []
+	sem = []
+	syn = []
+	depths  = []
+	vuidx = 0
+	for row in eachrow(nopsg)
+		vuidx = vuidx + 1
+		push!(psg, string(spsg, ".", vuidx))
+		push!(sem, row.semantic_type)
+		push!(syn, row.syntactic_type)
+		push!(depths, row.depth)
+	end
+	DataFrame(
+		passage = psg,
+		semantic_type = sem,
+		syntactic_type = syn,
+		depth = depths
+	)
+end;
+
 # ╔═╡ f21fd0c4-602c-4782-908c-3dcd91ad936d
 """True if Step 2 editing is complete."""
 function step2()
@@ -785,7 +838,7 @@ else
 end
 
 # ╔═╡ fedf66bc-7e15-4a4b-8dab-5aec0f07944e
-vudf = step2() ? create_dataframe(vus) : nothing;
+vudf = step2() ? createvudf() : nothing;
 
 # ╔═╡ 55b94fc8-0133-492b-baf1-2f8ed580e701
 if step2()
@@ -844,7 +897,7 @@ end
 if step3()
 	
 	md"""#### Save final results
-*Save to files named* $(fname)_`[TYPE]`.cex $(@bind saveall CheckBox())
+*Save to file named* $(fname).cex $(@bind saveall CheckBox())
 """
 end
 
@@ -967,107 +1020,6 @@ else
 	md""
 end
 
-# ╔═╡ d1edf3dd-503d-4b08-b153-a050d8a44a46
-function writetokens(sent, syntaxdf,groupsdf, f; delimiter = "|")
-	hdr = "urn|tokentype|text|verbalunit|node1|node1relation|node2|node2relation"
-	lines = isfile(f) ? readlines(f) : [hdr]
-
-	psg = sentencerange(sentence) |> passagecomponent			
-	rowidx = 0
-
-	for (tkn, ttype) in sent
-		tkngroup = groupforpassage(passagecomponent(tkn.urn), groupsdf)
-		tknrelations = relationsforpassage(passagecomponent(tkn.urn),syntax)
-		datarow = if isnothing(tknrelations)
-			[tkn.urn, typelabel(ttype), tkn.text, tkngroup,
-				nothing, nothing, nothing, nothing
-		
-		]
-		else
-			[tkn.urn, typelabel(ttype), tkn.text, tkngroup,
-				tknrelations.n1, tknrelations.n1relation, 
-				tknrelations.n2, tknrelations.n2relation
-		]
-		end
-		 
-		push!(lines, join(datarow, delimiter))
-	end
-	
-	open(f, "w") do io
-		write(f, join(lines,"\n"))
-	end
-end;
-
-# ╔═╡ 88ea3ada-dc10-44b5-8d2f-70ef78b7a3fe
-"""Append record for current sentence to delimited text file."""
-function writesentence(f; delimiter = "|")
-	senturn = sentencerange(sentence)
-	hdr = "sentence$(delimiter)connector"
-	lines = isfile(f) ? readlines(f) : [hdr]
-	if isnothing(connectorid) 
-		push!(lines, string(senturn, delimiter, nothing) )
-	else
-		connectorurn = sentence[connectorid][1].urn
-		push!(lines, string(senturn, delimiter, connectorurn))
-	end
-	open(f, "a") do io
-		write(f, join(lines,"\n"))
-	end
-	#checkrecc = readlines(f)
-	
-end;
-
-# ╔═╡ c205e757-4e5a-4b22-ac53-bdad947a942c
-if step3()
-	if saveall
-		
-		
-		
-		writesentence(sentencesfile)
-		writevus(vudf, vufile)
-
-		writetokens(sentence, syntax, assignedtokensdf, tokensfile)
-		sentrecords = readlines(sentencesfile) |> length
-		vurecords = readlines(vufile)|> length
-		tknrecords = readlines(tokensfile) |> length
-		
-		
-		md"""**Results of saving files**:  wrote
-		
-- records for sentences: $(sentrecords - 1)
-- records for verbal units: $(vurecords - 1)
-- records for tokens: $(tknrecords - 1)
-"""
-	end
-end
-
-# ╔═╡ 47b1c7b5-3306-45c0-bf14-54c978506b68
-"""Format string value of tokens in `s` with appropriate
-white space for lexical and punctuation tokens.  Add HTML
-`span` tags for manually tagged stuff.
-"""
-function formatsentenceBW(s)
-	formatted = []
-
-	counter = 0
-	for (tkn, tkntype) in s
-		counter = counter + 1
-		if typeof(tkntype) == LexicalToken
-			if ismissing(connectorid) || isnothing(connectorid) || ! (counter == connectorid)
-				push!(formatted, " " * tkn.text)
-			else
-				tagged = "<span class=\"connector\")>$(tkn.text)</span>"
-				push!(formatted, " " * tagged)
-			end
-			
-		else
-			push!(formatted, tkn.text)
-		end
-	end
-	
-	join(formatted,"")
-end;
-
 # ╔═╡ 0f48fb75-ab9d-4ab6-b619-f605e59dd00e
 """Compose HTML representation of current sentence with 
 color coding of verbal units."""
@@ -1098,6 +1050,33 @@ function formatColored(s, groupsdf)
 	end
 
 	join(groupedtext,"") 
+end;
+
+# ╔═╡ 47b1c7b5-3306-45c0-bf14-54c978506b68
+"""Format string value of tokens in `s` with appropriate
+white space for lexical and punctuation tokens.  Add HTML
+`span` tags for manually tagged stuff.
+"""
+function formatsentenceBW(s)
+	formatted = []
+
+	counter = 0
+	for (tkn, tkntype) in s
+		counter = counter + 1
+		if typeof(tkntype) == LexicalToken
+			if ismissing(connectorid) || isnothing(connectorid) || ! (counter == connectorid)
+				push!(formatted, " " * tkn.text)
+			else
+				tagged = "<span class=\"connector\")>$(tkn.text)</span>"
+				push!(formatted, " " * tagged)
+			end
+			
+		else
+			push!(formatted, tkn.text)
+		end
+	end
+	
+	join(formatted,"")
 end;
 
 # ╔═╡ 8aab14ce-c3f6-428c-8985-11ca2ce1ed1f
@@ -1169,19 +1148,111 @@ $(formatsentence(sentence))</blockquote></p>
 	""")
 end
 
-# ╔═╡ 2bffa4ea-03c2-4cda-8b7d-b166e0b9939b
-if openhood
-md"""> ### Documentation: morphology formatting that properly belongs in the (still unpublished) `Treebanks` package
->
-> The following hidden cell defines a `morphlabel`  function to convert codes in AGLDT tree banks to human-readable labels.
-"""
+# ╔═╡ 88ea3ada-dc10-44b5-8d2f-70ef78b7a3fe
+"""Compose delimited-text representation of sentence annotations."""
+function sentencecex(s;delimiter = "|")
+	senturn = sentencerange(s)
+	hdr = "sentence$(delimiter)connector"
+	lines = ["#!sentences", hdr]
+	if isnothing(connectorid) 
+		push!(lines, string(senturn, delimiter, nothing) )
+	else
+		connectorurn = sentence[connectorid][1].urn
+		push!(lines, string(senturn, delimiter, connectorurn))
+	end
+	join(lines, "\n")
+end;
+
+# ╔═╡ 01ccc6f1-2271-41cb-bbfa-a95f727e912b
+"""Construct named tuple with relations of passage `psg` in syntax dataframe `df`."""
+function relationsforpassage(psg, df)
+	psgmatches = filter(row -> row.passage == psg, df)
+	if nrow(psgmatches) == 1 
+		(n1 = psgmatches[1, :node1], n1rel = psgmatches[1,:node1rel],
+		n2 = psgmatches[1, :node2], n2rel = psgmatches[1,:node2rel],
+		)
+	else
+		nothing
+	end
+	psgmatches
+end;
+
+
+# ╔═╡ d1edf3dd-503d-4b08-b153-a050d8a44a46
+"""Compose delimited-text representation of verbal unit annotations."""
+function tokencex(senttokens, groupsdf, syntaxdf; delimiter = "|")
+	hdr = "urn|tokentype|text|verbalunit|node1|node1relation|node2|node2relation"
+	lines = ["#!tokens", hdr]
+
+
+	rowidx = 0
+	for (tkn, ttype) in senttokens
+		tknrelations = relationsforpassage(passagecomponent(tkn.urn),syntaxdf)
+		
+		datarow = if nrow(tknrelations) != 1#isnothing(tknrelations)
+			[tkn.urn, typelabel(ttype), tkn.text, vuidfortoken(senttokens, groupsdf),
+				nothing, nothing, nothing, nothing
+		
+		]
+		else
+			[tkn.urn, typelabel(ttype), tkn.text, vuidfortoken(senttokens, groupsdf),
+				tknrelations[1, :node1], tknrelations[1,:node1rel], 
+				tknrelations[1,:node2], tknrelations[1, :node2rel]
+		]
+		end
+		
+		
+		push!(lines, join(datarow, delimiter))
+	end
+	
+	join(lines, "\n")
+end;
+		
+
+# ╔═╡ 86da97f3-bb20-4779-8efa-b9088409acd6
+function appendannotations(filename, senttokens, vudata, groupsdf, syndf; delimiter = "|")
+	lines = isfile(filename) ? readlines(filename) : []
+	push!(lines, "")
+	push!(lines, "//")
+	push!(lines, "// Automatically appended from Pluto notebook \"Analyze syntax of Greek text from a CTS source\"")
+	push!(lines, "//")
+	for ln in split(sentencecex(senttokens), "\n")
+		push!(lines, ln)
+	end
+	push!(lines, "")
+	for ln in split(vucex(vudata), "\n")
+		push!(lines, ln)
+	end
+	push!(lines, "")
+	#split(tokencex(sentence, assignedtokensdf, syntax), "\n")
+	for ln in split(tokencex(senttokens, groupsdf, syndf), "\n")
+		push!(lines, ln)
+	end
+	join(lines, "\n")
+end;
+
+# ╔═╡ c205e757-4e5a-4b22-ac53-bdad947a942c
+if step3()
+	if saveall
+		txt = appendannotations(outputfile, sentence, vudf, assignedtokensdf, syntax; delimiter = "|")
+		open(outputfile, "w") do io
+			write(io, txt)
+		end
+		danger(md"""Appended data to file $(outputfile).
+		
+		> **Be sure to UNCHECK `Save to file` box before continuing!**
+		""")
+		
+	end
 end
 
-# ╔═╡ 65b236c8-fbb2-4002-a072-4dfc64723f13
-"""Convert treebank project's code to readable label for morphology.
-"""
-function morphlabel(s)
-	"Readable label for $(s)"
+# ╔═╡ 7b206be8-19cc-49b4-98a9-b39177701f2b
+"""Look up in dataframe `df` the assigned group for passage `psg`."""
+function groupforpassage(psg, df)
+	psgmatches = filter(row -> row.passage == psg, df)
+	groupid = nrow(psgmatches) == 1 ? psgmatches[1, :group] : nothing
+	#string(passagecomponent(sentencerange(sentence)), ".", groupid)
+	groupid
 end;
 
 # ╔═╡ Cell order:
@@ -1242,25 +1313,21 @@ end;
 # ╟─41a654d1-44d7-476b-b421-8f83d254f14e
 # ╟─3294b863-69ce-46d4-9465-7db4f2a52996
 # ╟─80010946-099e-4e1f-893b-f32aef12783e
-# ╟─a8e032a5-94f8-4937-aad1-016883116f85
 # ╟─b5be20e7-4eec-405b-9aa6-dfbd6aedbecd
 # ╟─3a49b461-e4c2-44cb-9600-9ec10bf1e91f
-# ╟─15deb4e6-4d84-4862-b453-d33cb96a02c7
 # ╟─97f0be7b-aafc-4180-a2f3-aa43d2c65358
 # ╟─d193df28-4805-49f7-a5ea-c2885be9cd98
-# ╟─86264609-3fb6-479b-9289-35bb31e7999b
 # ╟─187adacf-badf-482c-976a-9348e60b4c04
 # ╟─6c7b400c-0a73-42f7-93b5-ceb8e7c5960c
+# ╟─a906ee9c-dddd-4597-b8bc-6a15ef050138
 # ╟─fedf66bc-7e15-4a4b-8dab-5aec0f07944e
 # ╟─f21fd0c4-602c-4782-908c-3dcd91ad936d
 # ╟─86b59bc9-0cbb-4913-a67e-23f19fcd73a4
 # ╟─1d76a211-4942-4113-a4ea-13fa9e098168
 # ╟─140f25e2-e6b0-47df-a377-c92b3a82c94c
-# ╟─7b206be8-19cc-49b4-98a9-b39177701f2b
 # ╟─14c7b897-8ae7-4f01-94a7-9dfca51ba04f
 # ╟─68d9874a-d106-4fbc-8935-82e80cc92f9f
 # ╟─419c6fe4-b41f-4045-a2d2-c14a9b255f35
-# ╟─01ccc6f1-2271-41cb-bbfa-a95f727e912b
 # ╟─1f9b98d9-a7e0-43bf-a651-5e2e3afc85cf
 # ╟─a72eeaa5-a54a-4475-868a-1e21eee19b71
 # ╟─ca48466c-cd85-456e-ac50-072490cdbc8b
@@ -1269,19 +1336,33 @@ end;
 # ╟─5116aaa6-af7c-46e7-9e11-6059e587f5c0
 # ╟─d86eca56-ea1f-4d32-bff2-44f26d12e3f4
 # ╟─013963bc-d65f-449f-8bd5-ddda9dddb1fd
+<<<<<<< HEAD
+# ╟─55394f6e-e696-4f44-a00e-1dd6e4fcdcb8
+# ╟─86da97f3-bb20-4779-8efa-b9088409acd6
+=======
 # ╟─b3565306-6e7b-4d02-901c-dec331b3da18
 # ╟─887a6294-5987-4c94-98c6-d92634006bcc
 # ╟─26cc6db2-9164-4ceb-b87f-d812cb1e98ce
 # ╟─d1edf3dd-503d-4b08-b153-a050d8a44a46
 # ╟─fa278abd-db5d-4340-9795-94407ef9cbf7
 # ╟─88ea3ada-dc10-44b5-8d2f-70ef78b7a3fe
+>>>>>>> 0002c157cc4feebf8b8ce4ea277d9968dd0759c4
 # ╟─03a20740-0756-4081-b2f6-335888238336
 # ╟─0635610a-69b0-4a15-b086-236e3fd48a01
 # ╟─e7b6a508-81fb-4f40-bd34-185ce6a20e14
 # ╟─ab5048e0-e1c4-42ec-8837-a16dd231fe37
-# ╟─8aab14ce-c3f6-428c-8985-11ca2ce1ed1f
-# ╟─47b1c7b5-3306-45c0-bf14-54c978506b68
-# ╟─0f48fb75-ab9d-4ab6-b619-f605e59dd00e
 # ╟─d1496b85-c488-4130-a915-aeedfb1e45c0
+# ╟─fe901b4d-9453-4123-ac3d-ee6a766337d4
+# ╟─0f48fb75-ab9d-4ab6-b619-f605e59dd00e
+# ╟─47b1c7b5-3306-45c0-bf14-54c978506b68
+# ╟─8aab14ce-c3f6-428c-8985-11ca2ce1ed1f
 # ╟─2bffa4ea-03c2-4cda-8b7d-b166e0b9939b
-# ╟─65b236c8-fbb2-4002-a072-4dfc64723f13
+# ╟─d1edf3dd-503d-4b08-b153-a050d8a44a46
+# ╟─88ea3ada-dc10-44b5-8d2f-70ef78b7a3fe
+# ╟─fa278abd-db5d-4340-9795-94407ef9cbf7
+# ╟─15deb4e6-4d84-4862-b453-d33cb96a02c7
+# ╟─86264609-3fb6-479b-9289-35bb31e7999b
+# ╟─f0fcb59d-1793-413a-845c-55f77391b3b0
+# ╟─a8e032a5-94f8-4937-aad1-016883116f85
+# ╟─01ccc6f1-2271-41cb-bbfa-a95f727e912b
+# ╟─7b206be8-19cc-49b4-98a9-b39177701f2b
