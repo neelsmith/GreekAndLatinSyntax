@@ -6,6 +6,19 @@ Contents:
 - `pluto/ctssyntaxer.jl` is a Pluto notebook for annotating Greek syntax following the model presented on the web site.
 
 
-## Using the Pluto notebook
+## Pluto notebooks
 
-The Pluto notebook relies on an unpublished package (the invaluable [`PlutoGrid` package](https://github.com/lungben/PlutoGrid.jl) by Benjamin Lungwitz). For that reason, it comes with accompanying `Project.toml` and `Manifest.toml` files in the `pluto` directory.  If you start a Pluto server and open `pluto/ctssyntaxer.jl`, it should be able to build all the resources it needs (eventually: the first build especially will be slow).
+
+The `pluto` directory hosts notebooks for working with syntactically annotated texts.
+
+
+- `ctssyntaxer.jl`:  annotate the syntax of a citable text 
+- `readwithsyntax.jl`: read a syntactically annotated text
+
+
+### Using the annotater notebook 
+
+The Pluto notebook `ctssyntaxer.jl` relies on an unpublished package (the invaluable [`PlutoGrid` package](https://github.com/lungben/PlutoGrid.jl) by Benjamin Lungwitz). For that reason, it comes with accompanying `Project.toml` and `Manifest.toml` files in the `pluto` directory.  If you start a Pluto server and open `pluto/ctssyntaxer.jl`, it should be able to build all the resources it needs (eventually: the first build especially will be slow).
+
+This does not apply to the `readwithsyntax.jl` notebook.
+
