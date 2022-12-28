@@ -64,7 +64,7 @@ end
 TableOfContents() 
 
 # ╔═╡ 31cc3ad6-ac34-49f7-a86f-575a08eb1358
-nbversion = "0.2.0";
+nbversion = "0.3.0";
 
 # ╔═╡ 9c197585-a2dd-42d2-b45c-deb5f756434b
 begin
@@ -82,6 +82,7 @@ md"""(*Notebook version **$(nbversion)**.*)  *See version history* $(@bind histo
 if history
 md"""
 
+- **0.3.0**: changes user interface for defining verbal units and grouping tokens by verbal unit.  Saving files uses a rational clickable button (the underdocumented `CounterButton` in PlutoUI).
 - **0.2.0**: reorganizes notebook in preparation for publication of `GreekSyntax` package on juliahub, and changes to writing all delimited-text serialization of annotations to a single file.
 - **0.1.1**: bug fixes, including important correction to sentence + group ID in export of token annotations.
 - **0.1.0** initial version:  load a citable corpus from CEX source, validate its orthography and parse into sentence units citable by CTS URN, save annotation results to delimited-text files.
@@ -449,14 +450,15 @@ span.tooltip:before {
 palette = ["#79A6A3;",
 	"#E5B36A;",
 	"#C7D7CA;",
-	"#E7926C;",
-	"#D29DC0;",
 	"#C2D6C4;",
+	"#D29DC0;",
+	
 	"#D291BC;",
 	"E7DCCA;",
 	"#FEC8D8;",
 	"#F5CF89;",
-	"#F394AF;"
+	"#F394AF;",
+	"#E7926C;"
 ];
 
 # ╔═╡ ab5048e0-e1c4-42ec-8837-a16dd231fe37
@@ -514,12 +516,12 @@ end
 # ╔═╡ 336f2a45-45b1-4381-88af-e35a703574fb
 if prereqsok()
 	msg1 = md"""
-1. Choose a sentence by number. (*Note that if you enter a non-numeric value, the notebook will show an error message.  The error messages will disappear when you enter an integer value.*)
+1. Choose a sentence.
 2. Identify the conjunction or participle that connects it to the broader context, or choose `asyndeton` if there is none.
 	"""
 
 
-		Foldable("Step 1 instructions", instructions("Annotating a sentence", msg1))
+		Foldable("Step 1 instructions", instructions("Annotating a sentence", msg1)) |> aside
 
 end
 
@@ -715,31 +717,29 @@ end;
 
 # ╔═╡ a638caf3-94c9-4a03-8fa4-05d99d8e135a
 if step1()
-	md"""### Step 2. Define verbal units"""
+	md"""### Step 2. Define verbal units and groups tokens in verbal units"""
 else
 	md""
 end
 
 # ╔═╡ b8ab34a6-2336-471c-bb74-6ad0800ba22d
 if step1()
-	msg2 = md"""
+	msg2 = md"""	
 1. Use the button labelled `Initialize list of verbal units`  to create a new list.
 2. Enter a row for each verbal unit with values for its syntactic and semantic type, and for its level of subordination.  (See [this page](https://neelsmith.github.io/GreekSyntax/modelling/verbal_units/) for details.)
 3. When you	are done, check the `Done` box.
+
+	Assign each token to one of the verbal units you have defined above.  Fill in the sequential number of the verbal unit. (You can unfold the `Show verbal units` list if you don't want to scroll back up the notebook.)
+
+	Any connecting words you identified in Step 1 should be left as verbal unit 0.
+
+	When you have associated each token with the correct verbal unit, check `Done`.
+	
 	"""
 
-	Foldable("Step 2 instructions", instructions("Defining verbal units", msg2))
-else
-	md""
+	Foldable("Step 2 instructions", instructions("Defining verbal units", msg2)) |> aside
+	
 end
-
-# ╔═╡ f465f45f-79ac-4ad3-951d-c7161ddebb6f
-if step1()
-	md"""*Done* $(@bind vusdefined CheckBox()) $(@bind initialize Button("Initialize list of verbal units"))"""
-else
-	md""
-end
-
 
 # ╔═╡ 3181e436-9270-48ed-8d15-da8ad9e4927e
 let initialize  
@@ -776,123 +776,53 @@ function createvudf()
 	)
 end;
 
-# ╔═╡ f21fd0c4-602c-4782-908c-3dcd91ad936d
-"""True if Step 2 editing is complete."""
-function step2()
-	@isdefined(vusdefined) && vusdefined && step1()
-end;
-
-# ╔═╡ 43f8b9d1-b59b-49f2-9441-f582f08a7a11
-if step2()
-	md"""### Step 3. Assign tokens to verbal units
-	"""
-else
-	md""
-end
-
-# ╔═╡ 5bc46f28-1c9a-4cb8-ab24-7fe47a276554
-if step2()
-	msg3 = md"""Assign each token to one of the verbal units you have defined above.  Fill in the sequential number of the verbal unit. (You can unfold the `Show verbal units` list if you don't want to scroll back up the notebook.)
-
-	Any connecting words you identified in Step 1 should be left as verbal unit 0.
-
-	When you have associated each token with the correct verbal unit, check `Done`.
-	"""
-	Foldable("Step 3 instructions", instructions("Assigning tokens to verbal units", msg3))
-else
-	md""
-end
-
-# ╔═╡ b8240f2d-de6b-457e-b629-af55def6c53f
-if step2()
-	md"""Indented by level of subordination:"""
-end
-
 # ╔═╡ 4ca90ce5-c1e2-4f35-9e02-81788522c90e
-if step2()
-	md"""*Done* $(@bind tokensassigned CheckBox())"""
+if step1() 
+	md"""*Done assigning tokens* $(@bind tokensassigned CheckBox())
+	"""  |> aside
 else
 	md""
 end
 
 # ╔═╡ fedf66bc-7e15-4a4b-8dab-5aec0f07944e
-vudf = step2() ? createvudf() : nothing;
+vudf = if step1() && !isnothing(vus)
+	createvudf()
+else
+	nothing
+end;
 
-# ╔═╡ 55b94fc8-0133-492b-baf1-2f8ed580e701
-if step2()
-	if nrow(vudf)== 1
-		md"""**Step 2** result: **1 verbal unit** defined."""
-	elseif nrow(vudf) > 1
-		md"""**Step 2** result: **$(nrow(vudf)) verbal units** defined."""
-	else
-		md""
-	end
+
+# ╔═╡ d4ff15c7-358a-4429-825d-356965ff2137
+if step1() && ! isnothing(vudf)
+	md"""*Number of verbal units: **$(nrow(vudf))** defined.*"""
 end
 
 # ╔═╡ 7a768206-49a6-44b2-99e3-4448af4fb543
-if step2()
-	if nrow(vudf) == 0
+if step1() 
+	if isnothing(vudf) || nrow(vudf) == 0
 	md""
 else
-	vulistmd = []
+	vulisthtml = ["<ol>"]
+
+	local rowcount = 0
 	for r in eachrow(vudf)
-		push!(vulistmd, string("1. ", r.syntactic_type, " (level ", r.depth, ")"))
+		rowcount = rowcount + 1
+		coloridx = mod(rowcount, length(palette)) + 1
+		push!(vulisthtml, string("<li> <span style=\"color: $(palette[coloridx])\">", r.syntactic_type, "</span> (level ", r.depth, ")</li>"))
 	end
-	vuliststr = join(vulistmd, "\n")
-	Foldable("Show verbal units",Markdown.parse(vuliststr))
+	push!(vulisthtml, "</ol>")
+	vuliststr = join(vulisthtml, "\n")
+	HTML(vuliststr) |> aside
 end
 else
 md""
 end
 
-# ╔═╡ 68d9874a-d106-4fbc-8935-82e80cc92f9f
-"""True if Step 3 editing is complete."""
-function step3()
-	step2() && tokensassigned
+# ╔═╡ f21fd0c4-602c-4782-908c-3dcd91ad936d
+"""True if Step 2 editing is complete."""
+function step2()
+	@isdefined(vusdefined) && vusdefined && step1()
 end;
-
-# ╔═╡ 5d167ed1-905c-44bd-8b7d-e174f4a0eb04
-if step3()
-	md"""### Step 4. Define syntactic relations"""
-else
-	md""
-end
-
-# ╔═╡ ec6d4eb1-32dc-4dc5-82ab-eafba0540da8
-if step3()
-	msg4 = md"""Associate each token with a token it depends on, and define their relation.  If the token is a conjunction or a relative clause, you should also 
-	associate it with a second token and define that relation, too. See the (*forthcoming*) guide.
-
-	When you are through, Check the box labeled  `Save to files...` to append all your annotations for this sentence to delimited-text files (one each for sentence, verbal unit, and token annotations).
-	"""
-	Foldable("Step 4 instructions",
-	instructions("Assigning tokens to verbal units", msg4))
-else
-	md""
-end
-
-# ╔═╡ db3c92ef-9cab-4adf-b128-3f3e7eda885d
-if step3()
-	
-	md"""#### Save final results
-*Save to file named* $(fname).cex $(@bind saveall CheckBox())
-"""
-end
-
-# ╔═╡ fafa2505-fe2c-4a46-9e43-a54f44e9522f
-if step3()
-	if nrow(vudf) == 0
-	md""
-else
-	syntaxtips = [
-	"- **TBA**.  Full documentation and user guide will be posted [here](https://neelsmith.github.io/GreekSyntax/modelling/syntax/)"
-	]
-	syntaxtipstr = join(syntaxtips, "\n")
-	Foldable("See cheat sheet for syntactic relations",Markdown.parse(syntaxtipstr))
-end
-	else
-		md""
-	end
 
 # ╔═╡ 1d76a211-4942-4113-a4ea-13fa9e098168
 tokenlist = if step1()
@@ -911,7 +841,7 @@ end;
 tokengroupsdf = DataFrame(tokenlist);
 
 # ╔═╡ 3ae3b338-2e05-4a31-aca3-ebc6b71f3d4c
-if step2()
+if step1()
 	@bind tokengroups editable_table(tokengroupsdf; filterable=true, pagination=true)
 else 
 	md""
@@ -922,33 +852,91 @@ assignedtokensdf = @isdefined(tokengroups) ? create_dataframe(tokengroups) : not
 
 # ╔═╡ 031d14de-ce21-4d2c-9b1c-9ddbaf59bb01
 # Add display with level indentation
-if step2()
-	indentedtext = []
-	local currindent = 0
-	currstring = [""]
-	for r in eachrow(assignedtokensdf)
-		if r.group == 0
+if step1() 
+	if isnothing(assignedtokensdf)
+	else
+		indentedtext = []
+		local currindent = 0
+		currstring = [""]
+		for r in eachrow(assignedtokensdf)
 			
-		else
-			matchingdepth = vudf[r.group,:depth]
-			if currindent == matchingdepth
-				push!(indentedtext, " $(r.token)")
+			if r.group == 0
 				
 			else
-				if (currindent != 0)
-					push!(indentedtext, repeat("</blockquote>", currindent))
-				end
-					push!(indentedtext,  repeat("<blockquote>", matchingdepth) * "<strong>$(matchingdepth)</strong>. " * repeat(">", matchingdepth) * " "  )
 				
-				currindent = matchingdepth
-				push!(indentedtext, " $(r.token)")
+				matchingdepth = vudf[r.group,:depth]
+				#=
+				if currindent == matchingdepth
+					push!(indentedtext, " $(r.token)")
+					
+				else
+					
+					if (currindent != 0)
+						push!(indentedtext, repeat("</blockquote>", currindent))
+					end
+					
+					push!(indentedtext,  repeat("<blockquote>", matchingdepth) * "<strong>$(matchingdepth)</strong>. " * repeat(">", matchingdepth) * " "  )
+					
+					currindent = matchingdepth
+					push!(indentedtext, " $(r.token)")
+				
+			
+				end
+			=#
 			end
-		end
-		
+		end # for
+		join(indentedtext) |> HTML			
 	end
-	join(indentedtext) |> HTML
+end
+
+# ╔═╡ 68d9874a-d106-4fbc-8935-82e80cc92f9f
+"""True if Step 3 editing is complete."""
+function step3()
+	step1() && tokensassigned
+end;
+
+# ╔═╡ 5d167ed1-905c-44bd-8b7d-e174f4a0eb04
+if step3()
+	md"""### Step 3. Define syntactic relations"""
 else
 	md""
+end
+
+# ╔═╡ ec6d4eb1-32dc-4dc5-82ab-eafba0540da8
+if step3()
+	msg4 = md"""Associate each token with a token it depends on, and define their relation.  If the token is a conjunction or a relative clause, you should also 
+	associate it with a second token and define that relation, too. See the (*forthcoming*) guide.
+
+	When you are through, Check the box labeled  `Save to files...` to append all your annotations for this sentence to delimited-text files (one each for sentence, verbal unit, and token annotations).
+	"""
+	Foldable("Step 3 instructions",
+	instructions("Assigning tokens to verbal units", msg4)) |> aside
+else
+	md""
+end
+
+# ╔═╡ fafa2505-fe2c-4a46-9e43-a54f44e9522f
+if step3()
+	if nrow(vudf) == 0
+	md""
+else
+	syntaxtips = [
+	"- **TBA**.  Full documentation and user guide will be posted [here](https://neelsmith.github.io/GreekSyntax/modelling/syntax/)"
+	]
+	syntaxtipstr = join(syntaxtips, "\n")
+	Foldable("See cheat sheet for syntactic relations",aside(Markdown.parse(syntaxtipstr))) |> aside
+end
+	else
+		md""
+	end
+
+# ╔═╡ db3c92ef-9cab-4adf-b128-3f3e7eda885d
+if step3()
+	
+	md"""## Step 4. Save final results
+	
+*Save to file named* $(fname).cex $(@bind saves CounterButton("Save file"))
+"""
 end
 
 # ╔═╡ 1f9b98d9-a7e0-43bf-a651-5e2e3afc85cf
@@ -1103,10 +1091,10 @@ if step1()
 end
 
 # ╔═╡ 990de15b-b64f-4830-9740-3d97b93594c4
-if step2() == false || nrow(assignedtokensdf) == 0
+if step1() == false || isnothing(assignedtokensdf) || nrow(assignedtokensdf) == 0
 		md""
 else
-	HTML("""<p>Colored by group:<br/><br/><blockquote>
+	HTML("""<p><blockquote>
 $(formatsentence(sentence))</blockquote></p>
 	""")
 	
@@ -1114,7 +1102,7 @@ end
 
 # ╔═╡ 7d418f4f-ffb5-4048-8dd2-8535c6d5f664
 if step3()
-		HTML("""<p><b>Step 3 results</b><br/><blockquote>
+		HTML("""<p><b>Step 2 results</b><br/><blockquote>
 $(formatsentence(sentence))</blockquote></p>
 	""")
 end
@@ -1211,15 +1199,13 @@ end;
 
 # ╔═╡ c205e757-4e5a-4b22-ac53-bdad947a942c
 if step3()
-	if saveall
+	if saves > 0
 		txt = appendannotations(outputfile, sentence, vudf, assignedtokensdf, syntax; delimiter = "|")
 		open(outputfile, "w") do io
 			write(io, txt)
 		end
-		danger(md"""Appended data to file $(outputfile).
-		
-		> **Be sure to UNCHECK `Save to file` box before continuing!**
-		""")
+		tip(md"""Appended data to file $(outputfile).
+		""") 
 		
 	end
 end
@@ -1261,26 +1247,22 @@ end;
 # ╟─a638caf3-94c9-4a03-8fa4-05d99d8e135a
 # ╟─b8ab34a6-2336-471c-bb74-6ad0800ba22d
 # ╟─0e0cd61d-f4d0-4615-a413-4dae483b031b
-# ╟─f465f45f-79ac-4ad3-951d-c7161ddebb6f
+# ╟─d4ff15c7-358a-4429-825d-356965ff2137
 # ╟─3181e436-9270-48ed-8d15-da8ad9e4927e
-# ╟─55b94fc8-0133-492b-baf1-2f8ed580e701
-# ╟─43f8b9d1-b59b-49f2-9441-f582f08a7a11
-# ╟─5bc46f28-1c9a-4cb8-ab24-7fe47a276554
-# ╟─b8240f2d-de6b-457e-b629-af55def6c53f
 # ╟─031d14de-ce21-4d2c-9b1c-9ddbaf59bb01
-# ╟─990de15b-b64f-4830-9740-3d97b93594c4
 # ╟─7a768206-49a6-44b2-99e3-4448af4fb543
-# ╟─4ca90ce5-c1e2-4f35-9e02-81788522c90e
+# ╟─990de15b-b64f-4830-9740-3d97b93594c4
 # ╟─3ae3b338-2e05-4a31-aca3-ebc6b71f3d4c
+# ╟─4ca90ce5-c1e2-4f35-9e02-81788522c90e
 # ╟─7d418f4f-ffb5-4048-8dd2-8535c6d5f664
 # ╟─5d167ed1-905c-44bd-8b7d-e174f4a0eb04
 # ╟─ec6d4eb1-32dc-4dc5-82ab-eafba0540da8
-# ╟─db3c92ef-9cab-4adf-b128-3f3e7eda885d
-# ╟─c205e757-4e5a-4b22-ac53-bdad947a942c
-# ╟─a4a599ce-6362-4b57-a359-0ee1e8d12006
 # ╟─fe16ab5c-9065-4518-8ac3-38e3506d7633
+# ╟─a4a599ce-6362-4b57-a359-0ee1e8d12006
 # ╟─fafa2505-fe2c-4a46-9e43-a54f44e9522f
 # ╟─69451dde-a999-4c1f-a8e4-ed731e282149
+# ╟─db3c92ef-9cab-4adf-b128-3f3e7eda885d
+# ╟─c205e757-4e5a-4b22-ac53-bdad947a942c
 # ╟─7183fd4d-f180-474f-81d5-524aaf7f0152
 # ╟─736baf25-214a-4d22-9003-a4d33155b36e
 # ╟─ae140e63-0e4d-4978-b6c2-9f135cac8163
