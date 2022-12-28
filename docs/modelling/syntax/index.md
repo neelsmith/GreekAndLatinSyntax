@@ -20,21 +20,23 @@ In cases of asyndeton, there is no explicit connector.  In this situation, the u
 
 ## Conjunctions
 
-- `conjunction`
+- `conjunction`. Used for 
 
 
 ## Subordinating tokens
 
 
-- subordinate conjunction
-- relative
-- indir. statement with infinitive
-- indir. statement with participle
-- articular infintive
-- circumstantial
-- attributive
-- quoted
-- indirect statement
+- `subordinate conjunction`
+- `relative`. Takes two links, first to antecedent, second to function in clause.
+- `indirect statement`
+- `quoted`
+- `indirect statement with infinitive`
+- `indirect statement with participle`
+- `articular infinitive`
+- `circumstantial participle`
+- `attributive participle`
+
+
 
 
 ## Relations to verbs
