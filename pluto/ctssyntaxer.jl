@@ -64,7 +64,7 @@ end
 TableOfContents() 
 
 # ╔═╡ 31cc3ad6-ac34-49f7-a86f-575a08eb1358
-nbversion = "0.3.0";
+nbversion = "0.4.0";
 
 # ╔═╡ 9c197585-a2dd-42d2-b45c-deb5f756434b
 begin
@@ -82,6 +82,7 @@ md"""(*Notebook version **$(nbversion)**.*)  *See version history* $(@bind histo
 if history
 md"""
 
+- **0.4.0**: 
 - **0.3.0**: changes user interface for defining verbal units and grouping tokens by verbal unit.  Saving files uses a rational clickable button (the underdocumented `CounterButton` in PlutoUI).
 - **0.2.0**: reorganizes notebook in preparation for publication of `GreekSyntax` package on juliahub, and changes to writing all delimited-text serialization of annotations to a single file.
 - **0.1.1**: bug fixes, including important correction to sentence + group ID in export of token annotations.
@@ -138,6 +139,12 @@ md"""*Please provide a title for your collection of annotations.*
 
 # ╔═╡ 73cb1d9d-c265-46c5-ae8d-1d940379b0d1
 md"""*URL and title are correct* $(@bind urlok CheckBox())"""
+
+# ╔═╡ 2a49f12a-88b3-4667-8650-46cd7e127fd9
+# md"*Connecting word*: $(@bind connectorlist MultiSelect(connectormenu()))"
+
+# ╔═╡ fbd97d94-1527-44d0-9203-80c54ddfd856
+#connectorlist
 
 # ╔═╡ 7183fd4d-f180-474f-81d5-524aaf7f0152
 html"""
@@ -490,7 +497,7 @@ The current version of the notebook is configured to read a file derived from th
 - save to CEX
 - improve format of input data
 """
-	Foldable("How to use this notebook", instructions("Analyzing syntax", overview))
+	Foldable("How to use this notebook", instructions("Analyzing syntax", overview)) |> aside
 end
 
 
@@ -920,8 +927,45 @@ if step3()
 	if nrow(vudf) == 0
 	md""
 else
-	syntaxtips = [
-	"- **TBA**.  Full documentation and user guide will be posted [here](https://neelsmith.github.io/GreekSyntax/modelling/syntax/)"
+	syntaxtips = [ "##","",
+		"**Organization of verbal units**",
+		"",
+		"- conjunction",
+		"- connector",
+		"- unit verb",
+		"",
+	"**Subordination**","",
+	"- conjunction",
+"- subordinate conjunction",
+"- relative",
+"- indirect statement",
+"- quoted",
+"- indirect statement with infinitive",
+"- indirect statement with participle",
+"- articular infinitive",
+"- circumstantial participle",
+"- attributive participle",
+"",
+	"**Relations to `unit verb`**",
+"",
+
+"- subject",
+"- object",
+"- adverbial",
+"- dative",
+"- direct address",
+"- modal particle",
+		"- complementary infinitive",
+		"- supplementary participle",
+	"",
+	"**Relations to substantives**",
+"",
+"- attribute",
+"- article",
+"- pronoun",
+"",
+	"**Relations to prepositions**",
+"- object of preposition"
 	]
 	syntaxtipstr = join(syntaxtips, "\n")
 	Foldable("See cheat sheet for syntactic relations",aside(Markdown.parse(syntaxtipstr))) |> aside
@@ -1243,6 +1287,8 @@ end;
 # ╟─4627ab0d-42a8-4d92-9b0d-c933b1b41f50
 # ╟─a050416e-9b64-4103-8859-170d3912339d
 # ╟─c405681f-4271-46d5-a49f-f8da7bdfe3ed
+# ╠═2a49f12a-88b3-4667-8650-46cd7e127fd9
+# ╠═fbd97d94-1527-44d0-9203-80c54ddfd856
 # ╟─b41983f5-8774-4e4b-98fa-58087551971f
 # ╟─a638caf3-94c9-4a03-8fa4-05d99d8e135a
 # ╟─b8ab34a6-2336-471c-bb74-6ad0800ba22d
