@@ -51,6 +51,8 @@ The following relations are possible between unit verbs and their children:
 - `dative`
 - `direct address`
 - `modal particle`
+- `complementary infinitive`
+- `supplementary participle`
 
 
 ## Relations to substantives
