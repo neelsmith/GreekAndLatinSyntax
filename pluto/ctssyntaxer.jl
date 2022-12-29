@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.17
+# v0.19.18
 
 using Markdown
 using InteractiveUtils
@@ -64,7 +64,7 @@ end
 TableOfContents() 
 
 # ╔═╡ 31cc3ad6-ac34-49f7-a86f-575a08eb1358
-nbversion = "0.4.0";
+nbversion = "0.4.1";
 
 # ╔═╡ 9c197585-a2dd-42d2-b45c-deb5f756434b
 begin
@@ -82,6 +82,7 @@ md"""(*Notebook version **$(nbversion)**.*)  *See version history* $(@bind histo
 if history
 md"""
 
+- **0.4.1**: fixes a boundary-checking error in using multiple connectors.
 - **0.4.0**: reorganizes tips and instructions using `aside` from `PlutoTeachingTools`; allows selection of a *range* of connecting words; corrects bug in display of indented syntactic units.
 - **0.3.0**: changes user interface for defining verbal units and grouping tokens by verbal unit.  Saving files uses a rational clickable button (the underdocumented `CounterButton` in PlutoUI).
 - **0.2.0**: reorganizes notebook in preparation for publication of `GreekSyntax` package on juliahub, and changes to writing all delimited-text serialization of annotations to a single file.
@@ -505,16 +506,16 @@ begin
 
 Provide values for the three input boxes; for each input box, use the `Submit` button to save your entry.
 	
-1. Optionally, define a directory for saving results of your annotations. (By default,the notebook will create a subdirectory named `output` within the notebook's directory. If you enter a directory that does not exist, the notebook will attempt to create it.)	
+1. Define a directory for saving results of your annotations. (By default,the notebook will create a subdirectory named `output` within the notebook's directory. If you enter a directory that does not exist, the notebook will attempt to create it.)	
 1. Paste or type a URL into the second input box.
 2. In the third input box enter a title to use in formatting text and saving your annotations in local files.
 
-When you have configured all three input boxes, check `URL and title are correct`.
+When you have used `Submit` to verify all three input boxes, check `URL and title are correct`.
 
 It may take a moment for the notebook to download and parse your file.	
 
 """
-	Foldable("How to load texts to analyze", instructions("Loading files", loadmsg))
+	Foldable("How to load texts to analyze", instructions("Loading files", loadmsg)) |> aside
 end
 
 
@@ -1014,7 +1015,7 @@ syntaxtemplate = if loadedok()
 		passage = string(passagecomponent(tkn.urn))
 		(passage = passage, reference = seq, token = tkn.text, node1 = missing, node1rel = missing, node2 = missing, node2rel = missing)
 	end
-	if isnothing(connectorlist[1])
+	if isempty(connectorlist) || isnothing(connectorlist[1])
 		psg = sentencerange(sentence) |> passagecomponent
 		deranged = replace(psg, "-" => "_")
 		extrarow = (passage = string( "_asyndeton_",deranged), reference = seq + 1, token = "asyndeton", node1 = missing, node1rel = missing, node2 = missing, node2rel = missing)
