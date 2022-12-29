@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.18
+# v0.19.17
 
 using Markdown
 using InteractiveUtils
@@ -70,7 +70,7 @@ nbversion = "0.4.0";
 begin
 	tbdmd = md"""At the bottom of this notebook is a section of documentation you can unhide.
 
-Note that in notebook version **$(nbversion)**, *this documentation has not yet been updated*.  Please look for a subsequent release of this notebook for better documentation.
+Note that in notebook version **$(nbversion)**, *this documentation has not yet been updated*.  Look for improved documentation when the `GreekSyntax` package is available from juliahub.
 """
 	warning_box(tbdmd)
 end
@@ -82,7 +82,7 @@ md"""(*Notebook version **$(nbversion)**.*)  *See version history* $(@bind histo
 if history
 md"""
 
-- **0.4.0**: 
+- **0.4.0**: reorganizes tips and instructions using `aside` from `PlutoTeachingTools`; allows selection of a *range* of connecting words; corrects bug in display of indented syntactic units.
 - **0.3.0**: changes user interface for defining verbal units and grouping tokens by verbal unit.  Saving files uses a rational clickable button (the underdocumented `CounterButton` in PlutoUI).
 - **0.2.0**: reorganizes notebook in preparation for publication of `GreekSyntax` package on juliahub, and changes to writing all delimited-text serialization of annotations to a single file.
 - **0.1.1**: bug fixes, including important correction to sentence + group ID in export of token annotations.
@@ -139,12 +139,6 @@ md"""*Please provide a title for your collection of annotations.*
 
 # ╔═╡ 73cb1d9d-c265-46c5-ae8d-1d940379b0d1
 md"""*URL and title are correct* $(@bind urlok CheckBox())"""
-
-# ╔═╡ 2a49f12a-88b3-4667-8650-46cd7e127fd9
-# md"*Connecting word*: $(@bind connectorlist MultiSelect(connectormenu()))"
-
-# ╔═╡ fbd97d94-1527-44d0-9203-80c54ddfd856
-#connectorlist
 
 # ╔═╡ 7183fd4d-f180-474f-81d5-524aaf7f0152
 html"""
@@ -398,6 +392,10 @@ end
 # ╔═╡ 0635610a-69b0-4a15-b086-236e3fd48a01
  css = html"""
 <style>
+ blockquote.subordination {
+ 	padding: 0em;
+ 
+ }
  .connector {
  background: yellow;  
  font-style: bold;
@@ -459,8 +457,8 @@ palette = ["#79A6A3;",
 	"#C7D7CA;",
 	"#C2D6C4;",
 	"#D29DC0;",
+	"#AABBCC;",
 	
-	"#D291BC;",
 	"E7DCCA;",
 	"#FEC8D8;",
 	"#F5CF89;",
@@ -524,7 +522,7 @@ end
 if prereqsok()
 	msg1 = md"""
 1. Choose a sentence.
-2. Identify the conjunction or participle that connects it to the broader context, or choose `asyndeton` if there is none.
+2. Identify one or more connecting words (conjunction, particles) that connect the sentence to its broader context, or choose `asyndeton` if there is none.
 	"""
 
 
@@ -665,6 +663,15 @@ if prereqsok()
 *Choose a sentence to analyze*: $(@bind sentid NumberField(0:length(sentences)))"""
 end
 
+# ╔═╡ c405681f-4271-46d5-a49f-f8da7bdfe3ed
+if prereqsok()
+	if sentid == 0
+	md""	
+	else
+		#md"*Connecting word*: $(@bind connectorid Select(connectormenu()))"
+	end
+end
+
 # ╔═╡ 3a49b461-e4c2-44cb-9600-9ec10bf1e91f
 # The currently selected sentence
 if prereqsok()
@@ -676,7 +683,7 @@ if prereqsok()
 	if sentid == 0
 		md""
 	else 
-		md"""*Choose a connecting word from this many initial tokens:* $(@bind ninitial Slider(1:length(sentence), show_value = true, default = 10) )
+		md"""*Choose connecting words from this many initial tokens:* $(@bind ninitial Slider(1:length(sentence), show_value = true, default = 10) )
 	"""
 	
 	end
@@ -698,23 +705,26 @@ function connectormenu()
 	menu
 end;
 
-# ╔═╡ c405681f-4271-46d5-a49f-f8da7bdfe3ed
+# ╔═╡ 2a49f12a-88b3-4667-8650-46cd7e127fd9
 if prereqsok()
 	if sentid == 0
-	md""	
+		md""	
 	else
-		md"*Connecting word*: $(@bind connectorid Select(connectormenu()))"
+	md"""*Connecting words*: 
+
+$(@bind connectorlist MultiSelect(connectormenu()))
+"""
 	end
 end
 
 # ╔═╡ 97f0be7b-aafc-4180-a2f3-aa43d2c65358
 """True if requirements for sentence-level annotation (step 1) are satisfied"""
 function step1()
-	if @isdefined(connectorid) && isnothing(connectorid)
+	if @isdefined(connectorlist) && ! isempty(connectorlist) && isnothing(connectorlist[1])
 		# asyndeton
 		true
 		
-	elseif @isdefined(connectorid) == false || sentid == 0 || ismissing(connectorid) || isnothing(connectorid)
+	elseif @isdefined(connectorlist) == false || sentid == 0 || isempty(connectorlist) || isnothing(connectorlist[1])
 		false
 		
 	else
@@ -732,15 +742,11 @@ end
 # ╔═╡ b8ab34a6-2336-471c-bb74-6ad0800ba22d
 if step1()
 	msg2 = md"""	
-1. Use the button labelled `Initialize list of verbal units`  to create a new list.
-2. Enter a row for each verbal unit with values for its syntactic and semantic type, and for its level of subordination.  (See [this page](https://neelsmith.github.io/GreekSyntax/modelling/verbal_units/) for details.)
-3. When you	are done, check the `Done` box.
 
-	Assign each token to one of the verbal units you have defined above.  Fill in the sequential number of the verbal unit. (You can unfold the `Show verbal units` list if you don't want to scroll back up the notebook.)
+1. In the first data entry table, complete a row for each verbal unit with values for its syntactic and semantic type, and for its level of subordination.
+1. In the second data entry table, fill in the sequential number of the verbal unit to group each token in the unit it belongs to. Any connecting words you identified in Step 1 should be left as verbal unit 0. 
+1. When you have associated each token with the correct verbal unit, check the box `Done assigning tokens` (at the end of the second data entry table).
 
-	Any connecting words you identified in Step 1 should be left as verbal unit 0.
-
-	When you have associated each token with the correct verbal unit, check `Done`.
 	
 	"""
 
@@ -862,7 +868,7 @@ assignedtokensdf = @isdefined(tokengroups) ? create_dataframe(tokengroups) : not
 if step1() 
 	if isnothing(assignedtokensdf)
 	else
-		indentedtext = []
+		indentedtext = ["<blockquote class=\"subordination\">"]
 		local currindent = 0
 		currstring = [""]
 		for r in eachrow(assignedtokensdf)
@@ -870,9 +876,18 @@ if step1()
 			if r.group == 0
 				
 			else
+				## NEED TO CHECK GROUP INFO BY PASSAGE REF ==
+				# sentence + group num
+				groupref = string(passagecomponent(sentencerange(sentence)),".", r.group)
+
+				ginfo = filter(r -> r.passage == groupref, vudf)
+				if nrow(ginfo) != 1
+					push!(indentedtext,"""\n\nError with group reference $(groupref)\n\n""")
+				else
 				
-				matchingdepth = vudf[r.group,:depth]
-				#=
+					matchingdepth = ginfo[1,:depth]
+
+				
 				if currindent == matchingdepth
 					push!(indentedtext, " $(r.token)")
 					
@@ -882,17 +897,20 @@ if step1()
 						push!(indentedtext, repeat("</blockquote>", currindent))
 					end
 					
-					push!(indentedtext,  repeat("<blockquote>", matchingdepth) * "<strong>$(matchingdepth)</strong>. " * repeat(">", matchingdepth) * " "  )
+					push!(indentedtext,  repeat("<blockquote class=\"subordination\">", matchingdepth) * "<strong>$(matchingdepth)</strong>. " * " "  )
 					
 					currindent = matchingdepth
 					push!(indentedtext, " $(r.token)")
 				
 			
 				end
-			=#
+		
+					end
 			end
 		end # for
+		push!(indentedtext,"</blockquote>")
 		join(indentedtext) |> HTML			
+		#indentedtext
 	end
 end
 
@@ -912,9 +930,9 @@ end
 # ╔═╡ ec6d4eb1-32dc-4dc5-82ab-eafba0540da8
 if step3()
 	msg4 = md"""Associate each token with a token it depends on, and define their relation.  If the token is a conjunction or a relative clause, you should also 
-	associate it with a second token and define that relation, too. See the (*forthcoming*) guide.
+	associate it with a second token and define that relation, too.
 
-	When you are through, Check the box labeled  `Save to files...` to append all your annotations for this sentence to delimited-text files (one each for sentence, verbal unit, and token annotations).
+	Unfold the cheat sheet below to see a list of valid tags for relations.
 	"""
 	Foldable("Step 3 instructions",
 	instructions("Assigning tokens to verbal units", msg4)) |> aside
@@ -977,7 +995,7 @@ end
 # ╔═╡ db3c92ef-9cab-4adf-b128-3f3e7eda885d
 if step3()
 	
-	md"""## Step 4. Save final results
+	md"""### Step 4. Save final results
 	
 *Save to file named* $(fname).cex $(@bind saves CounterButton("Save file"))
 """
@@ -996,7 +1014,7 @@ syntaxtemplate = if loadedok()
 		passage = string(passagecomponent(tkn.urn))
 		(passage = passage, reference = seq, token = tkn.text, node1 = missing, node1rel = missing, node2 = missing, node2rel = missing)
 	end
-	if isnothing(connectorid)
+	if isnothing(connectorlist[1])
 		psg = sentencerange(sentence) |> passagecomponent
 		deranged = replace(psg, "-" => "_")
 		extrarow = (passage = string( "_asyndeton_",deranged), reference = seq + 1, token = "asyndeton", node1 = missing, node1rel = missing, node2 = missing, node2rel = missing)
@@ -1043,7 +1061,7 @@ function formatColored(s, groupsdf)
 		for r in eachrow(groupsdf)
 			groupidx = groupidx + 1
 				
-			if groupidx == connectorid
+			if groupidx in connectorlist
 				push!(groupedtext, " <span class=\"connector\">$(r.token)</span>")
 					
 			elseif r.group == 0
@@ -1074,7 +1092,10 @@ function formatsentenceBW(s)
 	for (tkn, tkntype) in s
 		counter = counter + 1
 		if typeof(tkntype) == LexicalToken
-			if ismissing(connectorid) || isnothing(connectorid) || ! (counter == connectorid)
+			
+			if isempty(connectorlist)  || isnothing(connectorlist[1]) || ! (counter in connectorlist)
+			
+				
 				push!(formatted, " " * tkn.text)
 			else
 				tagged = "<span class=\"connector\")>$(tkn.text)</span>"
@@ -1110,17 +1131,18 @@ if prereqsok()
 
 	else
 		local currpsg = sentencerange(sentence) |> passagecomponent
-		if ismissing(connectorid)
+		if isempty(connectorlist)
 			str = formatsentence(sentence)
 			
-			HTML("<i>Please identify a connecting word for this sentence, or select <q>asyndeton</q>:</i><br/><blockquote><strong>$(currpsg)</strong>: " * str * "</blockquote>")
+			HTML("<i>Use the following selection box to identify one or more connecting words for this sentence, or select</i> <code>asyndeton</code>:<br/><blockquote><strong>$(currpsg)</strong>: " * str * "</blockquote>")
 	
-		elseif isnothing(connectorid)
+			elseif isempty(connectorlist)
 				str = formatsentenceBW(sentences[sentid])
 				
 				HTML("<p><b>Step 1 result:</b></p><blockquote><span class=\"connector\">Asyndeton: no connecting word.</span><br/><strong>$(currpsg)</strong>: " * str * "</blockquote>")
 			
 		else
+			
 			str = formatsentenceBW(sentences[sentid])
 			HTML("<p><b>Step 1 result:</b></p><blockquote><strong>$(currpsg)</strong>: " * str * "</blockquote>")
 		end
@@ -1158,17 +1180,31 @@ $(formatsentence(sentence))</blockquote></p>
 	""")
 end
 
+# ╔═╡ 8b7cac29-f5df-4ae7-9282-dfe13e9b4434
+function connectorurn()
+	if length(connectorlist) == 1
+		#sentence[connectorlist[1]].urn
+		sentence[connectorlist[1]][1].urn
+	elseif length(connectorlist) > 1
+		rangeopen = sentence[connectorlist[1]][1].urn |> passagecomponent
+		rangeend = sentence[connectorlist[end]][1].urn |> passagecomponent
+		range = string(rangeopen, "-", rangeend)
+		addpassage(sentence[connectorlist[1]][1].urn, range)
+		
+	end
+end;
+
 # ╔═╡ 88ea3ada-dc10-44b5-8d2f-70ef78b7a3fe
 """Compose delimited-text representation of sentence annotations."""
 function sentencecex(s;delimiter = "|")
 	senturn = sentencerange(s)
 	hdr = "sentence$(delimiter)connector"
 	lines = ["#!sentences", hdr]
-	if isnothing(connectorid) 
+	if isnothing(connectorlist[1]) 
 		push!(lines, string(senturn, delimiter, nothing) )
 	else
-		connectorurn = sentence[connectorid][1].urn
-		push!(lines, string(senturn, delimiter, connectorurn))
+		#connecturn = sentence[connectorid][1].urn
+		push!(lines, string(senturn, delimiter, connectorurn()))
 	end
 	join(lines, "\n")
 end;
@@ -1287,17 +1323,16 @@ end;
 # ╟─4627ab0d-42a8-4d92-9b0d-c933b1b41f50
 # ╟─a050416e-9b64-4103-8859-170d3912339d
 # ╟─c405681f-4271-46d5-a49f-f8da7bdfe3ed
-# ╠═2a49f12a-88b3-4667-8650-46cd7e127fd9
-# ╠═fbd97d94-1527-44d0-9203-80c54ddfd856
 # ╟─b41983f5-8774-4e4b-98fa-58087551971f
+# ╟─2a49f12a-88b3-4667-8650-46cd7e127fd9
 # ╟─a638caf3-94c9-4a03-8fa4-05d99d8e135a
 # ╟─b8ab34a6-2336-471c-bb74-6ad0800ba22d
 # ╟─0e0cd61d-f4d0-4615-a413-4dae483b031b
 # ╟─d4ff15c7-358a-4429-825d-356965ff2137
 # ╟─3181e436-9270-48ed-8d15-da8ad9e4927e
 # ╟─031d14de-ce21-4d2c-9b1c-9ddbaf59bb01
-# ╟─7a768206-49a6-44b2-99e3-4448af4fb543
 # ╟─990de15b-b64f-4830-9740-3d97b93594c4
+# ╟─7a768206-49a6-44b2-99e3-4448af4fb543
 # ╟─3ae3b338-2e05-4a31-aca3-ebc6b71f3d4c
 # ╟─4ca90ce5-c1e2-4f35-9e02-81788522c90e
 # ╟─7d418f4f-ffb5-4048-8dd2-8535c6d5f664
@@ -1355,6 +1390,7 @@ end;
 # ╟─8aab14ce-c3f6-428c-8985-11ca2ce1ed1f
 # ╟─2bffa4ea-03c2-4cda-8b7d-b166e0b9939b
 # ╟─d1edf3dd-503d-4b08-b153-a050d8a44a46
+# ╟─8b7cac29-f5df-4ae7-9282-dfe13e9b4434
 # ╟─88ea3ada-dc10-44b5-8d2f-70ef78b7a3fe
 # ╟─fa278abd-db5d-4340-9795-94407ef9cbf7
 # ╟─15deb4e6-4d84-4862-b453-d33cb96a02c7
