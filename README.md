@@ -1,24 +1,30 @@
 # GreekSyntax
 
-Contents:
+This repository presents a straightforward model of ancient Greek syntax, hosted on github pages at [https://neelsmith.github.io/GreekSyntax/](https://neelsmith.github.io/GreekSyntax/).
 
-- `docs` is the source for the web site at [https://neelsmith.github.io/GreekSyntax/](https://neelsmith.github.io/GreekSyntax/)
-- `pluto/ctssyntaxer.jl` is a Pluto notebook for annotating Greek syntax following the model presented on the web site.
+The model is computationally implemented in the Julia language by the `GreekSyntax.jl` package.  See [documentation for the Julia package](https://neelsmith.github.io/GreekSyntax.jl/stable/).
+
+
+This repository includes Pluto notebooks for the reading and study of ancient Greek texts using the `GreekSyntax.jl` package.
+
+
 
 
 ## Pluto notebooks
 
+In the `pluto` directory, you can find the following notebooks:
 
-The `pluto` directory hosts notebooks for working with syntactically annotated texts.
 
+- `ctssyntaxer.jl`:  annotate the syntax of a citable Greek text 
+- `syntacticreader.jl`: read a citable text with syntactic annotations
 
-- `ctssyntaxer.jl`:  annotate the syntax of a citable text 
-- `readwithsyntax.jl`: read a syntactically annotated text
+In development:
 
+- `syntacticpublisher.jl`: generate static webpages for reading syntactically annotated texts
 
 ### Using the annotater notebook 
 
 The Pluto notebook `ctssyntaxer.jl` relies on an unpublished package (the invaluable [`PlutoGrid` package](https://github.com/lungben/PlutoGrid.jl) by Benjamin Lungwitz). For that reason, it comes with accompanying `Project.toml` and `Manifest.toml` files in the `pluto` directory.  If you start a Pluto server and open `pluto/ctssyntaxer.jl`, it should be able to build all the resources it needs (eventually: the first build especially will be slow).
 
-This does not apply to the `readwithsyntax.jl` notebook.
+This does not apply to other notebooks.
 
