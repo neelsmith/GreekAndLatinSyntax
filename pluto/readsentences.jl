@@ -1,8 +1,447 @@
+### A Pluto.jl notebook ###
+# v0.19.19
+
+using Markdown
+using InteractiveUtils
+
+# This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
+macro bind(def, element)
+    quote
+        local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
+        local el = $(esc(element))
+        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
+        el
+    end
+end
+
+# ╔═╡ c91e9345-9a42-4418-861b-6cdda203a71e
+# ╠═╡ show_logs = false
+begin
+	
+	using PlutoUI
+	import PlutoUI: combine # For using `aside`, from PlutoTeachingTools
+	using PlutoTeachingTools
+	using Kroki
+	using CitableText
+	using GreekSyntax
+	using Downloads
+	md"""*Unhide this cell to see environment configuration.*"""
+end
+
+# ╔═╡ 6791a277-05ea-43d6-9710-c4044f0c178a
+nbversion = "0.2.0";
+
+# ╔═╡ 282716c0-e0e4-4433-beb4-4b988fddaa9c
+md"""**Notebook version $(nbversion)**  *See version history* $(@bind history CheckBox())"""
+
+# ╔═╡ a4946b0e-17c9-4f90-b820-2439047f2a6a
+if history
+	md"""
+- **0.2.0**: allows loading data from local file or URL
+- **0.1.0**: simplified reader using new `GreekSyntax` julia package
+- **0.0.1**: initial release	
+	"""
+end
+
+# ╔═╡ e7059fa0-82f2-11ed-3bfe-059070a00b1d
+md"""## Read Greek texts by sentence
+
+"""
+
+# ╔═╡ b9311908-9282-4658-95ab-6e1ff0ebb84f
+md"""### Load data set"""
+
+# ╔═╡ 86d64b7d-e3f1-4346-96fa-fb166f7ceeea
+md"""*Load from* $(@bind srctype Select(["", "url", "file"]))"""
+
+# ╔═╡ 176cfe71-a2a5-4fc6-940a-658495b470ac
+if srctype == "url"
+	md"""*Source URL*: $(@bind url confirm(TextField(80; default = 
+	"https://raw.githubusercontent.com/neelsmith/GreekSyntax.jl/main/test/data/Lysias1.6ff.cex")))
+	"""
+elseif srctype == "file"
+	
+	defaultdir = joinpath(dirname(pwd()), "data")
+	md"""*Source directory*: $(@bind basedir confirm(TextField(80; default = defaultdir)))"""
+end
+
+# ╔═╡ 255d6736-08d5-4565-baef-f3b6f4d433e1
+if srctype == "file"
+	
+	cexfiles = filter(readdir(basedir)) do fname
+		endswith(fname, ".cex")
+	end
+	datasets = [""]
+	for f in cexfiles
+		push!(datasets,f)
+	end
+	md"""*Choose a file* $(@bind dataset Select(datasets))"""
+end
+
+
+# ╔═╡ 73efb203-72ad-4c16-9836-140303f4e189
+html"""
+<br/><br/><br/>
+<br/><br/>
+"""
+
+# ╔═╡ ec7eb05f-fd6d-4477-a80b-9bfe1fe02fac
+ md""">  ## CSS and visual styling
+
+To learn how to customize the display of texts, check this option: $(@bind seecss CheckBox())
+"""
+
+# ╔═╡ fd69dddd-5903-41eb-8ddc-ee2d2f34a473
+begin
+	cheatsheet = """
+
+
+<h4>On <code>div</code></h4>
+
+	<ul>
+<li> <code>class="passage"</code></li>
+	</ul>
+
+	<h4>On <code>blockquote</code></h4>
+
+	<ul>
+<li> <code>class="subordination"</code></li>
+	</ul>
+
+<h4>On <code>span</code></h4>
+
+Class attributes:
+
+	<ul>
+<li> <code>connector</code></li>
+<li> <code>subject</code></li>
+<li> <code>verb</code></li>
+<li> <code>object</code></li>
+</ul>
+
+	<p>
+Also on <code>span</code>: colors from a vector of colors are directly set in <code>style</code> attribute for verbal groups.
+	</p>
+"""
+
+	Foldable("Summary of CSS usage", HTML("""$(cheatsheet)""")) |> aside
+end
+
+# ╔═╡ 9ed6aaaf-fba8-4101-9a6c-48215f4ec3f9
+ css = html"""
+<style>
+  blockquote.subordination {
+ 	padding: 0em;
+ 
+ }
+  .connector {
+ background: yellow;  
+ font-style: bold;
+}
+
+.subject {
+ 	text-decoration: underline;
+ 	text-decoration-thickness: 3px;
+}
+.object {
+ 	text-decoration: underline;
+ 	text-decoration-style: wavy;
+ }
+ .verb {
+ 	border: thin solid black;
+ 	padding: 1px 3px;
+ 	
+ }
+
+ .unassigned {
+ color: silver;
+ }
+ 
+
+span.tooltip{
+  position: relative;
+  display: inline;
+}
+span.tooltip:hover:after{ visibility: visible; opacity: 0.8; bottom: 20px; }
+span.tooltip:hover:before{ visibility: visible; opacity: 0.8; bottom: 14px; }
+
+span.tooltip:after{
+  display: block;
+  visibility: hidden;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  opacity: 0.9;
+  content: attr(tool-tips);
+  height: auto;
+  width: auto;
+  min-width: 100px;
+  padding: 5px 8px;
+  z-index: 999;
+  color: #fff;
+  text-decoration: none;
+  text-align: center;
+  background: rgba(0,0,0,0.85);
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+span.tooltip:before {
+  position: absolute;
+  visibility: hidden;
+  width: 0;
+  height: 0;
+  left: 50%;
+  bottom: 0px;
+  opacity: 0;
+  content: "";
+  border-style: solid;
+  border-width: 6px 6px 0 6px;
+  border-color: rgba(0,0,0,0.85) transparent transparent transparent;
+}
+ """
+
+# ╔═╡ 87e46deb-aaad-4e78-81e9-410e3dda062d
+palette = ["#79A6A3;",
+	"#E5B36A;",
+	"#C7D7CA;",
+	"#E7926C;",
+	"#D29DC0;",
+	"#C2D6C4;",
+	"#D291BC;",
+	"E7DCCA;",
+	"#FEC8D8;",
+	"#F5CF89;",
+	"#F394AF;"
+]
+
+# ╔═╡ 34f55f22-1115-4962-801f-bde4edca05f3
+html"""
+<br/><br/><br/><br/><br/><br/><br/>
+<br/><br/><br/><br/><br/><br/><br/>
+<br/><br/><br/><br/><br/><br/><br/>
+<br/><br/><br/><br/><br/><br/><br/>
+<br/><br/><br/><br/><br/><br/><br/>
+<br/><br/><br/><br/><br/><br/><br/>
+<hr/>
+"""
+
+# ╔═╡ 85e2f41f-1163-45f1-b10a-aa25769f8345
+md"You should not need to edit the following cells:"
+
+# ╔═╡ 136599a5-b7c1-4513-be88-e7e79e1f6fb5
+md"""> **Loading data**. Use the `GreekSyntax` package to read delimited text annotations from a local file or a URL.
+>
+
+
+"""
+
+# ╔═╡ 74ec2148-dd53-4f54-9d92-327d5ba44eaf
+(sentences, verbalunits, tokens) = if srctype == "file"
+	 joinpath(basedir, dataset) |> readlines |> readdelimited
+elseif srctype == "url"
+	Downloads.download(url) |> readlines |> readdelimited
+else
+	(nothing, nothing, nothing)
+end
+
+# ╔═╡ 20f31f23-9d89-47d3-85a3-b53b5bc67a9f
+"""True if selected dataset exists."""
+function dsexists()
+	! isnothing(sentences) && ! isempty(sentences)
+end
+
+# ╔═╡ 31ea4680-63ff-44fc-82cf-dadb041fd144
+if srctype == "url"
+	if dsexists()
+		md"""*Summary of data loaded*:  **$(length(sentences)) sentences** with **$(length(verbalunits)) verbal units** composed from **$(length(tokens)) tokens**."""
+		
+	else
+		md"Something is broken"
+	end
+elseif srctype == "file"
+if ! @isdefined(dataset) || isempty(dataset)
+	md"""*Please choose a file*"""
+else
+	if dsexists()
+		md"""*Summary of data loaded*:  **$(length(sentences)) sentences** with **$(length(verbalunits)) verbal units** composed from **$(length(tokens)) tokens**."""
+		
+	else
+		md"Something is broken"
+	end
+end
+end
+
+# ╔═╡ 185edebe-b458-436e-91e7-3db8703991bf
+if dsexists()
+	md"""### Read by sentence"""
+end
+
+# ╔═╡ 32048e21-b1eb-49f1-94e6-c5347331f727
+if dsexists()
+	sentencemenu = [0 => ""]
+	for (i,s) in enumerate(sentences)
+		push!(sentencemenu, i => passagecomponent(s.range))
+	end
+
+	
+	md"""*Choose a sentence* $(@bind sentchoice Select(sentencemenu)) 
+	"""
+end
+
+# ╔═╡ deb8fb9d-407f-4bc8-9690-92934e5751e1
+# Add this when tooltip data are added to GreekSyntax.jl
+#*Add tooltips* $(@bind tippy CheckBox())if dsexists()
+begin
+	if dsexists()
+	displaymenu = ["continuous" => "continuous text", "indented" => "indented for subordination"
+	]
+	md"""*Display* $(@bind txtdisplay Select(displaymenu)) *Highlight SOV+ functions* $(@bind sov CheckBox()) *Color verbal units* $(@bind vucolor CheckBox()) 
+"""
+end
+end
+
+# ╔═╡ c26d95cb-e681-43e0-acc7-e4af4bf5e0da
+# ╠═╡ show_logs = false
+if @isdefined(sentchoice) && sentchoice > 0
+	if txtdisplay == "continuous"
+		rendered = htmltext(sentences[sentchoice], tokens; sov = sov, vucolor = vucolor)
+		HTML(rendered)
+		
+	else # indented
+		rendered = htmltext_indented(sentences[sentchoice], verbalunits, tokens; sov = sov, vucolor = vucolor)
+
+		HTML(rendered)
+		
+	end
+	
+end
+
+# ╔═╡ 2c692039-dd5b-4430-9f2e-d9eaa8851fbf
+if dsexists()
+	md"""*Include syntax diagram* $(@bind diagram CheckBox())
+"""
+end
+
+# ╔═╡ 809e4588-4d79-4a6d-a0e7-625805fc73d7
+begin
+	if @isdefined(sentchoice) && sentchoice > 0 && diagram
+		graphstr  = mermaiddiagram(sentences[sentchoice], tokens)
+		mermaid"""$(graphstr)"""
+	end
+end
+
+# ╔═╡ 69e9fc75-2d62-45ff-ad02-7bbf4ef7fa7c
+sentence = if dsexists() && sentchoice > 0
+	sentences[sentchoice]
+else
+	nothing
+end
+
+# ╔═╡ 1efb3f4c-13a7-4e71-a2f0-fdd9a057f37c
+if @isdefined(sentchoice) && sentchoice > 0
+	
+	sovkey =  sov ? """<p><b>SOV+ highlighting</b>:</p><ul>
+	<li><span class="connector">sentence connector</span></li>
+	<li><span class="verb">unit verb</span></li>
+	<li><span class="subject">subject of unit verb</span></li>
+	<li><span class="object">object of unit verb</span></li>
+	</ul>
+	""" : ""
+	
+	colorkey = vucolor ? "<p><b>Color</b></p>" * htmlgrouplist(sentence, verbalunits) : ""
+	
+	keytext = sovkey * colorkey
+
+	if ! isempty(keytext)
+		aside(Foldable("Key to highlighting",  HTML(keytext))  )
+	end
+end
+
+# ╔═╡ 698f3062-02a4-48b5-955e-a8c3ee527872
+"""Format user instructions with Markdown admonition."""
+instructions(title, text) = Markdown.MD(Markdown.Admonition("tip", title, [text]))
+
+# ╔═╡ d76195d9-5bf6-4d3e-bddf-92cc4a1001ba
+begin
+	loadmsg = md"""
+	
+You may load syntactically annotated texts from a URL or from a local file.
+
+*To load from a URL*:
+	
+- paste or type a URL in the input box, and verify your choice with the `Submit` button 
+
+	
+*To load from a file*:
+	
+1. Identify a directory with delimited-text files containing syntactic annotations, and verify your choice with the `Submit` button.
+2. Choose a file from the popup menu.
+
+
+"""
+	aside(Foldable("How to load annotated texts", instructions("Loading data sets", loadmsg))  )
+end
+
+# ╔═╡ f0ca233e-2113-451a-ac90-3ecb1f44d329
+begin
+	if dsexists()
+	readmsg = md"""
+
+#### Text formatting
+	
+- Text may be displayed continuously, or broken out and indented by its level of syntactic subordination. 
+- The `Highlight SOV+ functions` highlights the subject, object and verb for each verbal expression, and the connecting word for each sentence with special formatting defined in CSS (below).
+- The 'Color verbal units` option colors words by the verbal expression they belong to.
+
+
+#### Syntax diagram
+	
+The `Include syntax diagram` option appends a graph illustrating the syntactic relations of every word in the sentence.	
+
+"""
+	Foldable("Formatting options", instructions("Reading annotated texts", readmsg))  
+	end
+end
+
+# ╔═╡ 7772957f-3d7b-44b0-9cfe-998b8e6ab3cc
+begin
+	if seecss
+	cssmsg = md"""
+The following two cells define the visual appearance of the text's formatting.  If you are familiar with CSS, you can modify them to tailor the presentation to your preferences.
+
+1.  Unfold the `Summary of CSS usage` to see what attributes are defined in the HTML generated by the `GreekSyntax` package.  You can alter the corresponding CSS values in the definition of `css` in the following cell.
+2. The second cell defines `palette`, a series of colors that the notebook cycles through in highlighting different verbal expressions by color.  You can directly edit the cell to change those RGB values
+"""
+		instructions("Style your own", cssmsg)
+	end
+end
+
+# ╔═╡ 00000000-0000-0000-0000-000000000001
+PLUTO_PROJECT_TOML_CONTENTS = """
+[deps]
+CitableText = "41e66566-473b-49d4-85b7-da83b66615d8"
+Downloads = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
+GreekSyntax = "5497687e-e4d1-4cb6-b14f-a6a808518ccd"
+Kroki = "b3565e16-c1f2-4fe9-b4ab-221c88942068"
+PlutoTeachingTools = "661c6b06-c737-4d37-b85c-46df65de6f69"
+PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
+
+[compat]
+CitableText = "~0.15.2"
+GreekSyntax = "~0.8.0"
+Kroki = "~0.2.0"
+PlutoTeachingTools = "~0.2.5"
+PlutoUI = "~0.7.49"
+"""
+
+# ╔═╡ 00000000-0000-0000-0000-000000000002
+PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
 julia_version = "1.8.3"
 manifest_format = "2.0"
-project_hash = "e25c993af61342f3b47dad1b18ad66e174e12514"
+project_hash = "c282ff76651e8dcdabc6a1b1f790bef36fdab3fe"
 
 [[deps.ANSIColoredPrinters]]
 git-tree-sha1 = "574baf8110975760d391c710b6341da1afa48d8c"
@@ -107,21 +546,10 @@ deps = ["Artifacts", "Libdl"]
 uuid = "e66e0078-7015-5450-92f7-15fbd957f2ae"
 version = "0.5.2+0"
 
-[[deps.Crayons]]
-git-tree-sha1 = "249fe38abf76d48563e2f4556bebd215aa317e15"
-uuid = "a8cc5b0e-0ffa-5ad4-8c14-923d3ee1735f"
-version = "4.1.1"
-
 [[deps.DataAPI]]
 git-tree-sha1 = "e8119c1a33d267e16108be441a287a6981ba1630"
 uuid = "9a962f9c-6df0-11e9-0e5d-c546b8b5ee8a"
 version = "1.14.0"
-
-[[deps.DataFrames]]
-deps = ["Compat", "DataAPI", "Future", "InvertedIndices", "IteratorInterfaceExtensions", "LinearAlgebra", "Markdown", "Missings", "PooledArrays", "PrettyTables", "Printf", "REPL", "Random", "Reexport", "SnoopPrecompile", "SortingAlgorithms", "Statistics", "TableTraits", "Tables", "Unicode"]
-git-tree-sha1 = "d4f69885afa5e6149d0cab3818491565cf41446d"
-uuid = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
-version = "1.4.4"
 
 [[deps.DataStructures]]
 deps = ["Compat", "InteractiveUtils", "OrderedCollections"]
@@ -250,11 +678,6 @@ deps = ["Test"]
 git-tree-sha1 = "49510dfcb407e572524ba94aeae2fced1f3feb0f"
 uuid = "3587e190-3f89-42d0-90ee-14403ec27112"
 version = "0.1.8"
-
-[[deps.InvertedIndices]]
-git-tree-sha1 = "82aec7a3dd64f4d9584659dc0b62ef7db2ef3e19"
-uuid = "41ab1584-1d38-5bbf-9106-f11c6c58b48f"
-version = "1.2.0"
 
 [[deps.IrrationalConstants]]
 git-tree-sha1 = "7fd44fd4ff43fc60815f8e764c0f352b83c49151"
@@ -430,14 +853,6 @@ deps = ["Artifacts", "Dates", "Downloads", "LibGit2", "Libdl", "Logging", "Markd
 uuid = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 version = "1.8.0"
 
-[[deps.PlutoGrid]]
-deps = ["DataFrames", "HypertextLiteral", "Tables"]
-git-tree-sha1 = "7b643752ea94225c6227c627f54347485a197c84"
-repo-rev = "main"
-repo-url = "https://github.com/lungben/PlutoGrid.jl"
-uuid = "a20d0229-560c-4477-9f1c-52a9c9028069"
-version = "0.1.2"
-
 [[deps.PlutoHooks]]
 deps = ["InteractiveUtils", "Markdown", "UUIDs"]
 git-tree-sha1 = "072cdf20c9b0507fdd977d7d246d90030609674b"
@@ -479,12 +894,6 @@ deps = ["TOML"]
 git-tree-sha1 = "47e5f437cc0e7ef2ce8406ce1e7e24d44915f88d"
 uuid = "21216c6a-2e73-6563-6e65-726566657250"
 version = "1.3.0"
-
-[[deps.PrettyTables]]
-deps = ["Crayons", "Formatting", "LaTeXStrings", "Markdown", "Reexport", "StringManipulation", "Tables"]
-git-tree-sha1 = "96f6db03ab535bdb901300f88335257b0018689d"
-uuid = "08abe8d2-0d0c-5749-adfa-8a2ac140af0d"
-version = "2.2.2"
 
 [[deps.Printf]]
 deps = ["Unicode"]
@@ -572,11 +981,6 @@ deps = ["DataAPI", "DataStructures", "LinearAlgebra", "LogExpFunctions", "Missin
 git-tree-sha1 = "d1bf48bfcc554a3761a133fe3a9bb01488e06916"
 uuid = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 version = "0.33.21"
-
-[[deps.StringManipulation]]
-git-tree-sha1 = "46da2434b41f41ac3594ee9816ce5541c6096123"
-uuid = "892a3eda-7b42-436c-8928-eab12a02cf0e"
-version = "0.3.0"
 
 [[deps.TOML]]
 deps = ["Dates"]
@@ -669,3 +1073,40 @@ version = "1.48.0+0"
 deps = ["Artifacts", "Libdl"]
 uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
 version = "17.4.0+0"
+"""
+
+# ╔═╡ Cell order:
+# ╟─6791a277-05ea-43d6-9710-c4044f0c178a
+# ╟─c91e9345-9a42-4418-861b-6cdda203a71e
+# ╟─282716c0-e0e4-4433-beb4-4b988fddaa9c
+# ╟─a4946b0e-17c9-4f90-b820-2439047f2a6a
+# ╟─e7059fa0-82f2-11ed-3bfe-059070a00b1d
+# ╟─b9311908-9282-4658-95ab-6e1ff0ebb84f
+# ╟─d76195d9-5bf6-4d3e-bddf-92cc4a1001ba
+# ╟─86d64b7d-e3f1-4346-96fa-fb166f7ceeea
+# ╟─176cfe71-a2a5-4fc6-940a-658495b470ac
+# ╟─255d6736-08d5-4565-baef-f3b6f4d433e1
+# ╟─31ea4680-63ff-44fc-82cf-dadb041fd144
+# ╟─185edebe-b458-436e-91e7-3db8703991bf
+# ╟─32048e21-b1eb-49f1-94e6-c5347331f727
+# ╟─f0ca233e-2113-451a-ac90-3ecb1f44d329
+# ╟─deb8fb9d-407f-4bc8-9690-92934e5751e1
+# ╟─2c692039-dd5b-4430-9f2e-d9eaa8851fbf
+# ╟─1efb3f4c-13a7-4e71-a2f0-fdd9a057f37c
+# ╟─c26d95cb-e681-43e0-acc7-e4af4bf5e0da
+# ╟─809e4588-4d79-4a6d-a0e7-625805fc73d7
+# ╟─73efb203-72ad-4c16-9836-140303f4e189
+# ╟─ec7eb05f-fd6d-4477-a80b-9bfe1fe02fac
+# ╟─7772957f-3d7b-44b0-9cfe-998b8e6ab3cc
+# ╟─fd69dddd-5903-41eb-8ddc-ee2d2f34a473
+# ╟─9ed6aaaf-fba8-4101-9a6c-48215f4ec3f9
+# ╟─87e46deb-aaad-4e78-81e9-410e3dda062d
+# ╟─34f55f22-1115-4962-801f-bde4edca05f3
+# ╟─85e2f41f-1163-45f1-b10a-aa25769f8345
+# ╟─136599a5-b7c1-4513-be88-e7e79e1f6fb5
+# ╟─74ec2148-dd53-4f54-9d92-327d5ba44eaf
+# ╟─69e9fc75-2d62-45ff-ad02-7bbf4ef7fa7c
+# ╟─20f31f23-9d89-47d3-85a3-b53b5bc67a9f
+# ╟─698f3062-02a4-48b5-955e-a8c3ee527872
+# ╟─00000000-0000-0000-0000-000000000001
+# ╟─00000000-0000-0000-0000-000000000002
