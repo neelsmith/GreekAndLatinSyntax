@@ -14,8 +14,8 @@ This repository includes Pluto notebooks for the reading and study of ancient Gr
 
 In the `pluto` directory, you can find the following notebooks:
 
-- `readsentences.jl`
-- `readsubordination.jl`
+- `readsentences.jl`: read texts with options to visualize syntax per sentence
+- `readsubordination.jl`:  read texts with options to explore sentences by level of syntactic subordination
 
 ## Annotating citable texts.
 
