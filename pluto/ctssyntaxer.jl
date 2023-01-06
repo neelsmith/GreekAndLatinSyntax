@@ -313,9 +313,6 @@ function titleok()
 	@isdefined(title) && ! isempty(title)
 end
 
-# ╔═╡ 67195eec-ce3a-4246-b38e-8f8f02299275
-titleok()
-
 # ╔═╡ aaed173a-74da-4e3c-b08c-b2ba49d0d6e3
 """True if srcurl prerequisite is set."""
 function srcurlok()
@@ -552,12 +549,21 @@ end
 
 # ╔═╡ a36f18f6-20c8-4d24-9ed3-cf6afd9e0b52
 # Make conditional on satisfaction of necessary conditions ...
-sentenceannotation = isnothing(sentence) ? nothing : SentenceAnnotation(
+sentenceannotation = if isnothing(sentence) 
+		nothing 
+elseif isnothing(connectorlist) || isnothing(connectorlist[1])
+	SentenceAnnotation(
+		sentence.urn,
+		sentence.sequence,
+		nothing
+	)
+else
+SentenceAnnotation(
 		sentence.urn,
 		sentence.sequence,
 		connectorurn(sentencetokens, connectorlist)	
 	)	
-
+end
 
 # ╔═╡ b3589032-ad92-4dfc-8c0a-62ca4b97d2aa
 """Compose an HTML `blockquote` element setting highlighting on any connector tokens in `tknlist` with an index
@@ -1346,12 +1352,11 @@ end;
 # ╟─992ff9e8-cdce-4709-beef-9d96a6f668e6
 # ╟─423ff985-22e9-4aa8-a090-922448d53f4d
 # ╟─2914ad6d-b3e3-42ca-a0b8-31833e51a7e8
-# ╠═c8301540-56dc-4785-9d35-2c77d2438a8a
-# ╠═67195eec-ce3a-4246-b38e-8f8f02299275
+# ╟─c8301540-56dc-4785-9d35-2c77d2438a8a
 # ╟─7aac11cf-3a6b-4a96-8595-81a7a6d6a2a2
 # ╟─aaed173a-74da-4e3c-b08c-b2ba49d0d6e3
-# ╠═93bee380-1805-49ce-ae9f-794ea2224bb6
-# ╠═0f38d603-8b1d-451f-8be7-2162e055073f
+# ╟─93bee380-1805-49ce-ae9f-794ea2224bb6
+# ╟─0f38d603-8b1d-451f-8be7-2162e055073f
 # ╟─50250528-afda-4011-87a5-1217169b9b66
 # ╟─2b3381a1-a82a-441a-81a4-7aa0e62ceac6
 # ╟─41a654d1-44d7-476b-b421-8f83d254f14e

@@ -29,7 +29,7 @@ begin
 end
 
 # ╔═╡ 6791a277-05ea-43d6-9710-c4044f0c178a
-nbversion = "0.3.1";
+nbversion = "0.3.2";
 
 # ╔═╡ 282716c0-e0e4-4433-beb4-4b988fddaa9c
 md"""**Notebook version $(nbversion)**  *See version history* $(@bind history CheckBox())"""
@@ -37,6 +37,7 @@ md"""**Notebook version $(nbversion)**  *See version history* $(@bind history Ch
 # ╔═╡ a4946b0e-17c9-4f90-b820-2439047f2a6a
 if history
 	md"""
+- **0.3.2**: use `passage` class on div wrapping text passages
 - **0.3.1**: updates internal manifest to use version `0.9` of `GreekSyntax`
 - **0.3.0**: use updated `GreekSyntax` package; add options to use default or customized CSS and color palette
 - **0.2.1**: change default URL for loading data
@@ -333,11 +334,11 @@ end
 # ╠═╡ show_logs = false
 if @isdefined(sentchoice) && sentchoice > 0
 	if txtdisplay == "continuous"
-		rendered = htmltext(sentences[sentchoice], tokens; sov = sov, vucolor = vucolor)
+		rendered = "<div class=\"passage\">" * htmltext(sentences[sentchoice], tokens; sov = sov, vucolor = vucolor) * "</div>"
 		HTML(rendered)
 		
 	else # indented
-		rendered = htmltext_indented(sentences[sentchoice], verbalunits, tokens; sov = sov, vucolor = vucolor)
+		rendered = "<div class=\"passage\">" *  htmltext_indented(sentences[sentchoice], verbalunits, tokens; sov = sov, vucolor = vucolor) * "</div>"
 
 		HTML(rendered)
 		
@@ -469,7 +470,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.8.3"
 manifest_format = "2.0"
-project_hash = "c282ff76651e8dcdabc6a1b1f790bef36fdab3fe"
+project_hash = "bca951455e145e55e5b0df5fcdfe910dee11c878"
 
 [[deps.ANSIColoredPrinters]]
 git-tree-sha1 = "574baf8110975760d391c710b6341da1afa48d8c"
