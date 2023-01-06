@@ -29,7 +29,7 @@ begin
 end
 
 # ╔═╡ 6791a277-05ea-43d6-9710-c4044f0c178a
-nbversion = "0.3.0";
+nbversion = "0.3.1";
 
 # ╔═╡ 282716c0-e0e4-4433-beb4-4b988fddaa9c
 md"""**Notebook version $(nbversion)**  *See version history* $(@bind history CheckBox())"""
@@ -37,6 +37,7 @@ md"""**Notebook version $(nbversion)**  *See version history* $(@bind history Ch
 # ╔═╡ a4946b0e-17c9-4f90-b820-2439047f2a6a
 if history
 	md"""
+- **0.3.1**: updates internal manifest to use version `0.9` of `GreekSyntax`
 - **0.3.0**: use updated `GreekSyntax` package; add options to use default or customized CSS and color palette
 - **0.2.1**: change default URL for loading data
 - **0.2.0**: allows loading data from local file or URL
@@ -456,7 +457,7 @@ PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
 
 [compat]
 CitableText = "~0.15.2"
-GreekSyntax = "~0.8.1"
+GreekSyntax = "~0.9.0"
 Kroki = "~0.2.0"
 PlutoTeachingTools = "~0.2.5"
 PlutoUI = "~0.7.49"
@@ -468,7 +469,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.8.3"
 manifest_format = "2.0"
-project_hash = "917c9f520c52ae4e40865086718f40e45945e324"
+project_hash = "c282ff76651e8dcdabc6a1b1f790bef36fdab3fe"
 
 [[deps.ANSIColoredPrinters]]
 git-tree-sha1 = "574baf8110975760d391c710b6341da1afa48d8c"
@@ -652,9 +653,9 @@ uuid = "9fa8497b-333b-5362-9e8d-4d0656e87820"
 
 [[deps.GreekSyntax]]
 deps = ["CitableBase", "CitableCorpus", "CitableText", "Compat", "DocStringExtensions", "Documenter", "Kroki", "Orthography", "PolytonicGreek", "Test", "TestSetExtensions"]
-git-tree-sha1 = "927e8f8ead1a1e0cb25381c60f36d1dc418159ec"
+git-tree-sha1 = "9e046f538366814bc7ff78aa81d4112a077ed64d"
 uuid = "5497687e-e4d1-4cb6-b14f-a6a808518ccd"
-version = "0.8.1"
+version = "0.9.0"
 
 [[deps.HTTP]]
 deps = ["Base64", "CodecZlib", "Dates", "IniFile", "Logging", "LoggingExtras", "MbedTLS", "NetworkOptions", "OpenSSL", "Random", "SimpleBufferStream", "Sockets", "URIs", "UUIDs"]

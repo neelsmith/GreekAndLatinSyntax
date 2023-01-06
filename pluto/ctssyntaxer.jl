@@ -67,7 +67,7 @@ end
 TableOfContents() 
 
 # ╔═╡ 31cc3ad6-ac34-49f7-a86f-575a08eb1358
-nbversion = "0.5.0";
+nbversion = "0.6.0";
 
 # ╔═╡ ed67e569-147c-4899-b338-f3282d9474b1
 md"""(*Notebook version **$(nbversion)**.*)  *See version history* $(@bind history CheckBox())"""
@@ -76,6 +76,8 @@ md"""(*Notebook version **$(nbversion)**.*)  *See version history* $(@bind histo
 if history
 md"""
 
+- **0.6.0**: Allow loading source data from file or URL.
+- **0.5.1**: Fixes a bug in serializing verbal expressions.
 - **0.5.0**: Uses new `GreekSyntax` package to simplify notebook. Fixes syntax error in default color palette.
 - **0.4.1**: fixes a boundary-checking error in using multiple connectors.
 - **0.4.0**: reorganizes tips and instructions using `aside` from `PlutoTeachingTools`; allows selection of a *range* of connecting words; corrects bug in display of indented syntactic units.
@@ -104,28 +106,6 @@ md"""
 # ╔═╡ d865bcd7-ef34-48d1-9526-623578822e42
 md"""### Prerequisites: configuring your notebook"""
 
-# ╔═╡ 3c3003e6-ebe9-434a-8960-6504b0e1578e
-begin
-	defaultdir = joinpath(pwd(), "output")
-	md"""*Directory where results will be saved*: $(@bind outputdir confirm(TextField(80, default = defaultdir)))"""
-# *Title*: $(@bind title TextField(80; placeholder = "Title for text"))
-end
-
-# ╔═╡ b092c825-d4f8-4f3d-a8b1-57a6a642290d
-md"""
-*Paste or type in a URL for the CEX source file to annotate.*
- $(@bind srcurl confirm(TextField(80; placeholder = "URL for CEX source")))
-
-	"""
-
-# ╔═╡ 58b8e896-1d55-4d43-8d93-d9421f1d85bf
-if isempty(srcurl)
-	nourl_prompt = md"""Please paste or type in a URL for the CEX source of the text you want to annotate in the input box below.
-	
-	If you want to practice by annotating Lysias 1, you can use [https://raw.githubusercontent.com/neelsmith/GreekSyntax/main/sandbox/lysias1.cex](https://raw.githubusercontent.com/neelsmith/GreekSyntax/main/sandbox/lysias1.cex)."""
-	still_missing(nourl_prompt)
-end
-
 # ╔═╡ ccb5e655-9bb1-4117-9231-f9a90855b48b
 md"""*Please provide a title for your collection of annotations.*
 
@@ -133,8 +113,171 @@ md"""*Please provide a title for your collection of annotations.*
 """
 
 
+# ╔═╡ 3c3003e6-ebe9-434a-8960-6504b0e1578e
+begin
+	defaultdir = joinpath(pwd(), "output")
+	md"""*Directory where results will be saved*: $(@bind outputdir confirm(TextField(80, default = defaultdir)))"""
+# *Title*: $(@bind title TextField(80; placeholder = "Title for text"))
+end
+
+# ╔═╡ a6a283db-692c-43ff-8c43-6038d3bc2ed2
+md"""*Load citable text from* $(@bind srctype Select(["", "url", "file"]))"""
+
+# ╔═╡ 9d8b4b7c-f6f6-4f53-9f08-0854069f658b
+if srctype == "url"
+	md"""
+*Paste or type in a URL for the CEX source file to annotate.*	
+	*Source URL*: $(@bind srcurl confirm(TextField(80; default = 
+	"https://raw.githubusercontent.com/neelsmith/GreekSyntax.jl/main/test/data/texts/lysias1.cex")))
+	"""
+
+
+
+elseif srctype == "file"
+	
+	defaultsrcdir = joinpath(dirname(pwd()), "data")
+	md"""*Source directory*: $(@bind basedir confirm(TextField(80; default = defaultdir)))"""
+end
+
+# ╔═╡ de0e1c93-4e9a-40da-bf76-b9952d2da2ae
+if srctype == "file"
+	
+	cexfiles = filter(readdir(basedir)) do fname
+		endswith(fname, ".cex")
+	end
+	datasets = [""]
+	for f in cexfiles
+		push!(datasets,f)
+	end
+	md"""*Choose a file* $(@bind datafile Select(datasets))"""
+end
+
 # ╔═╡ 73cb1d9d-c265-46c5-ae8d-1d940379b0d1
-md"""*Output directory, source URL and title are all correct* $(@bind prereqsok CheckBox())"""
+md"""*Title, output directory, source are all correct* $(@bind prereqsok CheckBox())"""
+
+# ╔═╡ 29b8ac63-3d57-401f-b99e-97920bf03369
+html"""
+<br/><br/>
+<br/>"""
+
+# ╔═╡ 727a99ac-9106-4bac-a929-e829299f66f5
+md""" ## Customizing  the notebook's visual appearance
+
+
+To learn how to customize the display of texts, check this option: $(@bind seecss CheckBox())
+"""
+
+# ╔═╡ 1dfa58d2-bf17-4a6c-af5e-92ac70d34d64
+md"""*Use default CSS* $(@bind defaultcss CheckBox(true))"""
+
+# ╔═╡ ab04a33d-07df-4cb3-901b-452eae7ec085
+css = if defaultcss
+ 	cssbody = GreekSyntax.defaultcss()
+	 HTML("<style>$(cssbody)</style>")
+	 
+ else
+	 
+ html"""
+<style>
+ div.passage {
+ 	padding-top: 2em;
+ 	padding-bottom: 2em;
+ 
+ }
+  blockquote.subordination {
+ 	padding: 0em;
+ 
+ }
+  .connector {
+ background: yellow;  
+ font-style: bold;
+}
+
+.subject {
+ 	text-decoration: underline;
+ 	text-decoration-thickness: 3px;
+}
+.object {
+ 	text-decoration: underline;
+ 	text-decoration-style: wavy;
+ }
+ .verb {
+ 	border: thin solid black;
+ 	padding: 1px 3px;
+ 	
+ }
+
+ .unassigned {
+ color: silver;
+ }
+ 
+
+span.tooltip{
+  position: relative;
+  display: inline;
+}
+span.tooltip:hover:after{ visibility: visible; opacity: 0.8; bottom: 20px; }
+span.tooltip:hover:before{ visibility: visible; opacity: 0.8; bottom: 14px; }
+
+span.tooltip:after{
+  display: block;
+  visibility: hidden;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  opacity: 0.9;
+  content: attr(tool-tips);
+  height: auto;
+  width: auto;
+  min-width: 100px;
+  padding: 5px 8px;
+  z-index: 999;
+  color: #fff;
+  text-decoration: none;
+  text-align: center;
+  background: rgba(0,0,0,0.85);
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+span.tooltip:before {
+  position: absolute;
+  visibility: hidden;
+  width: 0;
+  height: 0;
+  left: 50%;
+  bottom: 0px;
+  opacity: 0;
+  content: "";
+  border-style: solid;
+  border-width: 6px 6px 0 6px;
+  border-color: rgba(0,0,0,0.85) transparent transparent transparent;
+}
+ """
+ end
+
+# ╔═╡ b4501a23-167e-4095-b9d6-dbd9dafc0d19
+md"""*Use default color palette* $(@bind defaultcolors CheckBox(true))"""
+
+# ╔═╡ 7b101134-1c41-40f0-9c1a-16ed9e4e5034
+palette = if defaultcolors
+	
+	GreekSyntax.defaultpalette
+	
+else
+	["#79A6A3;",
+	"#E5B36A;",
+	"#C7D7CA;",
+	"#E7926C;",
+	"#D29DC0;",
+	"#C2D6C4;",
+	"#D291BC;",
+	"E7DCCA;",
+	"#FEC8D8;",
+	"#F5CF89;",
+	"#F394AF;"
+]
+end
 
 # ╔═╡ 7183fd4d-f180-474f-81d5-524aaf7f0152
 html"""
@@ -170,16 +313,25 @@ function titleok()
 	@isdefined(title) && ! isempty(title)
 end
 
+# ╔═╡ 67195eec-ce3a-4246-b38e-8f8f02299275
+titleok()
+
 # ╔═╡ aaed173a-74da-4e3c-b08c-b2ba49d0d6e3
 """True if srcurl prerequisite is set."""
 function srcurlok()
 	@isdefined(srcurl) && ! isempty(srcurl)
 end
 
+# ╔═╡ 93bee380-1805-49ce-ae9f-794ea2224bb6
+"""True if selected data file exists."""
+function datafileok()
+	@isdefined(datafile) && isfile(joinpath(basedir, datafile)) 
+end
+
 # ╔═╡ c8301540-56dc-4785-9d35-2c77d2438a8a
 """True if all prerequisites are defined"""
 function prereqs()
-	prereqsok && srcurlok() && titleok() && isdir(outputdir)
+	prereqsok && titleok() && isdir(outputdir) && ( srcurlok()  || datafileok())
 end
 
 # ╔═╡ 0ce311b0-fcad-4e98-9b1f-42005f44e509
@@ -201,7 +353,13 @@ md"""> ### Global variables derived from *choice of data set*
 
 # ╔═╡ 2b3381a1-a82a-441a-81a4-7aa0e62ceac6
 corpus = if prereqs()
-	fromcex(srcurl, CitableTextCorpus, UrlReader);
+	if srctype == "url"
+		fromcex(srcurl, CitableTextCorpus, UrlReader)
+		
+	elseif srctype == "file" && datafileok()
+		fromcex(joinpath(basedir, datafile), CitableTextCorpus, FileReader)
+	end
+	
 else
 	nothing
 end
@@ -311,11 +469,11 @@ md"""> ### Global variables derived from the user's *sentence selection*
 # ╔═╡ 3a49b461-e4c2-44cb-9600-9ec10bf1e91f
 # The currently selected sentence
 # Check on existing of sentid!
-sentence = sentid == 0 ? [] : sentencesequence[sentid]
+sentence = sentid == 0 ? nothing : sentencesequence[sentid]
 
 
 # ╔═╡ d437d981-8140-49f2-89ef-4a2ddef1cacb
-sentencetokens = CitableCorpus.select(sentence.urn, tokencorpus)
+sentencetokens = isnothing(sentence) ? nothing : CitableCorpus.select(sentence.urn, tokencorpus)
 
 # ╔═╡ a050416e-9b64-4103-8859-170d3912339d
 if prereqs()
@@ -330,8 +488,12 @@ end
 
 # ╔═╡ 725e9948-db7d-4f45-8954-d8c554185c6e
 sentenceorthotokens = begin
-	rangeindexing = CitableCorpus.indexurn(sentence.urn, tokencorpus)
-	orthotokens[rangeindexing[1]:rangeindexing[2]]
+	if isnothing(sentence)
+		nothing
+	else
+		rangeindexing = CitableCorpus.indexurn(sentence.urn, tokencorpus)
+		orthotokens[rangeindexing[1]:rangeindexing[2]]
+	end
 end
 
 
@@ -390,8 +552,7 @@ end
 
 # ╔═╡ a36f18f6-20c8-4d24-9ed3-cf6afd9e0b52
 # Make conditional on satisfaction of necessary conditions ...
-sentenceannotation = 
-	SentenceAnnotation(
+sentenceannotation = isnothing(sentence) ? nothing : SentenceAnnotation(
 		sentence.urn,
 		sentence.sequence,
 		connectorurn(sentencetokens, connectorlist)	
@@ -550,8 +711,8 @@ function vusfromdf(vudataframe)
 	for row in eachrow(vudataframe)
 		push!(verbals, VerbalUnitAnnotation(
 			row.passage,
-			row.semantic_type,
 			row.syntactic_type,
+			row.semantic_type,
 			row.depth,
 			row.sentence
 		))
@@ -569,7 +730,11 @@ md"""> ### UI for *defining verbal expressions*
 # ╔═╡ 187adacf-badf-482c-976a-9348e60b4c04
 """Create a template DataFrame for recording verbal units"""
 function newvudf()
-	templatedf = DataFrame(syntactic_type = ["Independent clause"], semantic_type = "ADD VALUE HERE", depth = 1)
+	templatedf = DataFrame(
+		syntactic_type = ["Independent clause"], 
+		semantic_type = "ADD VALUE HERE", 
+		depth = 1
+	)
 end
 
 # ╔═╡ 6c7b400c-0a73-42f7-93b5-ceb8e7c5960c
@@ -733,9 +898,6 @@ else
  "<blockquote>" * htmltext(sentenceannotation, intermediatetokens) * "</blockquote>" |> HTML
 
 end
-
-# ╔═╡ ff160741-7a0d-43c0-a16d-429c0418757f
-describe(assignedtokensdf)
 
 # ╔═╡ 9cca16b6-2018-4770-b774-c54bc73f65d2
 md"""> ### Global variables for *defining syntactic relations*
@@ -941,6 +1103,8 @@ end
 outputfile = joinpath(outputdir, fname * ".cex");
 
 # ╔═╡ 86da97f3-bb20-4779-8efa-b9088409acd6
+"""Append delimited-text representation of annotations to file `filename`.
+"""
 function appendannotations(filename, sents, vus, tkns; delimiter = "|")
 	hdrlines = isfile(filename) ? readlines(filename) : []
 	push!(hdrlines, "")
@@ -972,86 +1136,9 @@ end
 # ╔═╡ 36a67acb-e449-489d-a548-bd5761f1321c
 md"""> ### Settings for visual formatting"""
 
-# ╔═╡ 0635610a-69b0-4a15-b086-236e3fd48a01
- css = html"""
-<style>
- blockquote.subordination {
- 	padding: 0em;
- 
- }
- .connector {
- background: yellow;  
- font-style: bold;
-}
- }
-
- .unassigned {
- color: silver;
- }
- 
-
-span.tooltip{
-  position: relative;
-  display: inline;
-}
-span.tooltip:hover:after{ visibility: visible; opacity: 0.8; bottom: 20px; }
-span.tooltip:hover:before{ visibility: visible; opacity: 0.8; bottom: 14px; }
-
-span.tooltip:after{
-  display: block;
-  visibility: hidden;
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  opacity: 0.9;
-  content: attr(tool-tips);
-  height: auto;
-  width: auto;
-  min-width: 100px;
-  padding: 5px 8px;
-  z-index: 999;
-  color: #fff;
-  text-decoration: none;
-  text-align: center;
-  background: rgba(0,0,0,0.85);
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-span.tooltip:before {
-  position: absolute;
-  visibility: hidden;
-  width: 0;
-  height: 0;
-  left: 50%;
-  bottom: 0px;
-  opacity: 0;
-  content: "";
-  border-style: solid;
-  border-width: 6px 6px 0 6px;
-  border-color: rgba(0,0,0,0.85) transparent transparent transparent;
-}
-</style>
- """
-
-# ╔═╡ e7b6a508-81fb-4f40-bd34-185ce6a20e14
-palette = [
-	"#79A6A3;",
-	"#E5B36A;",
-	"#C7D7CA;"#=,
-	"#D29DC0",
-	"#AABBCC",
-	
-	"#E7DCCA",
-	"#FEC8D8",
-	"#F5CF89",
-	"#F394AF",
-	"#E7926C" =#
-]
-
 # ╔═╡ ab5048e0-e1c4-42ec-8837-a16dd231fe37
 """Format user instructions with Markdown admonition."""
-instructions(title, text) = Markdown.MD(Markdown.Admonition("tip", title, [text]));
+instructions(title, text) = Markdown.MD(Markdown.Admonition("tip", title, [text]))
 
 # ╔═╡ 3487cd67-8c0f-4fe0-8c3a-2d25bba023bd
 begin
@@ -1147,6 +1234,19 @@ else
 	md""
 end
 
+# ╔═╡ 82e1af58-81b6-4f01-984c-63d95be4f4f3
+begin
+	if seecss
+	cssmsg = md"""
+The following two cells define the visual appearance of the text's formatting.  If you are familiar with CSS, you can modify them to tailor the presentation to your preferences.
+
+1.  You can choose to use default CSS from the `GreekSyntax` package, or directly edit CSS values from the following cell.
+2. `palette` is a series of colors that the notebook cycles through in highlighting different verbal expressions by color.	You can use a default color palette from `GreekSyntax`, or directly edit the cell to set RGB values.
+"""
+		instructions("Style your own", cssmsg)
+	end
+end
+
 # ╔═╡ 423ff985-22e9-4aa8-a090-922448d53f4d
 begin
 	whysocomplicated = md"""	
@@ -1199,10 +1299,11 @@ end;
 # ╟─e5caf28b-6ace-4b85-afb6-8406b9c062ed
 # ╟─d865bcd7-ef34-48d1-9526-623578822e42
 # ╟─910b86a4-b801-4a7a-bab7-9ad072e75bc3
-# ╟─3c3003e6-ebe9-434a-8960-6504b0e1578e
-# ╟─58b8e896-1d55-4d43-8d93-d9421f1d85bf
-# ╟─b092c825-d4f8-4f3d-a8b1-57a6a642290d
 # ╟─ccb5e655-9bb1-4117-9231-f9a90855b48b
+# ╟─3c3003e6-ebe9-434a-8960-6504b0e1578e
+# ╟─a6a283db-692c-43ff-8c43-6038d3bc2ed2
+# ╟─9d8b4b7c-f6f6-4f53-9f08-0854069f658b
+# ╟─de0e1c93-4e9a-40da-bf76-b9952d2da2ae
 # ╟─73cb1d9d-c265-46c5-ae8d-1d940379b0d1
 # ╟─7ff0baa8-3354-4300-81bc-90466b049e73
 # ╟─b6cb23ee-8870-41b5-a800-d91d88dc2c28
@@ -1233,15 +1334,24 @@ end;
 # ╟─69451dde-a999-4c1f-a8e4-ed731e282149
 # ╟─db3c92ef-9cab-4adf-b128-3f3e7eda885d
 # ╟─c205e757-4e5a-4b22-ac53-bdad947a942c
+# ╟─29b8ac63-3d57-401f-b99e-97920bf03369
+# ╟─727a99ac-9106-4bac-a929-e829299f66f5
+# ╟─82e1af58-81b6-4f01-984c-63d95be4f4f3
+# ╟─1dfa58d2-bf17-4a6c-af5e-92ac70d34d64
+# ╟─ab04a33d-07df-4cb3-901b-452eae7ec085
+# ╟─b4501a23-167e-4095-b9d6-dbd9dafc0d19
+# ╟─7b101134-1c41-40f0-9c1a-16ed9e4e5034
 # ╟─7183fd4d-f180-474f-81d5-524aaf7f0152
 # ╟─8176c04e-d8f4-4137-8e6b-89e8bf271b0b
 # ╟─992ff9e8-cdce-4709-beef-9d96a6f668e6
 # ╟─423ff985-22e9-4aa8-a090-922448d53f4d
 # ╟─2914ad6d-b3e3-42ca-a0b8-31833e51a7e8
-# ╟─c8301540-56dc-4785-9d35-2c77d2438a8a
+# ╠═c8301540-56dc-4785-9d35-2c77d2438a8a
+# ╠═67195eec-ce3a-4246-b38e-8f8f02299275
 # ╟─7aac11cf-3a6b-4a96-8595-81a7a6d6a2a2
 # ╟─aaed173a-74da-4e3c-b08c-b2ba49d0d6e3
-# ╟─0f38d603-8b1d-451f-8be7-2162e055073f
+# ╠═93bee380-1805-49ce-ae9f-794ea2224bb6
+# ╠═0f38d603-8b1d-451f-8be7-2162e055073f
 # ╟─50250528-afda-4011-87a5-1217169b9b66
 # ╟─2b3381a1-a82a-441a-81a4-7aa0e62ceac6
 # ╟─41a654d1-44d7-476b-b421-8f83d254f14e
@@ -1260,7 +1370,7 @@ end;
 # ╟─b3589032-ad92-4dfc-8c0a-62ca4b97d2aa
 # ╟─97f0be7b-aafc-4180-a2f3-aa43d2c65358
 # ╟─767f83c3-2c71-4f28-b91f-119d0bd7e243
-# ╟─c775334b-335a-48ad-afa5-9254153bfb3f
+# ╠═c775334b-335a-48ad-afa5-9254153bfb3f
 # ╟─c9ce7fcc-3d62-4f98-aec7-1d926822af67
 # ╟─e48a12b5-d7e8-4981-87da-4516cee27ed0
 # ╟─6c7b400c-0a73-42f7-93b5-ceb8e7c5960c
@@ -1273,7 +1383,6 @@ end;
 # ╟─ad85c5b0-fae3-4604-acaf-ae03aa41ec2b
 # ╠═140f25e2-e6b0-47df-a377-c92b3a82c94c
 # ╠═14c7b897-8ae7-4f01-94a7-9dfca51ba04f
-# ╠═ff160741-7a0d-43c0-a16d-429c0418757f
 # ╟─9cca16b6-2018-4770-b774-c54bc73f65d2
 # ╟─fa2e20e9-0f7a-4cca-b611-cda26051bce6
 # ╟─2cb8958b-458d-4c19-af56-1de1905bb62f
@@ -1284,10 +1393,8 @@ end;
 # ╠═d86eca56-ea1f-4d32-bff2-44f26d12e3f4
 # ╠═013963bc-d65f-449f-8bd5-ddda9dddb1fd
 # ╠═55394f6e-e696-4f44-a00e-1dd6e4fcdcb8
-# ╠═86da97f3-bb20-4779-8efa-b9088409acd6
+# ╟─86da97f3-bb20-4779-8efa-b9088409acd6
 # ╟─36a67acb-e449-489d-a548-bd5761f1321c
-# ╟─0635610a-69b0-4a15-b086-236e3fd48a01
-# ╠═e7b6a508-81fb-4f40-bd34-185ce6a20e14
-# ╠═ab5048e0-e1c4-42ec-8837-a16dd231fe37
+# ╟─ab5048e0-e1c4-42ec-8837-a16dd231fe37
 # ╟─d1eca415-05cb-435a-8f64-aad583a56d43
 # ╠═7bc296a5-d4ee-4a60-be7c-20df3a121176

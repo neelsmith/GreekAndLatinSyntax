@@ -31,7 +31,7 @@ begin
 end
 
 # ╔═╡ 6791a277-05ea-43d6-9710-c4044f0c178a
-nbversion = "0.2.0";
+nbversion = "0.2.1";
 
 # ╔═╡ 282716c0-e0e4-4433-beb4-4b988fddaa9c
 md"""**Notebook version $(nbversion)**  *See version history* $(@bind history CheckBox())"""
@@ -40,6 +40,7 @@ md"""**Notebook version $(nbversion)**  *See version history* $(@bind history Ch
 if history
 	md"""
 
+- **0.2.1**: Update internal manifest to use version `0.9` of `GreekSyntax` package.
 - **0.2.0**: Update internal manifest to use updated version of `GreekSyntax` package; new user controls on diagramming and visual formatting.
 - **0.1.1**: Change default URL for source data
 - **0.1.0**: initial release	
@@ -496,7 +497,7 @@ PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
 [compat]
 CitableCorpus = "~0.13.3"
 CitableText = "~0.15.2"
-GreekSyntax = "~0.8.1"
+GreekSyntax = "~0.9.0"
 Kroki = "~0.2.0"
 PlutoTeachingTools = "~0.2.5"
 PlutoUI = "~0.7.49"
@@ -692,9 +693,9 @@ uuid = "9fa8497b-333b-5362-9e8d-4d0656e87820"
 
 [[deps.GreekSyntax]]
 deps = ["CitableBase", "CitableCorpus", "CitableText", "Compat", "DocStringExtensions", "Documenter", "Kroki", "Orthography", "PolytonicGreek", "Test", "TestSetExtensions"]
-git-tree-sha1 = "927e8f8ead1a1e0cb25381c60f36d1dc418159ec"
+git-tree-sha1 = "9e046f538366814bc7ff78aa81d4112a077ed64d"
 uuid = "5497687e-e4d1-4cb6-b14f-a6a808518ccd"
-version = "0.8.1"
+version = "0.9.0"
 
 [[deps.HTTP]]
 deps = ["Base64", "CodecZlib", "Dates", "IniFile", "Logging", "LoggingExtras", "MbedTLS", "NetworkOptions", "OpenSSL", "Random", "SimpleBufferStream", "Sockets", "URIs", "UUIDs"]
