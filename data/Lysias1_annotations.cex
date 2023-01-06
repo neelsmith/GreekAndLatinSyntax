@@ -583,6 +583,30 @@ urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.11.28a|ignore|:|0|nothing|nothing|
 
 
 // Sentence 23
+
+//
+// Automatically appended from Pluto notebook "Analyze syntax of Greek text from a CTS source" (version 0.5.0)
+//
+#!sentences
+sentence|sequence|connector
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.11.29-1.11.33a|23|urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.11.30
+
+
+#!verbal_units
+vuid|syntactic_type|semantic_type|depth|sentence
+1.11.29-1.11.33a.1|linking|Independent clause|1|urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.11.29-1.11.33a
+
+
+#!tokens
+urn|tokentype|text|verbalunit|node1|node1relation|node2|node2relation
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.11.29|lexical|ὁ|1.11.29-1.11.33a.1|3|article|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.11.30|lexical|γὰρ|nothing|nothing|nothing|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.11.31|lexical|ἄνθρωπος|1.11.29-1.11.33a.1|5|subject|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.11.32|lexical|ἔνδον|1.11.29-1.11.33a.1|5|adverbial|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.11.33|lexical|ἦν|1.11.29-1.11.33a.1|2|unit verb|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.11.33a|ignore|:|0|nothing|nothing|nothing|nothing
+
+
 // Sentence 24
 // Sentence 25
 // Sentence 26
