@@ -31,7 +31,7 @@ begin
 end
 
 # ╔═╡ 6791a277-05ea-43d6-9710-c4044f0c178a
-nbversion = "0.1.1";
+nbversion = "0.2.0";
 
 # ╔═╡ 282716c0-e0e4-4433-beb4-4b988fddaa9c
 md"""**Notebook version $(nbversion)**  *See version history* $(@bind history CheckBox())"""
@@ -40,6 +40,7 @@ md"""**Notebook version $(nbversion)**  *See version history* $(@bind history Ch
 if history
 	md"""
 
+- **0.2.0**: Update internal manifest to use updated version of `GreekSyntax` package; new user controls on diagramming and visual formatting.
 - **0.1.1**: Change default URL for source data
 - **0.1.0**: initial release	
 	"""
@@ -97,6 +98,8 @@ To learn how to customize the display of texts, check this option: $(@bind seecs
 begin
 	cheatsheet = """
 
+<p>(See fuller <a href="https://neelsmith.github.io/GreekSyntax.jl/stable/html/">documentation</a>.)
+	</p>
 
 <h4>On <code>div</code></h4>
 
@@ -129,18 +132,22 @@ Also on <code>span</code>: colors from a vector of colors are directly set in <c
 	Foldable("Summary of CSS usage", HTML("""$(cheatsheet)""")) |> aside
 end
 
+# ╔═╡ 7ecae17d-855e-4dd7-8404-4c3057470007
+md"""*Use default CSS* $(@bind defaultcss CheckBox(true))"""
+
 # ╔═╡ 9ed6aaaf-fba8-4101-9a6c-48215f4ec3f9
- css = html"""
+ css = if defaultcss
+ 	cssbody = GreekSyntax.defaultcss()
+	 HTML("<style>$(cssbody)</style>")
+	 
+ else
+	 
+ html"""
 <style>
- .ref {
- color: silver;
+ div.passage {
+ 	padding-top: 2em;
+ 	padding-bottom: 2em;
  
- }
- .ref::before {
- 	content: "["
- } 
- .ref::after {
- 	content: "]"
  }
   blockquote.subordination {
  	padding: 0em;
@@ -212,9 +219,18 @@ span.tooltip:before {
   border-color: rgba(0,0,0,0.85) transparent transparent transparent;
 }
  """
+ end
+
+# ╔═╡ 092fc2ea-cbc3-4f2b-90b4-da5d8980b97c
+md"""*Use default color palette* $(@bind defaultcolors CheckBox(true))"""
 
 # ╔═╡ 87e46deb-aaad-4e78-81e9-410e3dda062d
-palette = ["#79A6A3;",
+palette = if defaultcolors
+	
+	GreekSyntax.defaultpalette
+	
+else
+	["#79A6A3;",
 	"#E5B36A;",
 	"#C7D7CA;",
 	"#E7926C;",
@@ -226,6 +242,7 @@ palette = ["#79A6A3;",
 	"#F5CF89;",
 	"#F394AF;"
 ]
+end
 
 # ╔═╡ 34f55f22-1115-4962-801f-bde4edca05f3
 html"""
@@ -293,7 +310,7 @@ end
 if dsexists()
 	sentencemenu = [0 => ""]
 	for (i,s) in enumerate(sentences)
-		push!(sentencemenu, i => passagecomponent(s.range))
+		push!(sentencemenu, i => string("[", s.sequence, "] ") * passagecomponent(s.range))
 	end
 
 	
@@ -358,8 +375,16 @@ if @isdefined(sentchoice) && sentchoice > 0
 	end
 end
 
+# ╔═╡ 2439b90f-9082-4ab4-b37c-73215979d1d7
+"""True if data has been loaded and parsed."""
+function dataloaded()
+	! isnothing(sentence)
+end
+
 # ╔═╡ dc5ddf9d-f3c9-499c-9986-a12e219fa1e1
-	(sentencetokens, connectorids, origin) = GreekSyntax.tokeninfoforsentence(sentence, tokens)
+	if dataloaded()
+		(sentencetokens, connectorids, origin) = GreekSyntax.tokeninfoforsentence(sentence, tokens)
+	end
 
 # ╔═╡ c6ea9917-c597-4711-9fd4-66e33062b380
 # ╠═╡ show_logs = false
@@ -378,13 +403,24 @@ end
 # ╠═╡ show_logs = false
 
 if @isdefined(sentchoice) && sentchoice > 0 && diagram
+	#=
 	local levelselection = GreekSyntax.filterbylevel(threshhold, verbalunits, sentencetokens)
 	local newsent = SentenceAnnotation(
 	    GreekSyntax.sentencerange(levelselection), sentence.sequence, sentence.connector
 	)
+	=#
+	diagramwarning = md"""Diagramming is currently turned off when viewing only selected selected levels of subordination because you can end up with diagrammed words connected to words that are excluded from the diagram.
+
+A future version of this notebook might try to address this.
+	"""
+
 	
-	graphstr  = mermaiddiagram(newsent, levelselection)
-	mermaid"""$(graphstr)"""
+	if threshhold < GreekSyntax.maxdepthforsentence(sentence, verbalunits)
+		warning_box(diagramwarning)
+	else
+		graphstr  = mermaiddiagram(sentence, sentencetokens)
+		mermaid"""$(graphstr)"""
+	end
 end
 
 
@@ -460,7 +496,7 @@ PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
 [compat]
 CitableCorpus = "~0.13.3"
 CitableText = "~0.15.2"
-GreekSyntax = "~0.8.0"
+GreekSyntax = "~0.8.1"
 Kroki = "~0.2.0"
 PlutoTeachingTools = "~0.2.5"
 PlutoUI = "~0.7.49"
@@ -470,9 +506,9 @@ PlutoUI = "~0.7.49"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.8.4"
+julia_version = "1.8.3"
 manifest_format = "2.0"
-project_hash = "5021fac34f7b25eb05cf68d64015995c97d706d7"
+project_hash = "dc94b5133438339f4bf953d84c6f24efdc079705"
 
 [[deps.ANSIColoredPrinters]]
 git-tree-sha1 = "574baf8110975760d391c710b6341da1afa48d8c"
@@ -575,7 +611,7 @@ version = "4.5.0"
 [[deps.CompilerSupportLibraries_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "e66e0078-7015-5450-92f7-15fbd957f2ae"
-version = "1.0.1+0"
+version = "0.5.2+0"
 
 [[deps.DataAPI]]
 git-tree-sha1 = "e8119c1a33d267e16108be441a287a6981ba1630"
@@ -656,9 +692,9 @@ uuid = "9fa8497b-333b-5362-9e8d-4d0656e87820"
 
 [[deps.GreekSyntax]]
 deps = ["CitableBase", "CitableCorpus", "CitableText", "Compat", "DocStringExtensions", "Documenter", "Kroki", "Orthography", "PolytonicGreek", "Test", "TestSetExtensions"]
-git-tree-sha1 = "e3fe7f2fbf10cfecf97d564751914b9c2c0d9cf3"
+git-tree-sha1 = "927e8f8ead1a1e0cb25381c60f36d1dc418159ec"
 uuid = "5497687e-e4d1-4cb6-b14f-a6a808518ccd"
-version = "0.8.0"
+version = "0.8.1"
 
 [[deps.HTTP]]
 deps = ["Base64", "CodecZlib", "Dates", "IniFile", "Logging", "LoggingExtras", "MbedTLS", "NetworkOptions", "OpenSSL", "Random", "SimpleBufferStream", "Sockets", "URIs", "UUIDs"]
@@ -1131,14 +1167,17 @@ version = "17.4.0+0"
 # ╟─ec7eb05f-fd6d-4477-a80b-9bfe1fe02fac
 # ╟─7772957f-3d7b-44b0-9cfe-998b8e6ab3cc
 # ╟─fd69dddd-5903-41eb-8ddc-ee2d2f34a473
+# ╟─7ecae17d-855e-4dd7-8404-4c3057470007
 # ╟─9ed6aaaf-fba8-4101-9a6c-48215f4ec3f9
+# ╟─092fc2ea-cbc3-4f2b-90b4-da5d8980b97c
 # ╟─87e46deb-aaad-4e78-81e9-410e3dda062d
 # ╟─34f55f22-1115-4962-801f-bde4edca05f3
 # ╟─85e2f41f-1163-45f1-b10a-aa25769f8345
 # ╟─136599a5-b7c1-4513-be88-e7e79e1f6fb5
 # ╟─74ec2148-dd53-4f54-9d92-327d5ba44eaf
 # ╟─69e9fc75-2d62-45ff-ad02-7bbf4ef7fa7c
-# ╟─dc5ddf9d-f3c9-499c-9986-a12e219fa1e1
+# ╠═dc5ddf9d-f3c9-499c-9986-a12e219fa1e1
+# ╟─2439b90f-9082-4ab4-b37c-73215979d1d7
 # ╟─20f31f23-9d89-47d3-85a3-b53b5bc67a9f
 # ╟─698f3062-02a4-48b5-955e-a8c3ee527872
 # ╟─00000000-0000-0000-0000-000000000001
