@@ -31,7 +31,7 @@ begin
 end
 
 # ╔═╡ 6791a277-05ea-43d6-9710-c4044f0c178a
-nbversion = "0.1.0";
+nbversion = "0.1.1";
 
 # ╔═╡ 282716c0-e0e4-4433-beb4-4b988fddaa9c
 md"""**Notebook version $(nbversion)**  *See version history* $(@bind history CheckBox())"""
@@ -40,6 +40,7 @@ md"""**Notebook version $(nbversion)**  *See version history* $(@bind history Ch
 if history
 	md"""
 
+- **0.1.1**: Change default URL for source data
 - **0.1.0**: initial release	
 	"""
 end
@@ -58,7 +59,7 @@ md"""*Load from* $(@bind srctype Select(["", "url", "file"]))"""
 # ╔═╡ 176cfe71-a2a5-4fc6-940a-658495b470ac
 if srctype == "url"
 	md"""*Source URL*: $(@bind url confirm(TextField(80; default = 
-	"https://raw.githubusercontent.com/neelsmith/GreekSyntax.jl/main/test/data/Lysias1.6ff.cex")))
+	"https://raw.githubusercontent.com/neelsmith/GreekSyntax/main/data/Lysias1_annotations.cex")))
 	"""
 elseif srctype == "file"
 	
@@ -469,9 +470,9 @@ PlutoUI = "~0.7.49"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.8.3"
+julia_version = "1.8.4"
 manifest_format = "2.0"
-project_hash = "dc94b5133438339f4bf953d84c6f24efdc079705"
+project_hash = "5021fac34f7b25eb05cf68d64015995c97d706d7"
 
 [[deps.ANSIColoredPrinters]]
 git-tree-sha1 = "574baf8110975760d391c710b6341da1afa48d8c"
@@ -574,7 +575,7 @@ version = "4.5.0"
 [[deps.CompilerSupportLibraries_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "e66e0078-7015-5450-92f7-15fbd957f2ae"
-version = "0.5.2+0"
+version = "1.0.1+0"
 
 [[deps.DataAPI]]
 git-tree-sha1 = "e8119c1a33d267e16108be441a287a6981ba1630"

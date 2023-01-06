@@ -136,22 +136,6 @@ md"""*Please provide a title for your collection of annotations.*
 # ╔═╡ 73cb1d9d-c265-46c5-ae8d-1d940379b0d1
 md"""*Output directory, source URL and title are all correct* $(@bind prereqsok CheckBox())"""
 
-# ╔═╡ c21618ab-7092-4696-9508-8f8efc052917
-#=
-if prereqsok() && ! isempty(badortho)
-	ortholines = ["Orthographically invalid tokens:", ""]
-	for cp in badortho
-		push!(ortholines, string("- ", passagecomponent(cp.urn), ": ", cp.text))
- 	end
-	orthostr =  join(ortholines, "\n")
-	orthomsg = Markdown.parse(orthostr)
-
-
-	Foldable("See invalid tokens", orthomsg)
-
-end
-=#
-
 # ╔═╡ 7183fd4d-f180-474f-81d5-524aaf7f0152
 html"""
 <br/><br/><br/><br/><br/><br/><br/><br/><br/>
@@ -294,6 +278,22 @@ if prereqs()
 You can unfold the list below to see a list of invalid tokens.  Consider whether you should correct your source text before annotating it.
 """)
 end
+end
+
+
+# ╔═╡ c21618ab-7092-4696-9508-8f8efc052917
+
+if prereqs() && ! isempty(badortho)
+	ortholines = ["Orthographically invalid tokens:", ""]
+	for cp in badortho
+		push!(ortholines, string("- ", passagecomponent(cp.urn), ": ", cp.text))
+ 	end
+	orthostr =  join(ortholines, "\n")
+	orthomsg = Markdown.parse(orthostr)
+
+
+	Foldable("See invalid tokens", orthomsg)
+
 end
 
 
@@ -963,7 +963,7 @@ if step3()
 		open(outputfile, "w") do io
 			write(io, txt)
 		end
-		tip(md"""Appended data to file $(outputfile).
+		tip(md"""Appended data for **sentence $(sentid)** to file $(outputfile).
 		""") 
 		
 	end

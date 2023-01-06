@@ -29,7 +29,7 @@ begin
 end
 
 # ╔═╡ 6791a277-05ea-43d6-9710-c4044f0c178a
-nbversion = "0.2.0";
+nbversion = "0.2.1";
 
 # ╔═╡ 282716c0-e0e4-4433-beb4-4b988fddaa9c
 md"""**Notebook version $(nbversion)**  *See version history* $(@bind history CheckBox())"""
@@ -37,6 +37,7 @@ md"""**Notebook version $(nbversion)**  *See version history* $(@bind history Ch
 # ╔═╡ a4946b0e-17c9-4f90-b820-2439047f2a6a
 if history
 	md"""
+- **0.2.1**: change default URL for loading data
 - **0.2.0**: allows loading data from local file or URL
 - **0.1.0**: simplified reader using new `GreekSyntax` julia package
 - **0.0.1**: initial release	
@@ -57,7 +58,7 @@ md"""*Load from* $(@bind srctype Select(["", "url", "file"]))"""
 # ╔═╡ 176cfe71-a2a5-4fc6-940a-658495b470ac
 if srctype == "url"
 	md"""*Source URL*: $(@bind url confirm(TextField(80; default = 
-	"https://raw.githubusercontent.com/neelsmith/GreekSyntax.jl/main/test/data/Lysias1.6ff.cex")))
+	"https://raw.githubusercontent.com/neelsmith/GreekSyntax/main/data/Lysias1_annotations.cex")))
 	"""
 elseif srctype == "file"
 	
@@ -281,7 +282,7 @@ end
 if dsexists()
 	sentencemenu = [0 => ""]
 	for (i,s) in enumerate(sentences)
-		push!(sentencemenu, i => passagecomponent(s.range))
+		push!(sentencemenu, i => string("[", s.sequence, "] ") * passagecomponent(s.range))
 	end
 
 	
@@ -439,9 +440,9 @@ PlutoUI = "~0.7.49"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.8.3"
+julia_version = "1.8.4"
 manifest_format = "2.0"
-project_hash = "c282ff76651e8dcdabc6a1b1f790bef36fdab3fe"
+project_hash = "3224d8e21dca2f148b3b008e39c57b8835055c4f"
 
 [[deps.ANSIColoredPrinters]]
 git-tree-sha1 = "574baf8110975760d391c710b6341da1afa48d8c"
@@ -544,7 +545,7 @@ version = "4.5.0"
 [[deps.CompilerSupportLibraries_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "e66e0078-7015-5450-92f7-15fbd957f2ae"
-version = "0.5.2+0"
+version = "1.0.1+0"
 
 [[deps.DataAPI]]
 git-tree-sha1 = "e8119c1a33d267e16108be441a287a6981ba1630"
