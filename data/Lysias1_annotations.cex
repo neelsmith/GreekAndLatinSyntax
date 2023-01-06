@@ -150,6 +150,38 @@ urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.7.5a|ignore|:|0|nothing|nothing|no
 
 // Sentence 13
 
+//
+// Automatically appended from Pluto notebook "Analyze syntax of Greek text from a CTS source" (version 0.5.0)
+//
+#!sentences
+sentence|sequence|connector
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.7.6-1.7.16a|13|urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.7.7
+
+
+#!verbal_units
+vuid|syntactic_type|semantic_type|depth|sentence
+1.7.6-1.7.16a.1|linking|Independent clause|1|urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.7.6-1.7.16a
+1.7.6-1.7.16a.2|linking|Independent clause|1|urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.7.6-1.7.16a
+1.7.6-1.7.16a.3|linking|Independent clause|1|urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.7.6-1.7.16a
+1.7.6-1.7.16a.4|transitive|circumstantial participle|2|urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.7.6-1.7.16a
+
+
+#!tokens
+urn|tokentype|text|verbalunit|node1|node1relation|node2|node2relation
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.7.6|lexical|καὶ|1.7.6-1.7.16a.1|12|conjunction|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.7.7|lexical|γὰρ|nothing|nothing|nothing|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.7.8|lexical|οἰκονόμος|1.7.6-1.7.16a.1|12|predicate|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.7.9|lexical|δεινὴ|1.7.6-1.7.16a.1|3|attributive|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.7.10|lexical|καὶ|1.7.6-1.7.16a.2|13|conjunction|1|conjunction
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.7.11|lexical|φειδωλὸς|1.7.6-1.7.16a.2|13|predicate|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.7.12|lexical|ἀγαθὴ|1.7.6-1.7.16a.2|6|attributive|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.7.13|lexical|καὶ|1.7.6-1.7.16a.3|14|unit verb|5|conjunction
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.7.14|lexical|ἀκριβῶς|1.7.6-1.7.16a.4|11|adverbial|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.7.15|lexical|πάντα|1.7.6-1.7.16a.4|11|object|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.7.16|lexical|διοικοῦσα|1.7.6-1.7.16a.4|14|circumstantial participle|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.7.16a|ignore|:|0|nothing|nothing|nothing|nothing
+
+
 // Sentence 14
 //
 // Automatically appended from Pluto notebook "Analyze syntax of Greek text from a CTS source" (version 0.5.0)
@@ -185,7 +217,8 @@ urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.7.29|lexical|γεγένηται|1.
 urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.7.29a|ignore|.|0|nothing|nothing|nothing|nothing
 
 // Sentence 15
-//Sentence 16
+
+// Sentence 16
 
 // Sentence 17
 //
@@ -245,7 +278,7 @@ urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.9.28a|ignore|.|0|nothing|nothing|n
 // Sentence 19
 // Sentence 20
 // Sentence 21
-// Sentenece 22
+// Sentence 22
 //
 // Automatically appended from Pluto notebook "Analyze syntax of Greek text from a CTS source" (version 0.5.0)
 //
