@@ -929,8 +929,82 @@ urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.32a|ignore|.|0|nothing|nothing|
 
 
 // Sentence 33
+// ADD WHEN WE HANDLE ASYNDETON PROPERLY!
+
+
 // Sentence 34
+//
+// Automatically appended from Pluto notebook "Analyze syntax of Greek text from a CTS source" (version 0.6.0)
+//
+#!sentences
+sentence|sequence|connector
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.40-1.14.53a|34|urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.41
+
+
+#!verbal_units
+vuid|syntactic_type|semantic_type|depth|sentence
+1.14.40-1.14.53a.1|Independent clause|intransitive|1|urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.40-1.14.53a
+1.14.40-1.14.53a.2|Indirect statement with accusative|transitive|2|urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.40-1.14.53a
+1.14.40-1.14.53a.3|circumstantial participle|intransitive|3|urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.40-1.14.53a
+
+
+#!tokens
+urn|tokentype|text|verbalunit|node1|node1relation|node2|node2relation
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.40|lexical|ἔδοξε|1.14.40-1.14.53a.1|2|unit verb|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.41|lexical|δέ|1.14.40-1.14.53a.1|nothing|nothing|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.42|lexical|μοι|1.14.40-1.14.53a.1|1|dative|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.42a|ignore|,|0|nothing|nothing|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.43|lexical|ὦ|1.14.40-1.14.53a.1|1|direct address|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.44|lexical|ἄνδρες|1.14.40-1.14.53a.1|4|direct address|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.44a|ignore|,|0|nothing|nothing|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.45|lexical|τὸ|1.14.40-1.14.53a.2|7|article|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.46|lexical|πρόσωπον|1.14.40-1.14.53a.2|8|subject|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.47|lexical|ἐψιμυθιῶσθαι|1.14.40-1.14.53a.2|1|verbal unit|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.47a|ignore|,|0|nothing|nothing|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.48|lexical|τοῦ|1.14.40-1.14.53a.3|10|article|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.49|lexical|ἀδελφοῦ|1.14.40-1.14.53a.3|8|absolute|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.50|lexical|τεθνεῶτος|1.14.40-1.14.53a.3|10|verbal unit|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.51|lexical|οὔπω|1.14.40-1.14.53a.3|11|adverbial|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.52|lexical|τριάκονθ'|1.14.40-1.14.53a.3|14|attributive|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.53|lexical|ἡμέρας|1.14.40-1.14.53a.3|11|adverbial|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.53a|ignore|:|0|nothing|nothing|nothing|nothing
+
+
 // Sentence 35
+
+//
+// Automatically appended from Pluto notebook "Analyze syntax of Greek text from a CTS source" (version 0.6.0)
+//
+#!sentences
+sentence|sequence|connector
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.54-1.14.66a|35|urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.55
+
+
+#!verbal_units
+vuid|syntactic_type|semantic_type|depth|sentence
+1.14.54-1.14.66a.1|Independent clause|intransitive|1|urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.54-1.14.66a
+1.14.54-1.14.66a.2|circumstantial participle|transitive|2|urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.54-1.14.66a
+1.14.54-1.14.66a.3|circumstantial participle|intransitive|2|urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.54-1.14.66a
+
+
+#!tokens
+urn|tokentype|text|verbalunit|node1|node1relation|node2|node2relation
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.54|lexical|ὅμως|1.14.54-1.14.66a.1|11|adverb|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.55|lexical|δ'|nothing|nothing|nothing|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.56|lexical|οὐδ'|1.14.54-1.14.66a.2|4|adverbial|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.57|lexical|οὕτως|1.14.54-1.14.66a.2|6|adverbial|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.58|lexical|οὐδὲν|1.14.54-1.14.66a.2|6|object|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.59|lexical|εἰπὼν|1.14.54-1.14.66a.2|11|unit verb|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.60|lexical|περὶ|1.14.54-1.14.66a.2|6|adverbial|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.61|lexical|τοῦ|1.14.54-1.14.66a.2|9|article|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.62|lexical|πράγματος|1.14.54-1.14.66a.2|7|object of preposition|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.63|lexical|ἐξελθὼν|1.14.54-1.14.66a.3|11|unit verb|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.64|lexical|ᾠχόμην|1.14.54-1.14.66a.1|2|unit verb|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.65|lexical|ἔξω|1.14.54-1.14.66a.1|11|adverbial|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.66|lexical|σιωπῇ|1.14.54-1.14.66a.1|11|adverbial|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.14.66a|ignore|.|0|nothing|nothing|nothing|nothing
+
+
 // Sentence 36
 
 //
@@ -1213,7 +1287,30 @@ urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.16.50|lexical|πολλάς|1.16.32
 urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.16.50a|ignore|:|0|nothing|nothing|nothing|nothing
 
 
-// Sentence 42
+// Sentence 42: end of narrative of elderly servant.
+//
+// Automatically appended from Pluto notebook "Analyze syntax of Greek text from a CTS source" (version 0.6.0)
+//
+#!sentences
+sentence|sequence|connector
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.16.51-1.16.55a|42|urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.16.52
+
+
+#!verbal_units
+vuid|syntactic_type|semantic_type|depth|sentence
+1.16.51-1.16.55a.1|Independent clause|transitive|1|urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.16.51-1.16.55a
+
+
+#!tokens
+urn|tokentype|text|verbalunit|node1|node1relation|node2|node2relation
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.16.51|lexical|ταύτην|1.16.51-1.16.55a.1|4|pronoun|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.16.52|lexical|γὰρ|nothing|nothing|nothing|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.16.53|lexical|τὴν|1.16.51-1.16.55a.1|4|article|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.16.54|lexical|τέχνην|1.16.51-1.16.55a.1|5|object|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.16.55|lexical|ἔχει|1.16.51-1.16.55a.1|2|unit verb|nothing|nothing
+urn:cts:greekLit:tlg0540.tlg001.omar_tokens:1.16.55a|ignore|".|0|nothing|nothing|nothing|nothing
+
+
 // Sentence 43
 // Sentence 44
 // Sentence 45
