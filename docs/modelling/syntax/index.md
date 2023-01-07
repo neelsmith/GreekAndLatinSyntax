@@ -5,17 +5,32 @@ nav_order: 8
 parent: "Modelling Greek syntax"
 ---
 
-# Syntactic categories
+# Annotating syntactic relations
 
 
 
-## Top-level annotation
+## Annotation of top-level syntactic relations
 
-Syntactic annotation is organized by *sentence*,  but expresses how individual sentences connect to their larger context.
+Syntactic annotation is organized by *sentence*,  and expresses how individual sentences connect to their larger context.
 
-The root node of the syntax graph is normally a *connector* — a coordinating conjunction, or a coodinating particle or particles.  Since every sentence includes at least one (explicit or implied) independent clause, and every independent clause includes a verb, the first child token of the *connector* is always one or more verb tokens.  The relation of the verb to the connector is tagged as *unit verb*.
+The root node of the syntax graph is normally a *connector* — a coordinating conjunction, or a coodinating particle or particles.  Since every sentence includes at least one (explicit or implied) independent clause, and every independent clause includes a verb, the first child token of the *connector* is always one or more verb tokens.  The relation of the verb to the connector is tagged as *unit verb*  Sentences may have more than one independent clause.
 
 In cases of asyndeton, there is no explicit connector.  In this situation, the unit verbs should be linked to an implied *asyndeton* element.
+
+## Annotation of subordinated verbal expressions
+
+All verbal expressions include a token linked to the rest of the sentence as a *verbal unit*.  
+
+| Syntactic type | Token with verbal idea | Connected to |
+| --- | --- | --- |
+| Independent clause | finite verb | connecting word |
+| Subordinate clause | finite verb | subordinating conjunction |
+| Accusative + infintive | infinitive | verb of speaking |
+| Accusative + participle | participle | verb of perceiving |
+| Circumstantial participle | participle | substantive (or implied subject of verb) |
+| Attributive particple | participle | article |
+| Quote | finite verb | verb of speaking |
+| Aside | ? | ? |
 
 
 ## Conjunctions
