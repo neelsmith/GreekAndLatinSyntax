@@ -1,11 +1,11 @@
-# GreekSyntax
+# GreekAndLatinSyntax
 
-This repository presents a straightforward model of ancient Greek syntax, hosted on github pages at [https://neelsmith.github.io/GreekSyntax/](https://neelsmith.github.io/GreekSyntax/).
+This repository presents a straightforward model of ancient Greek and Latin syntax, hosted on github pages at [https://neelsmith.github.io/GreekAndLatinSyntax/](https://neelsmith.github.io/GreekAndLatinSyntax/).
 
-The model is computationally implemented in the Julia language by the `GreekSyntax.jl` package.  See [documentation for the Julia package](https://neelsmith.github.io/GreekSyntax.jl/stable/).
+The model is computationally implemented in the Julia language by the `GreekSyntax` and `LatinSyntax` package.s.   (See documentation for the Julia package:  [GreekSyntax](https://neelsmith.github.io/GreekSyntax.jl/stable/), [LatinSyntax](https://neelsmith.github.io/LatinSyntax.jl/stable/)).
 
 
-This repository includes Pluto notebooks for the reading and study of ancient Greek texts using the `GreekSyntax.jl` package.
+This repository includes Pluto notebooks for the reading and study of ancient Greek texts using these packages.
 
 
 
