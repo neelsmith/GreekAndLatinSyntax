@@ -23,7 +23,10 @@ begin
 	using PlutoTeachingTools
 	using Kroki
 	using CitableText
+	
 	using GreekSyntax
+	using LatinSyntax
+	
 	using Downloads
 
 	using CitableText, CitableCorpus
@@ -31,7 +34,7 @@ begin
 end
 
 # ╔═╡ 6791a277-05ea-43d6-9710-c4044f0c178a
-nbversion = "0.2.1";
+nbversion = "0.2.2";
 
 # ╔═╡ 282716c0-e0e4-4433-beb4-4b988fddaa9c
 md"""**Notebook version $(nbversion)**  *See version history* $(@bind history CheckBox())"""
@@ -40,6 +43,7 @@ md"""**Notebook version $(nbversion)**  *See version history* $(@bind history Ch
 if history
 	md"""
 
+- **0.2.2**: Support Greek or Latin texts
 - **0.2.1**: Update internal manifest to use version `0.9` of `GreekSyntax` package.
 - **0.2.0**: Update internal manifest to use updated version of `GreekSyntax` package; new user controls on diagramming and visual formatting.
 - **0.1.1**: Change default URL for source data
@@ -48,7 +52,7 @@ if history
 end
 
 # ╔═╡ e7059fa0-82f2-11ed-3bfe-059070a00b1d
-md"""## Read Greek texts by level of subordination
+md"""## Read Greek or Latin texts by level of subordination
 
 """
 
@@ -491,14 +495,16 @@ CitableText = "41e66566-473b-49d4-85b7-da83b66615d8"
 Downloads = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
 GreekSyntax = "5497687e-e4d1-4cb6-b14f-a6a808518ccd"
 Kroki = "b3565e16-c1f2-4fe9-b4ab-221c88942068"
+LatinSyntax = "48187f9f-78ff-4060-b31e-d855612fbaec"
 PlutoTeachingTools = "661c6b06-c737-4d37-b85c-46df65de6f69"
 PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
 
 [compat]
 CitableCorpus = "~0.13.3"
 CitableText = "~0.15.2"
-GreekSyntax = "~0.9.0"
+GreekSyntax = "~0.10.2"
 Kroki = "~0.2.0"
+LatinSyntax = "~0.2.0"
 PlutoTeachingTools = "~0.2.5"
 PlutoUI = "~0.7.49"
 """
@@ -507,9 +513,9 @@ PlutoUI = "~0.7.49"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.8.3"
+julia_version = "1.8.4"
 manifest_format = "2.0"
-project_hash = "dc94b5133438339f4bf953d84c6f24efdc079705"
+project_hash = "0b7e3e032ae7cd13a4a9cfa34a8f20b65cba868a"
 
 [[deps.ANSIColoredPrinters]]
 git-tree-sha1 = "574baf8110975760d391c710b6341da1afa48d8c"
@@ -612,7 +618,7 @@ version = "4.5.0"
 [[deps.CompilerSupportLibraries_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "e66e0078-7015-5450-92f7-15fbd957f2ae"
-version = "0.5.2+0"
+version = "1.0.1+0"
 
 [[deps.DataAPI]]
 git-tree-sha1 = "e8119c1a33d267e16108be441a287a6981ba1630"
@@ -693,9 +699,9 @@ uuid = "9fa8497b-333b-5362-9e8d-4d0656e87820"
 
 [[deps.GreekSyntax]]
 deps = ["CitableBase", "CitableCorpus", "CitableText", "Compat", "DocStringExtensions", "Documenter", "Kroki", "Orthography", "PolytonicGreek", "Test", "TestSetExtensions"]
-git-tree-sha1 = "9e046f538366814bc7ff78aa81d4112a077ed64d"
+git-tree-sha1 = "bb6d7eb8f3127379b92de6734be170dd4177e702"
 uuid = "5497687e-e4d1-4cb6-b14f-a6a808518ccd"
-version = "0.9.0"
+version = "0.10.2"
 
 [[deps.HTTP]]
 deps = ["Base64", "CodecZlib", "Dates", "IniFile", "Logging", "LoggingExtras", "MbedTLS", "NetworkOptions", "OpenSSL", "Random", "SimpleBufferStream", "Sockets", "URIs", "UUIDs"]
@@ -791,6 +797,18 @@ deps = ["Formatting", "InteractiveUtils", "LaTeXStrings", "MacroTools", "Markdow
 git-tree-sha1 = "ab9aa169d2160129beb241cb2750ca499b4e90e9"
 uuid = "23fbe1c1-3f47-55db-b15f-69d7ec21a316"
 version = "0.15.17"
+
+[[deps.LatinOrthography]]
+deps = ["CitableBase", "CitableCorpus", "CitableText", "DocStringExtensions", "Documenter", "Orthography", "Test"]
+git-tree-sha1 = "fa17a57fe0e0795a78b43bde08171afa76b1f918"
+uuid = "1e3032c9-fa1e-4efb-a2df-a06f238f6146"
+version = "0.5.5"
+
+[[deps.LatinSyntax]]
+deps = ["CitableBase", "CitableCorpus", "CitableText", "DocStringExtensions", "Documenter", "GreekSyntax", "LatinOrthography", "Orthography", "Test", "TestSetExtensions"]
+git-tree-sha1 = "a867f90406e1b890b04ad0454d17bca9b957c530"
+uuid = "48187f9f-78ff-4060-b31e-d855612fbaec"
+version = "0.2.0"
 
 [[deps.LibCURL]]
 deps = ["LibCURL_jll", "MozillaCACerts_jll"]

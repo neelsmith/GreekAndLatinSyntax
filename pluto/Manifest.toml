@@ -2,7 +2,7 @@
 
 julia_version = "1.8.4"
 manifest_format = "2.0"
-project_hash = "e25c993af61342f3b47dad1b18ad66e174e12514"
+project_hash = "8ac4d1bec1818fb6add1fe3e904dba797d057932"
 
 [[deps.ANSIColoredPrinters]]
 git-tree-sha1 = "574baf8110975760d391c710b6341da1afa48d8c"
@@ -197,9 +197,9 @@ uuid = "9fa8497b-333b-5362-9e8d-4d0656e87820"
 
 [[deps.GreekSyntax]]
 deps = ["CitableBase", "CitableCorpus", "CitableText", "Compat", "DocStringExtensions", "Documenter", "Kroki", "Orthography", "PolytonicGreek", "Test", "TestSetExtensions"]
-git-tree-sha1 = "d9f0fd928947e03e910e085b547daf0c5f9ae0ba"
+git-tree-sha1 = "bb6d7eb8f3127379b92de6734be170dd4177e702"
 uuid = "5497687e-e4d1-4cb6-b14f-a6a808518ccd"
-version = "0.10.0"
+version = "0.10.2"
 
 [[deps.HTTP]]
 deps = ["Base64", "CodecZlib", "Dates", "IniFile", "Logging", "LoggingExtras", "MbedTLS", "NetworkOptions", "OpenSSL", "Random", "SimpleBufferStream", "Sockets", "URIs", "UUIDs"]
@@ -300,6 +300,18 @@ deps = ["Formatting", "InteractiveUtils", "LaTeXStrings", "MacroTools", "Markdow
 git-tree-sha1 = "ab9aa169d2160129beb241cb2750ca499b4e90e9"
 uuid = "23fbe1c1-3f47-55db-b15f-69d7ec21a316"
 version = "0.15.17"
+
+[[deps.LatinOrthography]]
+deps = ["CitableBase", "CitableCorpus", "CitableText", "DocStringExtensions", "Documenter", "Orthography", "Test"]
+git-tree-sha1 = "fa17a57fe0e0795a78b43bde08171afa76b1f918"
+uuid = "1e3032c9-fa1e-4efb-a2df-a06f238f6146"
+version = "0.5.5"
+
+[[deps.LatinSyntax]]
+deps = ["CitableBase", "CitableCorpus", "CitableText", "DocStringExtensions", "Documenter", "GreekSyntax", "LatinOrthography", "Orthography", "Test", "TestSetExtensions"]
+git-tree-sha1 = "a867f90406e1b890b04ad0454d17bca9b957c530"
+uuid = "48187f9f-78ff-4060-b31e-d855612fbaec"
+version = "0.2.0"
 
 [[deps.LibCURL]]
 deps = ["LibCURL_jll", "MozillaCACerts_jll"]

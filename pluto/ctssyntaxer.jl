@@ -24,6 +24,9 @@ begin
 
 	Pkg.add("GreekSyntax")
 	using GreekSyntax
+	
+	Pkg.add("LatinSyntax")
+	using LatinSyntax
 
 	Pkg.add("PlutoUI")
 	using PlutoUI
@@ -44,6 +47,9 @@ begin
 
 	Pkg.add("PolytonicGreek")
 	using PolytonicGreek
+
+	Pkg.add("LatinOrthography")
+	using LatinOrthography
 	
 	Pkg.add("PlutoTeachingTools")
 	using PlutoTeachingTools
@@ -67,15 +73,16 @@ end
 TableOfContents() 
 
 # ╔═╡ 31cc3ad6-ac34-49f7-a86f-575a08eb1358
-nbversion = "0.6.0";
+nbversion = "0.7.0";
 
 # ╔═╡ ed67e569-147c-4899-b338-f3282d9474b1
-md"""(*Notebook version **$(nbversion)**.*)  *See version history* $(@bind history CheckBox())"""
+md"""(*Notebook version **$(nbversion)**.*) *See version history* $(@bind history CheckBox(false))"""
 
 # ╔═╡ d227b2f4-5cdd-4ef6-ae7c-0a8f02f1f966
 if history
 md"""
 
+- **0.7.0**: Works with either Greek or Latin texts.
 - **0.6.0**: Allow loading source data from file or URL.
 - **0.5.1**: Fixes a bug in serializing verbal expressions.
 - **0.5.0**: Uses new `GreekSyntax` package to simplify notebook. Fixes syntax error in default color palette.
@@ -86,6 +93,7 @@ md"""
 - **0.1.1**: bug fixes, including important correction to sentence + group ID in export of token annotations.
 - **0.1.0** initial version:  load a citable corpus from CEX source, validate its orthography and parse into sentence units citable by CTS URN, save annotation results to delimited-text files.
 """
+	
 else
 		md""
 	
@@ -96,9 +104,9 @@ end
 md"""
 
 
-## Annotate the syntax of a citable Greek text
+## Annotate the syntax of a citable Greek or Latin text
 
-> *Annotate the syntax of a citable Greek text, and save your annotations to simple delimited text files.*
+> *Annotate the syntax of a citable Greek or Latin text, and save your annotations to simple delimited text files.*
 
 
 """
@@ -128,15 +136,15 @@ if srctype == "url"
 	md"""
 *Paste or type in a URL for the CEX source file to annotate.*	
 	*Source URL*: $(@bind srcurl confirm(TextField(80; default = 
-	"https://raw.githubusercontent.com/neelsmith/GreekSyntax.jl/main/test/data/texts/lysias1.cex")))
+	"https://raw.githubusercontent.com/neelsmith/GreekAndLatinSyntax/main/data/texts/lysias1.cex")))
 	"""
 
 
 
 elseif srctype == "file"
 	
-	defaultsrcdir = joinpath(dirname(pwd()), "data")
-	md"""*Source directory*: $(@bind basedir confirm(TextField(80; default = defaultdir)))"""
+	defaultsrcdir = joinpath(dirname(pwd()), "data", "texts")
+	md"""*Source directory*: $(@bind basedir confirm(TextField(80; default = defaultsrcdir)))"""
 end
 
 # ╔═╡ de0e1c93-4e9a-40da-bf76-b9952d2da2ae
@@ -150,6 +158,28 @@ if srctype == "file"
 		push!(datasets,f)
 	end
 	md"""*Choose a file* $(@bind datafile Select(datasets))"""
+end
+
+# ╔═╡ 2d13c642-7c89-4e47-bad0-0a5ff98e1d8d
+begin
+	orthomenu = ["litgreek" => "Greek: literary orthography", "latin23" => "Latin: 23-character alphabet","latin24" => "Latin: 24-character alphabet", "latin25" => "Latin: 25-character alphabet"]
+	
+md"""
+*Language and orthography of your corpus*: $(@bind ortho Select(orthomenu))
+"""
+end
+
+# ╔═╡ d4bf2d09-95de-4f81-ab13-8152e3ba351e
+"""Instantiate `OrthographicSystem` for user's menu choice.
+"""
+function orthography()
+	if ortho == "litgreek"
+		literaryGreek()
+	elseif ortho == "latin23"
+		latin23()
+	else
+		nothing
+	end
 end
 
 # ╔═╡ 73cb1d9d-c265-46c5-ae8d-1d940379b0d1
@@ -369,7 +399,7 @@ end
 
 # ╔═╡ 41a654d1-44d7-476b-b421-8f83d254f14e
 orthotokens = if loadedok()
-	tokenize(corpus, literaryGreek());
+	tokenize(corpus, orthography());
 end
 
 # ╔═╡ 83637e15-cdd7-4dd1-87d1-248bf7f3fcd6
@@ -378,7 +408,7 @@ tokencorpus = map(orthotokens) do t
 end |> CitableTextCorpus
 
 # ╔═╡ c77fb96e-dee1-4207-8e32-a4c07e784bc1
-sentencesequence = parsesentences(corpus, literaryGreek())
+sentencesequence = parsesentences(corpus, orthography())
 
 # ╔═╡ 4627ab0d-42a8-4d92-9b0d-c933b1b41f50
 if prereqs()
@@ -393,7 +423,7 @@ invalid in literary Greek orthography.
 """
 function findinvalid(c)
 	bad = []
-	tokens = tokenize(c, literaryGreek());
+	tokens = tokenize(c, orthography());
 	for (t,ttype) in tokens
 		if ttype isa Orthography.UnanalyzedToken
 			push!(bad, t)
@@ -834,7 +864,7 @@ tokengroupssrcdf = if step1()
 	local tokentuples = []
 	for (tkn, tkntype) in sentenceorthotokens
 		if typeof(tkntype) == LexicalToken
-			push!(tokentuples, (passage = string(passagecomponent(tkn.urn)), token = tkn.text, group = 0))
+			push!(tokentuples, (passage = string(passagecomponent(tkn.urn)), token = string(tkn.text), group = 0))
 		end
 	end
 	DataFrame(tokentuples)
@@ -904,6 +934,9 @@ else
  "<blockquote>" * htmltext(sentenceannotation, intermediatetokens) * "</blockquote>" |> HTML
 
 end
+
+# ╔═╡ 0c9bef6a-2b7c-43bb-b873-e9f63923c78f
+isnothing(assignedtokensdf) ? md"`assignedtokensdf` undefined" : describe(assignedtokensdf)
 
 # ╔═╡ 9cca16b6-2018-4770-b774-c54bc73f65d2
 md"""> ### Global variables for *defining syntactic relations*
@@ -1196,6 +1229,28 @@ It may take a moment for the notebook to download and parse your file.
 end
 
 
+# ╔═╡ 49169dec-8a82-406b-a1cc-8efaa940efea
+begin
+orthodetails = md"""
+
+
+**Greek**: 
+
+- *literary orthography*: texts in the standard orthography of printed editions of ancient Greek texts
+- *epichoric Attic*: NOT CURRENTLY AVAILABLE
+
+
+**Latin**:
+
+- *23-character alphabet*: alphabet uses *i* and *u* for both consonantal and vocalic values
+- *24-character alphabet*: alphabet distinguishes vocalic *u* from consonantal *v*, uses *i* for both consonantal and vocalic values
+- *25-character alphabet*: alphabet distinguishes vocalic *u* and *i* from consonantal *v* and *j*, respectively
+
+"""
+
+Foldable("Details about language and orthography", instructions("Available choices of language and orthography", orthodetails))
+end
+
 # ╔═╡ 336f2a45-45b1-4381-88af-e35a703574fb
 if prereqs()
 	msg1 = md"""
@@ -1310,6 +1365,9 @@ end;
 # ╟─a6a283db-692c-43ff-8c43-6038d3bc2ed2
 # ╟─9d8b4b7c-f6f6-4f53-9f08-0854069f658b
 # ╟─de0e1c93-4e9a-40da-bf76-b9952d2da2ae
+# ╟─2d13c642-7c89-4e47-bad0-0a5ff98e1d8d
+# ╟─d4bf2d09-95de-4f81-ab13-8152e3ba351e
+# ╟─49169dec-8a82-406b-a1cc-8efaa940efea
 # ╟─73cb1d9d-c265-46c5-ae8d-1d940379b0d1
 # ╟─7ff0baa8-3354-4300-81bc-90466b049e73
 # ╟─b6cb23ee-8870-41b5-a800-d91d88dc2c28
@@ -1388,6 +1446,7 @@ end;
 # ╟─ad85c5b0-fae3-4604-acaf-ae03aa41ec2b
 # ╠═140f25e2-e6b0-47df-a377-c92b3a82c94c
 # ╠═14c7b897-8ae7-4f01-94a7-9dfca51ba04f
+# ╟─0c9bef6a-2b7c-43bb-b873-e9f63923c78f
 # ╟─9cca16b6-2018-4770-b774-c54bc73f65d2
 # ╟─fa2e20e9-0f7a-4cca-b611-cda26051bce6
 # ╟─2cb8958b-458d-4c19-af56-1de1905bb62f
