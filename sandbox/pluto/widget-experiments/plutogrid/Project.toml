@@ -1,0 +1,3 @@
+[deps]
+PlutoGrid = "a20d0229-560c-4477-9f1c-52a9c9028069"
+PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
