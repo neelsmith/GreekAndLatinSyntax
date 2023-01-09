@@ -8,8 +8,6 @@ The model is computationally implemented in the Julia language by the `GreekSynt
 This repository includes Pluto notebooks for the reading and study of ancient Greek texts using these packages.
 
 
-
-
 ## Reading syntactically annotated texts
 
 In the `pluto` directory, you can find the following notebooks:
@@ -25,7 +23,3 @@ The notebook relies on an unpublished package (the invaluable [`PlutoGrid` packa
 
 Note that this limitation does not apply to notebooks for reading annoated texts.
 
-
-## In development
-
-- `syntacticpublisher.jl`: generate static webpages for reading syntactically annotated texts
