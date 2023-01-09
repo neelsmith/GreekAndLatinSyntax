@@ -29,7 +29,7 @@ Pkg.add("Downloads")
 Pkg.add("CitableText")
 Pkg.add("Dates")
 Pkg.update()
-
+cd(originaldir)
 
 #= 2. Optionally, you may define your own CSS.
 
@@ -113,10 +113,7 @@ end
 """Compose HMTL page for sentence number `idx`.
 """
 function webpage(idx, sentences, groups, tokens)
-
-    matches = filter(s -> s.sequence == idx, sentences)
-    # Write png for page:
-    sentence = matches[1]
+    sentence = sentences[idx]
     @info("$(idx). Writing page for $(sentence.range)...")
 
     # Compose parts of page content:
@@ -144,7 +141,7 @@ function webpage(idx, sentences, groups, tokens)
     txtdisplay2 = "<div class=\"passage\">" * htmltext(sentence, tokens, sov = true, vucolor = true) * "</div>"
 
     # Syntax diagram (pre-generated PNG)
-    imglink = "<img src=\"pngs/sentence_$(idx).png\" alt=\"Syntax diagram, sentence $(idx)\"/>"
+    imglink = "<img src=\"pngs/sentence_$(sentence.sequence).png\" alt=\"Syntax diagram, sentence $(sentence.sequence)\"/>"
     diagram = "<div class=\"diagram\">" * imglink * "</div>"
     
     m = now() |> monthname
@@ -165,7 +162,7 @@ function publishsentence(num, sentences, groups, tokens; pngdir = pngdir, outdir
     sentence = sentences[idx]
     @info("Sentence $(num) == $(sentence.range)")
     pngout = mermaiddiagram(sentence, tokens, format = "png")
-    write(joinpath(pngdir, "sentence_$(num).png"), pngout)
+    write(joinpath(pngdir, "sentence_$(idx).png"), pngout)
 
     psg = passagecomponent(sentence.range)
     pagehtml = webpage(idx, sentences, groups, tokens)
@@ -177,13 +174,13 @@ end
 
 
 function publishall(sentences, groups, tokens)
-    for (idx, sentence) in enumerate(sentences)
+    for sentence in sentences
         publishsentence(sentence.sequence, sentences, groups, tokens)   
     end
     @info("Done: wrote $(length(sentences)) HTML pages linked to accompanying PNG file in $(outputdir). (Now working in $(pwd()).)")
 end
 
-publishall(sentences, groups, tokekns)
+publishall(sentences, groups, tokens)
 
 
 # This works if you want to republish a specific sentence identified
