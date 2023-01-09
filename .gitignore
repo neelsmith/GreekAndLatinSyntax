@@ -4,5 +4,6 @@ Gemfile.lock
 .jekyll-cache/
 scratch/
 pluto/output/
+debug/
 docs/Gemfile
 Gemfile.lock
