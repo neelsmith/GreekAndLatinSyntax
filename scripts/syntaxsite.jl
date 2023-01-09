@@ -3,7 +3,7 @@
 
     To use it, check the three required settings identified in the following comments.
 =#
-script_version = "1.0.0"
+script_version = "1.0.1"
 originaldir = pwd()
 @info("Starting from directory $(originaldir)")
 
@@ -114,7 +114,7 @@ end
 """
 function webpage(idx, sentences, groups, tokens)
     sentence = sentences[idx]
-    @info("$(idx). Writing page for $(sentence.range)...")
+    @info("$(idx). Writing page for $(sentence.sequence) == $(sentence.range)...")
 
     # Compose parts of page content:
 
@@ -141,6 +141,7 @@ function webpage(idx, sentences, groups, tokens)
     txtdisplay2 = "<div class=\"passage\">" * htmltext(sentence, tokens, sov = true, vucolor = true) * "</div>"
 
     # Syntax diagram (pre-generated PNG)
+    @info("Linking to image for $(sentence.sequence) == $(sentence.range)")
     imglink = "<img src=\"pngs/sentence_$(sentence.sequence).png\" alt=\"Syntax diagram, sentence $(sentence.sequence)\"/>"
     diagram = "<div class=\"diagram\">" * imglink * "</div>"
     
@@ -160,16 +161,16 @@ function publishsentence(num, sentences, groups, tokens; pngdir = pngdir, outdir
     idx = findfirst(s -> s.sequence == num, sentences)
     # Write png for page:
     sentence = sentences[idx]
-    @info("Sentence $(num) == $(sentence.range)")
+    @info("Composing diagram for sentence $(num) == $(sentence.range)")
     pngout = mermaiddiagram(sentence, tokens, format = "png")
-    write(joinpath(pngdir, "sentence_$(idx).png"), pngout)
+    write(joinpath(pngdir, "sentence_$(sentence.sequence).png"), pngout)
 
     psg = passagecomponent(sentence.range)
     pagehtml = webpage(idx, sentences, groups, tokens)
     open(joinpath(outputdir, "$(psg).html"), "w") do io
         write(io, pagehtml)
     end
-    @info("Done: wrote HTML page for sentence $(num) in $(outputdir).")
+    @info("Done: wrote HTML page for sentence $(num) in $(outputdir) as $(psg).html.")
 end
 
 
@@ -177,7 +178,7 @@ function publishall(sentences, groups, tokens)
     for sentence in sentences
         publishsentence(sentence.sequence, sentences, groups, tokens)   
     end
-    @info("Done: wrote $(length(sentences)) HTML pages linked to accompanying PNG file in $(outputdir). (Now working in $(pwd()).)")
+    @info("Done: wrote $(length(sentences)) HTML pages linked to accompanying PNG file in $(outputdir). (Now in $(pwd()))")
 end
 
 publishall(sentences, groups, tokens)
@@ -185,7 +186,5 @@ publishall(sentences, groups, tokens)
 
 # This works if you want to republish a specific sentence identified
 # by its sequence number:
-#publishsentence(13, sentences, groups, tokens)  
+#publishsentence(11, sentences, groups, tokens)  
 
-
-cd(originaldir)
