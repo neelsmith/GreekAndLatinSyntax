@@ -243,4 +243,41 @@ urn:cts:latinLit:stoa1263.stoa001.hc_tokens:122a.2.19a|ignore|.|0|nothing|nothin
 
 
 // Sentence 1207
+
+//
+// Automatically appended from Pluto notebook "Analyze syntax of Greek text from a CTS source" (version 0.7.0)
+//
+#!sentences
+sentence|sequence|connector
+urn:cts:latinLit:stoa1263.stoa001.hc_tokens:122a.2.20-122a.2.30a|1207|urn:cts:latinLit:stoa1263.stoa001.hc_tokens:122a.2.20
+
+
+#!verbal_units
+vuid|syntactic_type|semantic_type|depth|sentence
+122a.2.20-122a.2.30a.1|Independent clause|transitive|1|urn:cts:latinLit:stoa1263.stoa001.hc_tokens:122a.2.20-122a.2.30a
+122a.2.20-122a.2.30a.2|subordinate clause|transitive|2|urn:cts:latinLit:stoa1263.stoa001.hc_tokens:122a.2.20-122a.2.30a
+122a.2.20-122a.2.30a.3|indirect statement|linking|2|urn:cts:latinLit:stoa1263.stoa001.hc_tokens:122a.2.20-122a.2.30a
+
+
+#!tokens
+urn|tokentype|text|verbalunit|node1|node1relation|node2|node2relation
+urn:cts:latinLit:stoa1263.stoa001.hc_tokens:122a.2.20|lexical|idem|nothing|2|attritubitve|nothing|nothing
+urn:cts:latinLit:stoa1263.stoa001.hc_tokens:122a.2.21|lexical|nuntius|122a.2.20-122a.2.30a.1|7|subject|nothing|nothing
+urn:cts:latinLit:stoa1263.stoa001.hc_tokens:122a.2.22|lexical|qui|122a.2.20-122a.2.30a.2|2|subordinate conjunction|nothing|nothing
+urn:cts:latinLit:stoa1263.stoa001.hc_tokens:122a.2.23|lexical|de|122a.2.20-122a.2.30a.2|6|object|nothing|nothing
+urn:cts:latinLit:stoa1263.stoa001.hc_tokens:122a.2.24|lexical|Oreste|122a.2.20-122a.2.30a.2|4|object of preposition|nothing|nothing
+urn:cts:latinLit:stoa1263.stoa001.hc_tokens:122a.2.25|lexical|dixerat|122a.2.20-122a.2.30a.2|3|unit verb|nothing|nothing
+urn:cts:latinLit:stoa1263.stoa001.hc_tokens:122a.2.25a|ignore|,|0|nothing|nothing|nothing|nothing
+urn:cts:latinLit:stoa1263.stoa001.hc_tokens:122a.2.26|lexical|dixit|122a.2.20-122a.2.30a.1|0|unit verb|nothing|nothing
+urn:cts:latinLit:stoa1263.stoa001.hc_tokens:122a.2.27|lexical|Iphigeniam|122a.2.20-122a.2.30a.3|11|subject|nothing|nothing
+urn:cts:latinLit:stoa1263.stoa001.hc_tokens:122a.2.28|lexical|fratris|122a.2.20-122a.2.30a.3|10|attributive|nothing|nothing
+urn:cts:latinLit:stoa1263.stoa001.hc_tokens:122a.2.29|lexical|interfectricem|122a.2.20-122a.2.30a.3|11|predicate|nothing|nothing
+urn:cts:latinLit:stoa1263.stoa001.hc_tokens:122a.2.30|lexical|esse|122a.2.20-122a.2.30a.3|7|unit verb|nothing|nothing
+urn:cts:latinLit:stoa1263.stoa001.hc_tokens:122a.2.30a|ignore|.|0|nothing|nothing|nothing|nothing
+
+
+
 // Sentence 1208
+// Sentence 1209
+// Sentence 1210
+// Sentence 1211
