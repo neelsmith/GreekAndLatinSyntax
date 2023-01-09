@@ -169,19 +169,6 @@ md"""
 """
 end
 
-# ╔═╡ d4bf2d09-95de-4f81-ab13-8152e3ba351e
-"""Instantiate `OrthographicSystem` for user's menu choice.
-"""
-function orthography()
-	if ortho == "litgreek"
-		literaryGreek()
-	elseif ortho == "latin23"
-		latin23()
-	else
-		nothing
-	end
-end
-
 # ╔═╡ 73cb1d9d-c265-46c5-ae8d-1d940379b0d1
 md"""*Title, output directory, source are all correct* $(@bind prereqsok CheckBox())"""
 
@@ -378,6 +365,19 @@ md"""> ### Global variables derived from *choice of data set*
 
 """
 
+# ╔═╡ d4bf2d09-95de-4f81-ab13-8152e3ba351e
+"""Instantiate `OrthographicSystem` for user's menu choice.
+"""
+function orthography()
+	if ortho == "litgreek"
+		literaryGreek()
+	elseif ortho == "latin23"
+		latin23()
+	else
+		nothing
+	end
+end
+
 # ╔═╡ 2b3381a1-a82a-441a-81a4-7aa0e62ceac6
 corpus = if prereqs()
 	if srctype == "url"
@@ -403,12 +403,12 @@ orthotokens = if loadedok()
 end
 
 # ╔═╡ 83637e15-cdd7-4dd1-87d1-248bf7f3fcd6
-tokencorpus = map(orthotokens) do t
+tokencorpus = isnothing(orthotokens) ? nothing : map(orthotokens) do t
 	t[1]
 end |> CitableTextCorpus
 
 # ╔═╡ c77fb96e-dee1-4207-8e32-a4c07e784bc1
-sentencesequence = parsesentences(corpus, orthography())
+sentencesequence = isnothing(corpus) ? nothing : parsesentences(corpus, orthography())
 
 # ╔═╡ 4627ab0d-42a8-4d92-9b0d-c933b1b41f50
 if prereqs()
@@ -496,7 +496,11 @@ md"""> ### Global variables derived from the user's *sentence selection*
 # ╔═╡ 3a49b461-e4c2-44cb-9600-9ec10bf1e91f
 # The currently selected sentence
 # Check on existing of sentid!
-sentence = sentid == 0 ? nothing : sentencesequence[sentid]
+sentence = if @isdefined(sentid)
+	sentid == 0 ? nothing : sentencesequence[sentid]
+else
+	nothing
+end
 
 
 # ╔═╡ d437d981-8140-49f2-89ef-4a2ddef1cacb
@@ -1366,7 +1370,6 @@ end;
 # ╟─9d8b4b7c-f6f6-4f53-9f08-0854069f658b
 # ╟─de0e1c93-4e9a-40da-bf76-b9952d2da2ae
 # ╟─2d13c642-7c89-4e47-bad0-0a5ff98e1d8d
-# ╟─d4bf2d09-95de-4f81-ab13-8152e3ba351e
 # ╟─49169dec-8a82-406b-a1cc-8efaa940efea
 # ╟─73cb1d9d-c265-46c5-ae8d-1d940379b0d1
 # ╟─7ff0baa8-3354-4300-81bc-90466b049e73
@@ -1416,6 +1419,7 @@ end;
 # ╟─93bee380-1805-49ce-ae9f-794ea2224bb6
 # ╟─0f38d603-8b1d-451f-8be7-2162e055073f
 # ╟─50250528-afda-4011-87a5-1217169b9b66
+# ╟─d4bf2d09-95de-4f81-ab13-8152e3ba351e
 # ╟─2b3381a1-a82a-441a-81a4-7aa0e62ceac6
 # ╟─41a654d1-44d7-476b-b421-8f83d254f14e
 # ╟─83637e15-cdd7-4dd1-87d1-248bf7f3fcd6
