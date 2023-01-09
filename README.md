@@ -21,5 +21,5 @@ You can use `ctssyntaxer.jl` kn the `pluto` directory to annotate the syntax of 
 
 The notebook relies on an unpublished package (the invaluable [`PlutoGrid` package](https://github.com/lungben/PlutoGrid.jl) by Benjamin Lungwitz). For that reason, it comes with accompanying `Project.toml` and `Manifest.toml` files in the `pluto` directory.  If you start a Pluto server and open `pluto/ctssyntaxer.jl`, it should be able to build all the resources it needs (eventually: the first build especially will be slow).
 
-Note that this limitation does not apply to notebooks for reading annoated texts.
+Note that this limitation does not apply to notebooks for reading annoated texts. They Pluto's internal package manager, and do not need external `*.toml` files.
 
