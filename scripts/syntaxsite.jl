@@ -9,7 +9,7 @@ originaldir = pwd()
 
 #= There are three required settings: =#
 #1: directory where output will be written
-outputdir = joinpath(originaldir, "debug", "lysias1_revised")
+outputdir = joinpath(originaldir, "debug", "lysias1_site")
 #2: title for your text
 textlabel = "Lysias 1"
 #3:  source for your syntactic annotations.
