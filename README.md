@@ -4,29 +4,4 @@ This repository presents a straightforward model of ancient Greek and Latin synt
 
 The model is computationally implemented in the Julia language by the `GreekSyntax` and `LatinSyntax` package.s.   (See documentation for the Julia package:  [GreekSyntax](https://neelsmith.github.io/GreekSyntax.jl/stable/), [LatinSyntax](https://neelsmith.github.io/LatinSyntax.jl/stable/)).
 
-
-This repository includes Pluto notebooks and Julia scripts for the reading and study of ancient Greek texts using these packages.
-
-
-
-## Pluto notebooks
-
-### Reading syntactically annotated texts
-
-In the `pluto` directory, you can find the following notebooks:
-
-- `readsentences.jl`: read texts with options to visualize syntax per sentence
-- `readsubordination.jl`:  read texts with options to explore sentences by level of syntactic subordination
-
-### Annotating citable texts.
-
-You can use `ctssyntaxer.jl` in the `pluto` directory to annotate the syntax of a citable Greek text.
-
-The notebook relies on an unpublished package (the invaluable [`PlutoGrid` package](https://github.com/lungben/PlutoGrid.jl) by Benjamin Lungwitz). For that reason, it comes with accompanying `Project.toml` and `Manifest.toml` files in the `pluto` directory.  If you start a Pluto server and open `pluto/ctssyntaxer.jl`, it should be able to build all the resources it needs (eventually: the first build especially will be slow).
-
-Note that this limitation does not apply to notebooks for reading annoated texts. They Pluto's internal package manager, and do not need external `*.toml` files.
-
-
-## Scripts
-
-In the `scripts` directory, the `syntaxsite.jl` script will build a direct of static web pages.
+The repository at [https://github.com/neelsmith/eagl-texts](https://github.com/neelsmith/eagl-texts) hosts delimited-text files with citable texts and syntactic annotations that are published in various visualizations at [https://neelsmith.github.io/eagl-texts/](https://neelsmith.github.io/eagl-texts/).
